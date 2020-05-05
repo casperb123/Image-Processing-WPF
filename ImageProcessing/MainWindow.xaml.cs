@@ -59,7 +59,11 @@ namespace ImageProcessing
 
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
         {
-            originalImage = fileOperation.OpenFile();
+            Bitmap bitmap = fileOperation.OpenFile();
+            if (bitmap is null)
+                return;
+
+            originalImage = bitmap;
             DisplayImage(originalImage, 3);
         }
 
