@@ -1,11 +1,7 @@
-﻿using ControlzEx.Standard;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using Color = System.Drawing.Color;
 
 namespace ImageProcessing
@@ -70,6 +66,21 @@ namespace ImageProcessing
         //        OnImageFinished(modifiedBitmap);
         //    }
         //}
+
+        private Bitmap ApplyColorMatrix(Bitmap bitmap, ColorMatrix colorMatrix)
+        {
+            Bitmap modifiedBitmap = new Bitmap(bitmap);
+
+            using (Graphics graphics = Graphics.FromImage(modifiedBitmap))
+            {
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.SetColorMatrix(colorMatrix);
+
+                graphics.DrawImage(modifiedBitmap, new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), 0, 0, modifiedBitmap.Width, modifiedBitmap.Height, GraphicsUnit.Pixel, attributes);
+            }
+
+            return modifiedBitmap;
+        }
 
         public void Modify(object obj, double hueMin, double hueMax)
         {

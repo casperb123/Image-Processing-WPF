@@ -1,9 +1,12 @@
 ﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Brush = System.Windows.Media.Brush;
 
 namespace ImageProcessing
@@ -35,7 +38,7 @@ namespace ImageProcessing
 
         private void DisplayImage(Bitmap bitmap, int window)
         {
-            ImageSource source = fileOperation.BitmapToImageSource(bitmap);
+            ImageSource source = fileOperation.BitmapToBitmapImage(bitmap);
 
             if (window == 1)
                 imageOriginal.Source = source;
@@ -67,6 +70,28 @@ namespace ImageProcessing
             DisplayImage(originalImage, 3);
         }
 
+        private void ButtonResetImage_Click(object sender, RoutedEventArgs e)
+        {
+            modifiedImage = new Bitmap(originalImage);
+            DisplayImage(modifiedImage, 2);
+        }
+
+        private void ButtonToggleImages_Click(object sender, RoutedEventArgs e)
+        {
+            if (borderManipulated.Visibility == Visibility.Visible)
+            {
+                borderManipulated.Visibility = Visibility.Hidden;
+                borderOriginal.Visibility = Visibility.Visible;
+                buttonToggleImages.Content = "Show Manipulated";
+            }
+            else
+            {
+                borderOriginal.Visibility = Visibility.Hidden;
+                borderManipulated.Visibility = Visibility.Visible;
+                buttonToggleImages.Content = "Show Original";
+            }
+        }
+
         private void SliderHue_ValueChanged(object sender, RangeParameterChangedEventArgs e)
         {
             if (!IsLoaded)
@@ -90,6 +115,25 @@ namespace ImageProcessing
         {
             Thread thread = new Thread(() => manipulation.Modify(originalImage, minimum, maximum));
             thread.Start();
+        }
+
+        private async void ButtonSaveImage_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "JPEG (*.jpg)|*.jpg|PNG (*.png)|*.png|BMP (*.bmp)|*.bmp";
+            
+            if (dialog.ShowDialog() == true)
+            {
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)imageManipulated.Source));
+
+                using (FileStream stream = new FileStream(dialog.FileName, FileMode.Create))
+                {
+                    encoder.Save(stream);
+                }
+
+                await this.ShowMessageAsync("Image Saved", "The image has been successfully saved!");
+            }
         }
     }
 }

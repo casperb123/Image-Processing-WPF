@@ -103,7 +103,7 @@ namespace ImageProcessing
         {
             HSLColor hslColor = new HSLColor
             {
-                hue = color.GetHue() / 360.0, // we store hue as 0-1 as opposed to 0-360 
+                hue = color.GetHue() / scale, // we store hue as 0-1 as opposed to 0-360
                 luminosity = color.GetBrightness(),
                 saturation = color.GetSaturation()
             };
