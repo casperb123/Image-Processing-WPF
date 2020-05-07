@@ -67,44 +67,60 @@ namespace ImageProcessing
         //    }
         //}
 
-        private Bitmap ApplyColorMatrix(Bitmap bitmap, ColorMatrix colorMatrix)
-        {
-            Bitmap modifiedBitmap = new Bitmap(bitmap);
-
-            using (Graphics graphics = Graphics.FromImage(modifiedBitmap))
-            {
-                ImageAttributes attributes = new ImageAttributes();
-                attributes.SetColorMatrix(colorMatrix);
-
-                graphics.DrawImage(modifiedBitmap, new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), 0, 0, modifiedBitmap.Width, modifiedBitmap.Height, GraphicsUnit.Pixel, attributes);
-            }
-
-            return modifiedBitmap;
-        }
-
-        public void Modify(object obj, double hueMin, double hueMax)
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma)
         {
             if (obj is Bitmap bitmap)
             {
                 Bitmap modifiedBitmap = new Bitmap(bitmap);
 
+                float[][] matrixArray =
+                {
+                    new float[] {contrast, 0, 0, 0, 0}, // scale red
+                    new float[] {0, contrast, 0, 0, 0}, // scale green
+                    new float[] {0, 0, contrast, 0, 0}, // scale blue
+                    new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
+                    new float[] {brightness, brightness, brightness, 0, 1}
+                };
+
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.ClearColorMatrix();
+                attributes.SetColorMatrix(new ColorMatrix(matrixArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                attributes.SetGamma(gamma, ColorAdjustType.Bitmap);
+
+                Graphics graphics = Graphics.FromImage(modifiedBitmap);
+                graphics.DrawImage(modifiedBitmap, new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), 0, 0, modifiedBitmap.Width, modifiedBitmap.Height, GraphicsUnit.Pixel, attributes);
+
+                // Use "unsafe" because C# doesn't support pointer aritmetic by default
                 unsafe
                 {
+                    // Lock the bitmap into system memory
+                    // "PixelFormat" can be "Format24bppRgb", "Format32bppArgb", etc
                     BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, modifiedBitmap.PixelFormat);
+
+                    // Define variables for bytes per pixel, as well as Image Width & Height
                     int bytesPerPixel = Image.GetPixelFormatSize(modifiedBitmap.PixelFormat) / 8;
                     int heightInPixels = modifiedBitmap.Height;
                     int widthInBytes = modifiedBitmap.Width * bytesPerPixel;
+
+                    // Define a pointer to the first pixel in the locked image
+                    // Scan0 gets or sets the address of the first pixel data in the bitmap
+                    // This can also be thought of as the first scan line in the bitmap
                     byte* ptrFirstPixel = (byte*)bitmapData.Scan0;
 
+                    // Step thru each pixel in the image using pointers
+                    // Parallel.For execute a 'for' loop in which iterations may run in parallel
                     Parallel.For(0, heightInPixels, y =>
                     {
+                        // Use the 'Stride' (scanline width) property to step line by line through the image
                         byte* currentLine = ptrFirstPixel + (y * bitmapData.Stride);
 
                         for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                         {
+                            // Get each pixel color (R, G & B)
                             int oldBlue = currentLine[x];
                             int oldGreen = currentLine[x + 1];
                             int oldRed = currentLine[x + 2];
+
                             Color color = Color.FromArgb(oldRed, oldGreen, oldBlue);
                             double hue = color.GetHue();
 
@@ -113,6 +129,7 @@ namespace ImageProcessing
                                 int avg = (oldRed + oldGreen + oldBlue) / 3;
                                 Color newColor = Color.FromArgb(avg, avg, avg);
 
+                                // Change each pixels color
                                 currentLine[x] = newColor.B;
                                 currentLine[x + 1] = newColor.G;
                                 currentLine[x + 2] = newColor.R;
