@@ -63,7 +63,8 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Header="Color Isolation">
+            <GroupBox Header="Color Isolation"
+                      IsEnabled="{Binding Path=InvertedGrayScale, Mode=OneWay}">
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -101,8 +102,7 @@
                                      mah:SliderHelper.ChangeValueBy="LargeChange"
                                      LargeChange="10"
                                      LowerValueChanged="SliderHue_ValueChanged"
-                                     UpperValueChanged="SliderHue_ValueChanged"
-                                     IsEnabled="{Binding Path=InvertedGrayScale, Mode=OneWay}">
+                                     UpperValueChanged="SliderHue_ValueChanged">
                         <mah:RangeSlider.AutoToolTipRangeValuesTemplate>
                             <DataTemplate DataType="mah:RangeSliderAutoTooltipValues">
                                 <UniformGrid Columns="2"
