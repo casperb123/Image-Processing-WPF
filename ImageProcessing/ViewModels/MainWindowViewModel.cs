@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,12 +22,35 @@ namespace ImageProcessing.ViewModels
         private double gamma;
         private Bitmap originalImage;
         private Bitmap modifiedImage;
+        private bool invert;
+        private bool showChanges;
 
         private MainWindow mainWindow;
         private Manipulation manipulation;
         private FileOperation fileOperation;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool ShowChanges
+        {
+            get { return showChanges; }
+            set
+            {
+                showChanges = value;
+                OnPropertyChanged(nameof(ShowChanges));
+                ToggleImages();
+            }
+        }
+
+        public bool Invert
+        {
+            get { return invert; }
+            set
+            {
+                invert = value;
+                OnPropertyChanged(nameof(Invert));
+            }
+        }
 
         public Bitmap ModifiedImage
         {
@@ -102,6 +126,7 @@ namespace ImageProcessing.ViewModels
             MaximumHue = 360;
             Contrast = 1;
             Gamma = 1;
+            showChanges = true;
 
             this.mainWindow = mainWindow;
             manipulation = new Manipulation();
@@ -144,8 +169,19 @@ namespace ImageProcessing.ViewModels
             DisplayImage(OriginalImage, 3);
         }
 
-        public void ResetImage()
+        public async void ResetImage()
         {
+            MessageDialogResult result = await mainWindow.ShowMessageAsync("Reset Image", "Are you sure that you want to reset the image?", MessageDialogStyle.AffirmativeAndNegative);
+            if (result == MessageDialogResult.Negative)
+                return;
+
+            MinimumHue = 0;
+            MaximumHue = 360;
+            Brightness = 0;
+            Contrast = 1;
+            Gamma = 1;
+            Invert = false;
+
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);
         }
@@ -156,13 +192,11 @@ namespace ImageProcessing.ViewModels
             {
                 mainWindow.borderManipulated.Visibility = Visibility.Hidden;
                 mainWindow.borderOriginal.Visibility = Visibility.Visible;
-                mainWindow.buttonToggleImages.Content = "Show Manipulated";
             }
             else
             {
                 mainWindow.borderOriginal.Visibility = Visibility.Hidden;
                 mainWindow.borderManipulated.Visibility = Visibility.Visible;
-                mainWindow.buttonToggleImages.Content = "Show Original";
             }
         }
 
@@ -181,7 +215,7 @@ namespace ImageProcessing.ViewModels
 
         public void ModifyImage()
         {
-            Thread thread = new Thread(() => manipulation.Modify(originalImage, MinimumHue, MaximumHue, (float)Brightness, (float)Contrast, (float)Gamma));
+            Thread thread = new Thread(() => manipulation.Modify(originalImage, MinimumHue, MaximumHue, (float)Brightness, (float)Contrast, (float)Gamma, Invert));
             thread.Start();
         }
 

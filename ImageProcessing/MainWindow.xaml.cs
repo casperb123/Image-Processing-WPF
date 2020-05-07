@@ -37,11 +37,6 @@ namespace ImageProcessing
             viewModel.ResetImage();
         }
 
-        private void ButtonToggleImages_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.ToggleImages();
-        }
-
         private void SliderHue_ValueChanged(object sender, RangeParameterChangedEventArgs e)
         {
             if (!IsLoaded)

@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Border x:Name="borderOriginal"
@@ -43,13 +44,13 @@
                     Content="Reset Image"
                     Margin="0,0,0,5"
                     Click="ButtonResetImage_Click" />
-            <Button x:Name="buttonToggleImages"
-                    Content="Show Original"
-                    Click="ButtonToggleImages_Click" />
+            <CheckBox x:Name="checkBoxShowChanges"
+                      Content="Show Changes"
+                      IsChecked="{Binding Path=ShowChanges}"/>
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom"
-                    Margin="0,0,10,0">
+                    Margin="0,0,10,10">
             <Button x:Name="buttonSaveImage"
                     Content="Save Image"
                     Click="ButtonSaveImage_Click" />
@@ -61,14 +62,9 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
 
             <GroupBox Header="Color Isolation">
-                <Grid Grid.Row="1"
-                      Grid.Column="1">
+                <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
@@ -212,17 +208,26 @@
                                        StringFormat="N2" />
                 </Grid>
             </GroupBox>
-
-            <StackPanel Orientation="Horizontal"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="2"
-                        HorizontalAlignment="Center"
-                        Margin="0,10,0,0">
-                <Button x:Name="buttonModify"
-                        Content="Modify"
-                        Width="80"
-                        Click="ButtonModify_Click" />
-            </StackPanel>
         </Grid>
+
+        <GroupBox Header="Image Effects"
+                  Grid.Row="1">
+            <StackPanel>
+                <CheckBox x:Name="checkBoxInvert"
+                          Content="Invert Image"
+                          IsChecked="{Binding Path=Invert}" />
+            </StackPanel>
+        </GroupBox>
+
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0">
+            <Button x:Name="buttonModify"
+                    Content="Modify"
+                    Width="80"
+                    Click="ButtonModify_Click" />
+        </StackPanel>
     </Grid>
 </mah:MetroWindow>

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Windows;
 using Color = System.Drawing.Color;
+using Size = System.Drawing.Size;
 
 namespace ImageProcessing
 {
@@ -67,28 +70,24 @@ namespace ImageProcessing
         //    }
         //}
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma)
+        public void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray, bool clearExistingMatrix = false)
+        {
+            ImageAttributes attributes = new ImageAttributes();
+            if (clearExistingMatrix)
+                attributes.ClearColorMatrix();
+
+            attributes.SetColorMatrix(new ColorMatrix(matrixArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            Graphics graphics = Graphics.FromImage(bitmap);
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            graphics.DrawImage(bitmap, rectangle, 0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, attributes);
+        }
+
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool invert)
         {
             if (obj is Bitmap bitmap)
             {
                 Bitmap modifiedBitmap = new Bitmap(bitmap);
-
-                float[][] matrixArray =
-                {
-                    new float[] {contrast, 0, 0, 0, 0}, // scale red
-                    new float[] {0, contrast, 0, 0, 0}, // scale green
-                    new float[] {0, 0, contrast, 0, 0}, // scale blue
-                    new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
-                    new float[] {brightness, brightness, brightness, 0, 1}
-                };
-
-                ImageAttributes attributes = new ImageAttributes();
-                attributes.ClearColorMatrix();
-                attributes.SetColorMatrix(new ColorMatrix(matrixArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
-                attributes.SetGamma(gamma, ColorAdjustType.Bitmap);
-
-                Graphics graphics = Graphics.FromImage(modifiedBitmap);
-                graphics.DrawImage(modifiedBitmap, new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), 0, 0, modifiedBitmap.Width, modifiedBitmap.Height, GraphicsUnit.Pixel, attributes);
 
                 // Use "unsafe" because C# doesn't support pointer aritmetic by default
                 unsafe
@@ -140,138 +139,70 @@ namespace ImageProcessing
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
 
+                float[][] matrixArray =
+                {
+                    new float[] {contrast, 0, 0, 0, 0}, // scale red
+                    new float[] {0, contrast, 0, 0, 0}, // scale green
+                    new float[] {0, 0, contrast, 0, 0}, // scale blue
+                    new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
+                    new float[] {brightness, brightness, brightness, 0, 1}
+                };
+
+                ApplyColorMatrix(modifiedBitmap, matrixArray, true);
+
+                if (invert)
+                {
+                    float[][] invertArray =
+                    {
+                        new float[] {-1, 0, 0, 0, 0},
+                        new float[] {0, -1, 0, 0, 0},
+                        new float[] {0, 0, -1, 0, 0},
+                        new float[] {0, 0, 0, 1, 0},
+                        new float[] {1, 1, 1, 0, 1}
+                    };
+
+                    ApplyColorMatrix(modifiedBitmap, invertArray);
+                }
+
                 OnImageFinished(modifiedBitmap);
             }
         }
 
-        //public void ManipulateLockBits(object obj, bool removeRed, bool removeGreen, bool removeBlue)
+        //public Bitmap[,] MakeTiles(object obj)
         //{
         //    if (obj is Bitmap bitmap)
         //    {
-        //        Bitmap modifiedBitmap = new Bitmap(bitmap);
+        //        Size tileSize = new Size(bitmap.Width / 4, bitmap.Height / 2);
+        //        Bitmap[,] bitmapArray = new Bitmap[4, 2];
 
-        //        // Use "unsafe" because C# doesn't support pointer aritmetic by default
-        //        unsafe
+        //        #region Break the original bitmap image into an array of tiles
+        //        for (int i = 0; i < 4; i++)
         //        {
-        //            // Lock the bitmap into system memory
-        //            // "PixelFormat" can be "Format24bppRgb", "Format32bppArgb", etc
-        //            BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, modifiedBitmap.PixelFormat);
-
-        //            // Define variables for bytes per pixel, as well as Image Width & Height
-        //            int bytesPerPixel = Image.GetPixelFormatSize(modifiedBitmap.PixelFormat) / 8;
-        //            int heightInPixels = bitmapData.Height;
-        //            int widthInBytes = bitmapData.Width * bytesPerPixel;
-
-        //            // Define a pointer to the first pixel in the locked image
-        //            // Scan0 gets or sets the address of the first pixel data in the bitmap
-        //            // This can also be thought of as the first scan line in the bitmap
-        //            byte* PtrFirstPixel = (byte*)bitmapData.Scan0;
-
-        //            // Step thru each pixel in the image using pointers
-        //            // Parallel.For execute a 'for' loop in which iterations may run in parallel
-        //            Parallel.For(0, heightInPixels, y =>
+        //            for (int j = 0; j < 2; j++)
         //            {
-        //                // Use the 'Stride' (scanline width) property to step line by line through the image
-        //                byte* currentLine = PtrFirstPixel + (y * bitmapData.Stride);
+        //                // Define "moving" rectangles with dimensions of the tiles to define where in the source image to pull from
+        //                Rectangle movingTileFrame = new Rectangle(i * tileSize.Width, j * tileSize.Height, tileSize.Width, tileSize.Height);
 
-        //                for (int x = 0; x < widthInBytes; x += bytesPerPixel)
+        //                // Define each element of 4,2 array of bitmaps at the corrent tile size
+        //                bitmapArray[i, j] = new Bitmap(tileSize.Width, tileSize.Height);
+
+        //                // Define a graphics "canvas" object to draw on, based on each tile in the bitmap array
+        //                using (Graphics canvas = Graphics.FromImage(bitmapArray[i, j]))
         //                {
-        //                    // GET: each pixel color (R, G & B)
-        //                    int oldBlue = currentLine[x];
-        //                    int oldGreen = currentLine[x + 1];
-        //                    int oldRed = currentLine[x + 2];
-
-        //                    if (removeRed && removeGreen && removeBlue)
-        //                    {
-        //                        int gray = (oldRed + oldGreen + oldBlue) / 3;
-
-        //                        currentLine[x] = (byte)gray;
-        //                        currentLine[x + 1] = (byte)gray;
-        //                        currentLine[x + 2] = (byte)gray;
-        //                    }
-        //                    else
-        //                    {
-        //                        if (removeRed)
-        //                            oldRed = 0;
-        //                        if (removeGreen)
-        //                            oldGreen = 0;
-        //                        if (removeBlue)
-        //                            oldBlue = 0;
-
-        //                        currentLine[x] = (byte)oldBlue;
-        //                        currentLine[x + 1] = (byte)oldGreen;
-        //                        currentLine[x + 2] = (byte)oldRed;
-        //                    }
-        //                }
-        //            });
-
-        //            modifiedBitmap.UnlockBits(bitmapData);
-        //        }
-
-        //        OnImageFinished(modifiedBitmap);
-        //    }
-        //}
-
-        public Bitmap[,] MakeTiles(object obj)
-        {
-            if (obj is Bitmap bitmap)
-            {
-                Size tileSize = new Size(bitmap.Width / 4, bitmap.Height / 2);
-                Bitmap[,] bitmapArray = new Bitmap[4, 2];
-
-                #region Break the original bitmap image into an array of tiles
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        // Define "moving" rectangles with dimensions of the tiles to define where in the source image to pull from
-                        Rectangle movingTileFrame = new Rectangle(i * tileSize.Width, j * tileSize.Height, tileSize.Width, tileSize.Height);
-
-                        // Define each element of 4,2 array of bitmaps at the corrent tile size
-                        bitmapArray[i, j] = new Bitmap(tileSize.Width, tileSize.Height);
-
-                        // Define a graphics "canvas" object to draw on, based on each tile in the bitmap array
-                        using (Graphics canvas = Graphics.FromImage(bitmapArray[i, j]))
-                        {
-                            // Draw a portion of the original bitmap on the canvas, defined by the moving rectangles
-                            canvas.DrawImage(bitmap,
-                                             new Rectangle(0, 0, tileSize.Width, tileSize.Height),
-                                             movingTileFrame,
-                                             GraphicsUnit.Pixel);
-                        }
-                    }
-                }
-
-                return bitmapArray;
-                #endregion
-            }
-
-            return null;
-        }
-
-        //public Bitmap[,] ParallelImageProcess(Bitmap[,] bitmaps)
-        //{
-        //    // NOTE: INCLUSIVE & EXCLUSIVE INDICES
-        //    Parallel.For(0, 4, x =>
-        //    {
-        //        for (int y = 0; y < 2; y++)
-        //        {
-        //            int width = bitmaps[x, y].Width;
-        //            int height = bitmaps[x, y].Height;
-
-        //            for (int i = 0; i < width; i++)
-        //            {
-        //                for (int j = 0; j < height; j++)
-        //                {
-        //                    Color oldPixel = bitmaps[x, y].GetPixel(i, j);
-        //                    Color newPixel = Color.FromArgb(oldPixel.R, oldPixel.G, 0);
-        //                    bitmaps[x, y].SetPixel(i, j, newPixel);
+        //                    // Draw a portion of the original bitmap on the canvas, defined by the moving rectangles
+        //                    canvas.DrawImage(bitmap,
+        //                                     new Rectangle(0, 0, tileSize.Width, tileSize.Height),
+        //                                     movingTileFrame,
+        //                                     GraphicsUnit.Pixel);
         //                }
         //            }
         //        }
-        //    });
 
-        //    return bitmaps;
+        //        return bitmapArray;
+        //        #endregion
+        //    }
+
+        //    return null;
         //}
 
         public Color Hue(double value)
