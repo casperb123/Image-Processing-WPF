@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Brush = System.Windows.Media.Brush;
@@ -22,8 +23,11 @@ namespace ImageProcessing.ViewModels
         private double gamma;
         private Bitmap originalImage;
         private Bitmap modifiedImage;
-        private bool invert;
         private bool showChanges;
+        private bool invert;
+        private bool sepiaTone;
+        private bool grayScale;
+        private bool invertedGrayScale;
 
         private MainWindow mainWindow;
         private Manipulation manipulation;
@@ -39,6 +43,37 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
+            }
+        }
+
+        public bool GrayScale
+        {
+            get { return grayScale; }
+            set
+            {
+                grayScale = value;
+                OnPropertyChanged(nameof(GrayScale));
+                InvertedGrayScale = !value;
+            }
+        }
+
+        public bool InvertedGrayScale
+        {
+            get { return invertedGrayScale; }
+            private set
+            {
+                invertedGrayScale = value;
+                OnPropertyChanged(nameof(InvertedGrayScale));
+            }
+        }
+
+        public bool SepiaTone
+        {
+            get { return sepiaTone; }
+            set
+            {
+                sepiaTone = value;
+                OnPropertyChanged(nameof(SepiaTone));
             }
         }
 
@@ -127,6 +162,7 @@ namespace ImageProcessing.ViewModels
             Contrast = 1;
             Gamma = 1;
             showChanges = true;
+            invertedGrayScale = true;
 
             this.mainWindow = mainWindow;
             manipulation = new Manipulation();
@@ -181,6 +217,7 @@ namespace ImageProcessing.ViewModels
             Contrast = 1;
             Gamma = 1;
             Invert = false;
+            SepiaTone = false;
 
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);
@@ -215,7 +252,7 @@ namespace ImageProcessing.ViewModels
 
         public void ModifyImage()
         {
-            Thread thread = new Thread(() => manipulation.Modify(originalImage, MinimumHue, MaximumHue, (float)Brightness, (float)Contrast, (float)Gamma, Invert));
+            Thread thread = new Thread(() => manipulation.Modify(originalImage, MinimumHue, MaximumHue, (float)Brightness, (float)Contrast, (float)Gamma, GrayScale, Invert, SepiaTone));
             thread.Start();
         }
 

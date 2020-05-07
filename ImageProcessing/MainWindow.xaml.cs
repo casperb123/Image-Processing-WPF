@@ -1,15 +1,6 @@
 ﻿using ImageProcessing.ViewModels;
 using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Threading;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Brush = System.Windows.Media.Brush;
 
 namespace ImageProcessing
 {

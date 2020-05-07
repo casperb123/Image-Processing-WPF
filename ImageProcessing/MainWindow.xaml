@@ -46,7 +46,7 @@
                     Click="ButtonResetImage_Click" />
             <CheckBox x:Name="checkBoxShowChanges"
                       Content="Show Changes"
-                      IsChecked="{Binding Path=ShowChanges}"/>
+                      IsChecked="{Binding Path=ShowChanges}" />
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom"
@@ -101,7 +101,8 @@
                                      mah:SliderHelper.ChangeValueBy="LargeChange"
                                      LargeChange="10"
                                      LowerValueChanged="SliderHue_ValueChanged"
-                                     UpperValueChanged="SliderHue_ValueChanged">
+                                     UpperValueChanged="SliderHue_ValueChanged"
+                                     IsEnabled="{Binding Path=InvertedGrayScale, Mode=OneWay}">
                         <mah:RangeSlider.AutoToolTipRangeValuesTemplate>
                             <DataTemplate DataType="mah:RangeSliderAutoTooltipValues">
                                 <UniformGrid Columns="2"
@@ -215,7 +216,15 @@
             <StackPanel>
                 <CheckBox x:Name="checkBoxInvert"
                           Content="Invert Image"
+                          Margin="0,0,0,5"
                           IsChecked="{Binding Path=Invert}" />
+                <CheckBox x:Name="checkBoxSepia"
+                          Content="Sepia Tone"
+                          Margin="0,0,0,5"
+                          IsChecked="{Binding Path=SepiaTone}" />
+                <CheckBox x:Name="checkBoxGrayScale"
+                          Content="Gray Scale"
+                          IsChecked="{Binding Path=GrayScale}" />
             </StackPanel>
         </GroupBox>
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -83,7 +84,7 @@ namespace ImageProcessing
             graphics.DrawImage(bitmap, rectangle, 0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, attributes);
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool invert)
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone)
         {
             if (obj is Bitmap bitmap)
             {
@@ -123,7 +124,7 @@ namespace ImageProcessing
                             Color color = Color.FromArgb(oldRed, oldGreen, oldBlue);
                             double hue = color.GetHue();
 
-                            if (hue < hueMin || hue > hueMax)
+                            if (grayScale || hue < hueMin || hue > hueMax)
                             {
                                 int avg = (oldRed + oldGreen + oldBlue) / 3;
                                 Color newColor = Color.FromArgb(avg, avg, avg);
@@ -162,6 +163,20 @@ namespace ImageProcessing
                     };
 
                     ApplyColorMatrix(modifiedBitmap, invertArray);
+                }
+
+                if (sepiaTone)
+                {
+                    float[][] sepiaArray =
+                    {
+                        new float[] {.393f, .349f, .272f, 0, 0},
+                        new float[] {.769f, .686f, .534f, 0, 0},
+                        new float[] {.189f, .168f, .131f, 0, 0},
+                        new float[] {0, 0, 0, 1, 0},
+                        new float[] {0, 0, 0, 0, 1}
+                    };
+
+                    ApplyColorMatrix(modifiedBitmap, sepiaArray);
                 }
 
                 OnImageFinished(modifiedBitmap);
