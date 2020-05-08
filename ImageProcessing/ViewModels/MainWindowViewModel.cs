@@ -99,7 +99,6 @@ namespace ImageProcessing.ViewModels
             set { originalImage = value; }
         }
 
-        [Range(0.01, 10)]
         public double Gamma
         {
             get { return gamma; }

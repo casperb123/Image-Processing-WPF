@@ -71,13 +71,23 @@ namespace ImageProcessing
         //    }
         //}
 
-        public void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray, bool clearExistingMatrix = false)
+        private void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray, bool clearExistingMatrix = false)
         {
             ImageAttributes attributes = new ImageAttributes();
             if (clearExistingMatrix)
                 attributes.ClearColorMatrix();
 
             attributes.SetColorMatrix(new ColorMatrix(matrixArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            Graphics graphics = Graphics.FromImage(bitmap);
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            graphics.DrawImage(bitmap, rectangle, 0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, attributes);
+        }
+
+        private void SetGamma(Bitmap bitmap, float gamma)
+        {
+            ImageAttributes attributes = new ImageAttributes();
+            attributes.SetGamma(gamma);
 
             Graphics graphics = Graphics.FromImage(bitmap);
             Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
@@ -178,6 +188,8 @@ namespace ImageProcessing
 
                     ApplyColorMatrix(modifiedBitmap, sepiaArray);
                 }
+
+                SetGamma(modifiedBitmap, gamma);
 
                 OnImageFinished(modifiedBitmap);
             }
