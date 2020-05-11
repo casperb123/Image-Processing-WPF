@@ -1,10 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Windows;
 using Color = System.Drawing.Color;
 using Size = System.Drawing.Size;
 
@@ -28,48 +26,6 @@ namespace ImageProcessing
         {
             ImageFinished?.Invoke(this, new ImageEventArgs(bitmap));
         }
-
-        //public void ManipulateSetPixel(object obj, bool removeRed, bool removeGreen, bool removeBlue)
-        //{
-        //    if (obj is Bitmap bitmap)
-        //    {
-        //        Bitmap modifiedBitmap = new Bitmap(bitmap);
-
-        //        for (int w = 0; w < modifiedBitmap.Width; w++)
-        //        {
-        //            for (int h = 0; h < modifiedBitmap.Height; h++)
-        //            {
-        //                Color color = modifiedBitmap.GetPixel(w, h);
-        //                Color newColor;
-
-        //                if (removeRed && removeGreen && removeBlue)
-        //                {
-        //                    int gray = (color.R + color.G + color.B) / 3;
-        //                    newColor = Color.FromArgb(gray, gray, gray);
-        //                }
-        //                else
-        //                {
-        //                    int r = color.R;
-        //                    int g = color.G;
-        //                    int b = color.B;
-
-        //                    if (removeRed)
-        //                        r = 0;
-        //                    if (removeGreen)
-        //                        g = 0;
-        //                    if (removeBlue)
-        //                        b = 0;
-
-        //                    newColor = Color.FromArgb(r, g, b);
-        //                }
-
-        //                modifiedBitmap.SetPixel(w, h, newColor);
-        //            }
-        //        }
-
-        //        OnImageFinished(modifiedBitmap);
-        //    }
-        //}
 
         private void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray)
         {

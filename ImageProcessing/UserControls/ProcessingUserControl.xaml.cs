@@ -50,10 +50,10 @@ namespace ImageProcessing.UserControls
 
         private void ButtonPixelateSize_Click(object sender, RoutedEventArgs e)
         {
-            PixelateSizeWindow pixelateSizeWindow = new PixelateSizeWindow(viewModel.PixelateSize);
+            OtherEffectsWindow otherEffects = new OtherEffectsWindow(viewModel.PixelateSize);
 
-            if (pixelateSizeWindow.ShowDialog() == true)
-                viewModel.PixelateSize = pixelateSizeWindow.ViewModel.PixelateSize;
+            if (otherEffects.ShowDialog() == true)
+                viewModel.PixelateSize = otherEffects.ViewModel.PixelateSize;
         }
     }
 }

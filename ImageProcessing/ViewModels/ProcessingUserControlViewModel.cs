@@ -218,6 +218,7 @@ namespace ImageProcessing.ViewModels
             Gamma = 1;
             Invert = false;
             SepiaTone = false;
+            PixelateSize = 0;
 
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);

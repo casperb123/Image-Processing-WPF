@@ -142,13 +142,12 @@
                             Minimum="-1"
                             Maximum="1"
                             SmallChange="0.01"
-                            LargeChange="0.02"
                             Value="{Binding Path=Brightness}"
                             AutoToolTipPlacement="TopLeft"
                             AutoToolTipPrecision="2"
                             Grid.Row="1"
                             mah:SliderHelper.EnableMouseWheel="MouseHover"
-                            mah:SliderHelper.ChangeValueBy="LargeChange" />
+                            mah:SliderHelper.ChangeValueBy="SmallChange" />
                     <mah:NumericUpDown Grid.Row="2"
                                        Minimum="-1"
                                        Maximum="1"
@@ -164,15 +163,14 @@
                             Orientation="Vertical"
                             Minimum="0"
                             Maximum="5"
-                            SmallChange="0"
-                            LargeChange="1"
+                            SmallChange="0.01"
                             Value="{Binding Path=Contrast}"
                             Grid.Row="1"
                             Grid.Column="1"
                             AutoToolTipPlacement="TopLeft"
                             AutoToolTipPrecision="2"
                             mah:SliderHelper.EnableMouseWheel="MouseHover"
-                            mah:SliderHelper.ChangeValueBy="LargeChange" />
+                            mah:SliderHelper.ChangeValueBy="SmallChange" />
                     <mah:NumericUpDown Grid.Row="2"
                                        Grid.Column="1"
                                        Minimum="0"
@@ -190,14 +188,13 @@
                             Minimum="0.01"
                             Maximum="5"
                             SmallChange="0.01"
-                            LargeChange="0.1"
                             Value="{Binding Path=Gamma}"
                             Grid.Row="1"
                             Grid.Column="2"
                             AutoToolTipPlacement="TopLeft"
                             AutoToolTipPrecision="2"
                             mah:SliderHelper.EnableMouseWheel="MouseHover"
-                            mah:SliderHelper.ChangeValueBy="LargeChange" />
+                            mah:SliderHelper.ChangeValueBy="SmallChange" />
                     <mah:NumericUpDown Grid.Row="2"
                                        Grid.Column="2"
                                        Minimum="0.01"
