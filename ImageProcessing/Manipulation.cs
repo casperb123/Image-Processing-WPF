@@ -71,12 +71,9 @@ namespace ImageProcessing
         //    }
         //}
 
-        private void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray, bool clearExistingMatrix = false)
+        private void ApplyColorMatrix(Bitmap bitmap, float[][] matrixArray)
         {
             ImageAttributes attributes = new ImageAttributes();
-            if (clearExistingMatrix)
-                attributes.ClearColorMatrix();
-
             attributes.SetColorMatrix(new ColorMatrix(matrixArray), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
             Graphics graphics = Graphics.FromImage(bitmap);
@@ -159,7 +156,7 @@ namespace ImageProcessing
                     new float[] {brightness, brightness, brightness, 0, 1}
                 };
 
-                ApplyColorMatrix(modifiedBitmap, matrixArray, true);
+                ApplyColorMatrix(modifiedBitmap, matrixArray);
 
                 if (invert)
                 {

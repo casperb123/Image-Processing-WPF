@@ -1,6 +1,11 @@
-﻿using ImageProcessing.ViewModels;
+﻿using ControlzEx.Theming;
+using ImageProcessing.Entities;
+using ImageProcessing.UserControls;
+using ImageProcessing.ViewModels;
 using MahApps.Metro.Controls;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ImageProcessing
 {
@@ -9,7 +14,7 @@ namespace ImageProcessing
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private MainWindowViewModel viewModel;
+        private readonly MainWindowViewModel viewModel;
 
         public MainWindow()
         {
@@ -18,32 +23,33 @@ namespace ImageProcessing
             DataContext = viewModel;
         }
 
-        private void ButtonOpen_Click(object sender, RoutedEventArgs e)
+        private void ButtonSettings_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.OpenFile();
+            flyoutSettings.IsOpen = !flyoutSettings.IsOpen;
         }
 
-        private void ButtonResetImage_Click(object sender, RoutedEventArgs e)
+        private async void FlyoutSettings_IsOpenChanged(object sender, RoutedEventArgs e)
         {
-            viewModel.ResetImage();
+            if (viewModel.SettingsChanged && !flyoutSettings.IsOpen)
+            {
+                await Settings.CurrentSettings.Save();
+                viewModel.SettingsChanged = false;
+            }
         }
 
-        private void SliderHue_ValueChanged(object sender, RangeParameterChangedEventArgs e)
+        private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!IsLoaded)
                 return;
 
-            viewModel.SetBoxColors();
+            string theme = comboBoxTheme.SelectedItem.ToString();
+            string color = comboBoxColor.SelectedItem.ToString();
+            viewModel.ChangeTheme(theme, color);
         }
 
-        private void ButtonModify_Click(object sender, RoutedEventArgs e)
+        private async void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            viewModel.ModifyImage();
-        }
-
-        private void ButtonSaveImage_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.SaveImage();
+            await Settings.CurrentSettings.Save();
         }
     }
 }
