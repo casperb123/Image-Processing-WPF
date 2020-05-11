@@ -223,7 +223,12 @@
                           IsChecked="{Binding Path=SepiaTone}" />
                 <CheckBox x:Name="checkBoxGrayScale"
                           Content="Gray Scale"
+                          Margin="0,0,0,5"
                           IsChecked="{Binding Path=GrayScale}" />
+                <Button x:Name="buttonPixelateSize"
+                        Content="{Binding Path=PixelateSize}"
+                        ContentStringFormat="Pixelate: {0}"
+                        Click="ButtonPixelateSize_Click" />
             </StackPanel>
         </GroupBox>
 

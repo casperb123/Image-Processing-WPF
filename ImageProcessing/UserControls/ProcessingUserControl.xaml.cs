@@ -1,4 +1,5 @@
 ﻿using ImageProcessing.ViewModels;
+using ImageProcessing.Windows;
 using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,14 @@ namespace ImageProcessing.UserControls
         private void ButtonSaveImage_Click(object sender, RoutedEventArgs e)
         {
             viewModel.SaveImage();
+        }
+
+        private void ButtonPixelateSize_Click(object sender, RoutedEventArgs e)
+        {
+            PixelateSizeWindow pixelateSizeWindow = new PixelateSizeWindow(viewModel.PixelateSize);
+
+            if (pixelateSizeWindow.ShowDialog() == true)
+                viewModel.PixelateSize = pixelateSizeWindow.ViewModel.PixelateSize;
         }
     }
 }

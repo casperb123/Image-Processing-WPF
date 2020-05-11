@@ -39,7 +39,6 @@ namespace ImageProcessing.Entities
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string prop)

@@ -36,7 +36,7 @@
                         IsOpenChanged="FlyoutSettings_IsOpenChanged">
                 <StackPanel x:Name="stackPanelFlyoutSettings">
                     <GroupBox Header="Application Settings">
-                        <Grid Margin="10,5">
+                        <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="1*" />

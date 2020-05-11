@@ -91,7 +91,37 @@ namespace ImageProcessing
             graphics.DrawImage(bitmap, rectangle, 0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, attributes);
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone)
+        private Bitmap Pixelate(Bitmap bitmap, int pixelateSize)
+        {
+            Bitmap modifiedBitmap = new Bitmap(bitmap);
+            Rectangle rectangle = new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height);
+
+            for (int x = rectangle.X; x < rectangle.X + rectangle.Width && x < modifiedBitmap.Width; x += pixelateSize)
+            {
+                for (int y = rectangle.Y; y < rectangle.Y + rectangle.Height && y < modifiedBitmap.Height; y += pixelateSize)
+                {
+                    int offsetX = pixelateSize / 2;
+                    int offsetY = pixelateSize / 2;
+
+                    while (x + offsetX >= modifiedBitmap.Width) offsetX--;
+                    while (y + offsetY >= modifiedBitmap.Height) offsetY--;
+
+                    Color pixel = modifiedBitmap.GetPixel(x + offsetX, y + offsetY);
+
+                    for (int xx = x; xx < x + pixelateSize && xx < modifiedBitmap.Width; xx++)
+                    {
+                        for (int yy = y; yy < y + pixelateSize && yy < modifiedBitmap.Height; yy++)
+                        {
+                            modifiedBitmap.SetPixel(xx, yy, pixel);
+                        }
+                    }
+                }
+            }
+
+            return modifiedBitmap;
+        }
+
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, int pixelateSize)
         {
             if (obj is Bitmap bitmap)
             {
@@ -146,6 +176,9 @@ namespace ImageProcessing
 
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
+
+                if (pixelateSize > 0)
+                    modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
 
                 float[][] matrixArray =
                 {

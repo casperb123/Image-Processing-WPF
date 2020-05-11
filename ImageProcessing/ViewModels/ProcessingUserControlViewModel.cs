@@ -24,6 +24,7 @@ namespace ImageProcessing.ViewModels
         private bool sepiaTone;
         private bool grayScale;
         private bool invertedGrayScale;
+        private int pixelateSize;
 
         private MainWindow mainWindow;
         private ProcessingUserControl userControl;
@@ -43,14 +44,13 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool GrayScale
+        public int PixelateSize
         {
-            get { return grayScale; }
+            get { return pixelateSize; }
             set
             {
-                grayScale = value;
-                OnPropertyChanged(nameof(GrayScale));
-                InvertedGrayScale = !value;
+                pixelateSize = value;
+                OnPropertyChanged(nameof(PixelateSize));
             }
         }
 
@@ -61,6 +61,17 @@ namespace ImageProcessing.ViewModels
             {
                 invertedGrayScale = value;
                 OnPropertyChanged(nameof(InvertedGrayScale));
+            }
+        }
+
+        public bool GrayScale
+        {
+            get { return grayScale; }
+            set
+            {
+                grayScale = value;
+                OnPropertyChanged(nameof(GrayScale));
+                InvertedGrayScale = !value;
             }
         }
 
@@ -241,7 +252,7 @@ namespace ImageProcessing.ViewModels
 
         public void ModifyImage()
         {
-            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone));
+            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, PixelateSize));
             thread.Start();
         }
 
