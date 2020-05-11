@@ -10,6 +10,8 @@
                  Title="Image Processing"
                  Height="705"
                  Width="985"
+                 MinWidth="800"
+                 MinHeight="600"
                  Closing="MetroWindow_Closing">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
