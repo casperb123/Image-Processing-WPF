@@ -21,7 +21,7 @@
 
         <Border x:Name="borderOriginal"
                 BorderThickness="2"
-                BorderBrush="Gray"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                 Grid.Column="1"
                 Visibility="Hidden">
             <Image x:Name="imageOriginal"
@@ -29,7 +29,7 @@
         </Border>
         <Border x:Name="borderManipulated"
                 BorderThickness="2"
-                BorderBrush="Gray"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                 Grid.Column="1">
             <Image x:Name="imageManipulated" />
         </Border>
