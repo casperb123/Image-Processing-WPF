@@ -226,6 +226,7 @@ namespace ImageProcessing.ViewModels
             {
                 userControl.rectangleManipulated.Visibility = Visibility.Hidden;
                 userControl.progressRingManipulated.Visibility = Visibility.Hidden;
+                userControl.progressRingManipulated.IsActive = false;
                 userControl.buttonModify.IsEnabled = true;
 
                 ModifiedImage = e.Bitmap;
@@ -310,6 +311,7 @@ namespace ImageProcessing.ViewModels
         public void ModifyImage()
         {
             userControl.rectangleManipulated.Visibility = Visibility.Visible;
+            userControl.progressRingManipulated.IsActive = true;
             userControl.progressRingManipulated.Visibility = Visibility.Visible;
             userControl.buttonModify.IsEnabled = false;
 

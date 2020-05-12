@@ -38,11 +38,12 @@
                            Visibility="Hidden">
                     <Rectangle.Fill>
                         <SolidColorBrush Color="Black"
-                                         Opacity=".8" />
+                                         Opacity=".85" />
                     </Rectangle.Fill>
                 </Rectangle>
                 <mah:ProgressRing x:Name="progressRingManipulated"
-                                  Visibility="Hidden"/>
+                                  Visibility="Hidden"
+                                  IsActive="False" />
             </Grid>
         </Border>
 
