@@ -57,7 +57,7 @@
 
                             <Label Content="Color"
                                    VerticalContentAlignment="Center"
-                                   Grid.Row="1"  />
+                                   Grid.Row="1" />
                             <ComboBox x:Name="comboBoxColor"
                                       Grid.Column="1"
                                       Grid.Row="1"

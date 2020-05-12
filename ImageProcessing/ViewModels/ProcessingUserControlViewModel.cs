@@ -222,8 +222,12 @@ namespace ImageProcessing.ViewModels
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
         {
-            mainWindow.Dispatcher.Invoke(() =>
+            userControl.Dispatcher.Invoke(() =>
             {
+                userControl.rectangleManipulated.Visibility = Visibility.Hidden;
+                userControl.progressRingManipulated.Visibility = Visibility.Hidden;
+                userControl.buttonModify.IsEnabled = true;
+
                 ModifiedImage = e.Bitmap;
                 DisplayImage(e.Bitmap, 2);
             });
@@ -294,8 +298,8 @@ namespace ImageProcessing.ViewModels
         {
             System.Drawing.Color colorMin = manipulation.Hue(MinimumHue);
             System.Drawing.Color colorMax = manipulation.Hue(MaximumHue);
-            System.Windows.Media.Color brushColorMin = System.Windows.Media.Color.FromArgb(colorMin.A, colorMin.R, colorMin.G, colorMin.B);
-            System.Windows.Media.Color brushColorMax = System.Windows.Media.Color.FromArgb(colorMax.A, colorMax.R, colorMax.G, colorMax.B);
+            Color brushColorMin = Color.FromArgb(colorMin.A, colorMin.R, colorMin.G, colorMin.B);
+            Color brushColorMax = Color.FromArgb(colorMax.A, colorMax.R, colorMax.G, colorMax.B);
             Brush brushMin = new SolidColorBrush(brushColorMin);
             Brush brushMax = new SolidColorBrush(brushColorMax);
 
@@ -305,6 +309,10 @@ namespace ImageProcessing.ViewModels
 
         public void ModifyImage()
         {
+            userControl.rectangleManipulated.Visibility = Visibility.Visible;
+            userControl.progressRingManipulated.Visibility = Visibility.Visible;
+            userControl.buttonModify.IsEnabled = false;
+
             Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, pixelate, medianFilter, PixelateSize, MedianSize));
             thread.Start();
         }

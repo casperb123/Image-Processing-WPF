@@ -31,7 +31,19 @@
                 BorderThickness="2"
                 BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                 Grid.Column="1">
-            <Image x:Name="imageManipulated" />
+            <Grid>
+                <Image x:Name="imageManipulated" />
+                
+                <Rectangle x:Name="rectangleManipulated"
+                           Visibility="Hidden">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="Black"
+                                         Opacity=".8" />
+                    </Rectangle.Fill>
+                </Rectangle>
+                <mah:ProgressRing x:Name="progressRingManipulated"
+                                  Visibility="Hidden"/>
+            </Grid>
         </Border>
 
         <StackPanel Margin="0,0,10,0">
