@@ -7,13 +7,14 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Other Effects "
-                 Height="116"
+                 Height="225"
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
                  Closing="MetroWindow_Closing">
     <StackPanel Margin="5">
-        <GroupBox Header="Pixelate">
+        <GroupBox Header="Pixelate"
+                  Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -27,9 +28,12 @@
                 <Label Content="Pixelate Size"
                        HorizontalContentAlignment="Center"
                        Grid.ColumnSpan="2" />
+                <CheckBox x:Name="checkBoxPixelate"
+                          Content="Pixelate"
+                          IsChecked="{Binding Path=Pixelate}" />
 
                 <Slider x:Name="sliderPixelateSize"
-                        Minimum="0"
+                        Minimum="1"
                         Maximum="100"
                         AutoToolTipPlacement="TopLeft"
                         AutoToolTipPrecision="0"
@@ -39,15 +43,60 @@
                         SmallChange="1"
                         Grid.Row="1"
                         Value="{Binding Path=PixelateSize}"
-                        Margin="0,0,5,0" />
+                        Margin="0,0,5,0"
+                        IsEnabled="{Binding Path=Pixelate}" />
                 <mah:NumericUpDown x:Name="numericPixelateSize"
-                                   Minimum="0"
+                                   Minimum="1"
                                    Maximum="100"
                                    Interval="1"
                                    Grid.Column="1"
                                    Grid.Row="1"
                                    Margin="5,0,0,0"
-                                   Value="{Binding Path=PixelateSize}" />
+                                   Value="{Binding Path=PixelateSize}"
+                                   IsEnabled="{Binding Path=Pixelate}" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Median Filter">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Label Content="Median Size"
+                       HorizontalContentAlignment="Center"
+                       Grid.ColumnSpan="2" />
+                <CheckBox x:Name="checkBoxMedianFilter"
+                          Content="Median Filter"
+                          IsChecked="{Binding Path=MedianFilter}" />
+
+                <Slider x:Name="sliderMedianSize"
+                        Minimum="3"
+                        Maximum="15"
+                        AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="0"
+                        mah:SliderHelper.EnableMouseWheel="MouseHover"
+                        mah:SliderHelper.ChangeValueBy="SmallChange"
+                        IsMoveToPointEnabled="True"
+                        SmallChange="1"
+                        Grid.Row="1"
+                        Value="{Binding Path=MedianSize}"
+                        Margin="0,0,5,0"
+                        IsEnabled="{Binding Path=MedianFilter}" />
+                <mah:NumericUpDown x:Name="numericMedianSize"
+                                   Minimum="3"
+                                   Maximum="15"
+                                   Interval="1"
+                                   Grid.Column="1"
+                                   Grid.Row="1"
+                                   Margin="5,0,0,0"
+                                   Value="{Binding Path=MedianSize}"
+                                   IsEnabled="{Binding Path=MedianFilter}" />
             </Grid>
         </GroupBox>
     </StackPanel>

@@ -225,7 +225,14 @@
                 <Button x:Name="buttonPixelateSize"
                         Content="{Binding Path=PixelateSize}"
                         ContentStringFormat="Pixelate: {0}"
-                        Click="ButtonPixelateSize_Click" />
+                        Margin="0,0,0,5"
+                        Foreground="White"
+                        Click="ButtonOtherEffects_Click" />
+                <Button x:Name="buttonMedianSize"
+                        Content="{Binding Path=MedianSize}"
+                        ContentStringFormat="Median Size: {0}"
+                        Foreground="White"
+                        Click="ButtonOtherEffects_Click" />
             </StackPanel>
         </GroupBox>
 

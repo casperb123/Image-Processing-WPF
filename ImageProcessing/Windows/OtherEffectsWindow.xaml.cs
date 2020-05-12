@@ -20,12 +20,12 @@ namespace ImageProcessing.Windows
     /// </summary>
     public partial class OtherEffectsWindow : MetroWindow
     {
-        public PixelateSizeWindowViewModel ViewModel;
+        public OtherEffectsWindowViewModel ViewModel;
 
-        public OtherEffectsWindow(int pixelateSize)
+        public OtherEffectsWindow(bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
         {
             InitializeComponent();
-            ViewModel = new PixelateSizeWindowViewModel(pixelateSize);
+            ViewModel = new OtherEffectsWindowViewModel(pixelate, medianFilter, pixelateSize, medianSize);
             DataContext = ViewModel;
         }
 

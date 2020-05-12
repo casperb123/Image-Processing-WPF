@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 
 namespace ImageProcessing.ViewModels
 {
@@ -25,6 +26,9 @@ namespace ImageProcessing.ViewModels
         private bool grayScale;
         private bool invertedGrayScale;
         private int pixelateSize;
+        private int medianSize;
+        private bool pixelate;
+        private bool medianFilter;
 
         private MainWindow mainWindow;
         private ProcessingUserControl userControl;
@@ -41,6 +45,46 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
+            }
+        }
+
+        public bool Pixelate
+        {
+            get { return pixelate; }
+            set
+            {
+                pixelate = value;
+                OnPropertyChanged(nameof(Pixelate));
+
+                if (value)
+                    userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(0, 150, 0));
+                else
+                    userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+            }
+        }
+
+        public bool MedianFilter
+        {
+            get { return medianFilter; }
+            set
+            {
+                medianFilter = value;
+                OnPropertyChanged(nameof(MedianFilter));
+
+                if (value)
+                    userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(0, 150, 0));
+                else
+                    userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+            }
+        }
+
+        public int MedianSize
+        {
+            get { return medianSize; }
+            set
+            {
+                medianSize = value;
+                OnPropertyChanged(nameof(MedianSize));
             }
         }
 
@@ -162,6 +206,8 @@ namespace ImageProcessing.ViewModels
             Gamma = 1;
             showChanges = true;
             invertedGrayScale = true;
+            PixelateSize = 1;
+            MedianSize = 3;
 
             this.mainWindow = mainWindow;
             this.userControl = userControl;
@@ -169,6 +215,9 @@ namespace ImageProcessing.ViewModels
             fileOperation = new FileOperation();
 
             manipulation.ImageFinished += OnImageFinished;
+
+            userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+            userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
         }
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
@@ -218,7 +267,10 @@ namespace ImageProcessing.ViewModels
             Gamma = 1;
             Invert = false;
             SepiaTone = false;
-            PixelateSize = 0;
+            PixelateSize = 1;
+            MedianSize = 3;
+            Pixelate = false;
+            MedianFilter = false;
 
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);
@@ -253,7 +305,7 @@ namespace ImageProcessing.ViewModels
 
         public void ModifyImage()
         {
-            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, PixelateSize));
+            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, pixelate, medianFilter, PixelateSize, MedianSize));
             thread.Start();
         }
 

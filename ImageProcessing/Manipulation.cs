@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
 using Size = System.Drawing.Size;
@@ -77,7 +78,59 @@ namespace ImageProcessing
             return modifiedBitmap;
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, int pixelateSize)
+        private Bitmap MedianFilter(Bitmap sourceBitmap, int matrixSize)
+        {
+            Rectangle rectangle = new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
+            BitmapData sourceData = sourceBitmap.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
+            byte[] resultBuffer = new byte[sourceData.Stride * sourceData.Height];
+
+            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            sourceBitmap.UnlockBits(sourceData);
+
+            int filterOffset = (matrixSize - 1) / 2;
+
+            List<int> neighbourPixels = new List<int>();
+            byte[] middlePixel;
+
+            for (int offsetY = filterOffset; offsetY < sourceBitmap.Height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX < sourceBitmap.Width - filterOffset; offsetX++)
+                {
+                    int byteOffset = offsetY * sourceData.Stride + offsetX * 4;
+                    neighbourPixels.Clear();
+
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
+                        {
+                            int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
+                            neighbourPixels.Add(BitConverter.ToInt32(pixelBuffer, calcOffset));
+                        }
+                    }
+
+                    neighbourPixels.Sort();
+                    middlePixel = BitConverter.GetBytes(neighbourPixels[filterOffset]);
+
+                    resultBuffer[byteOffset] = middlePixel[0];
+                    resultBuffer[byteOffset + 1] = middlePixel[1];
+                    resultBuffer[byteOffset + 2] = middlePixel[2];
+                    resultBuffer[byteOffset + 3] = middlePixel[3];
+                }
+            }
+
+            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
+            Rectangle resultRectangle = new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height);
+            BitmapData resultData = resultBitmap.LockBits(resultRectangle, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
+            resultBitmap.UnlockBits(resultData);
+
+            return resultBitmap;
+        }
+
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
         {
             if (obj is Bitmap bitmap)
             {
@@ -133,7 +186,10 @@ namespace ImageProcessing
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
 
-                if (pixelateSize > 0)
+                if (medianFilter)
+                    modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+
+                if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
 
                 float[][] matrixArray =

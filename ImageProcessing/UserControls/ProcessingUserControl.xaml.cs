@@ -3,6 +3,7 @@ using ImageProcessing.Windows;
 using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ImageProcessing.UserControls
 {
@@ -48,12 +49,17 @@ namespace ImageProcessing.UserControls
             viewModel.SaveImage();
         }
 
-        private void ButtonPixelateSize_Click(object sender, RoutedEventArgs e)
+        private void ButtonOtherEffects_Click(object sender, RoutedEventArgs e)
         {
-            OtherEffectsWindow otherEffects = new OtherEffectsWindow(viewModel.PixelateSize);
+            OtherEffectsWindow otherEffects = new OtherEffectsWindow(viewModel.Pixelate, viewModel.MedianFilter, viewModel.PixelateSize, viewModel.MedianSize);
 
             if (otherEffects.ShowDialog() == true)
+            {
+                viewModel.Pixelate = otherEffects.ViewModel.Pixelate;
+                viewModel.MedianFilter = otherEffects.ViewModel.MedianFilter;
                 viewModel.PixelateSize = otherEffects.ViewModel.PixelateSize;
+                viewModel.MedianSize = otherEffects.ViewModel.MedianSize;
+            }
         }
     }
 }
