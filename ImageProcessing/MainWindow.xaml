@@ -5,21 +5,38 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:ImageProcessing"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  xmlns:entities="clr-namespace:ImageProcessing.Entities;assembly=ImageProcessing.Entities"
                  mc:Ignorable="d"
                  Title="Image Processing"
                  Height="740"
-                 Width="1050"
+                 Width="1025"
                  MinWidth="800"
-                 MinHeight="600"
+                 MinHeight="613"
+                 ResizeMode="CanResizeWithGrip"
+                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  Closing="MetroWindow_Closing">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <Button x:Name="buttonSettings"
-                    Content="Settings"
                     Cursor="Hand"
+                    Content="Settings"
                     ToolTip="Open/close the settings flyout"
-                    Click="ButtonSettings_Click" />
+                    Click="ButtonSettings_Click">
+                <Button.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconModern Width="20"
+                                                      Height="20"
+                                                      VerticalAlignment="Center"
+                                                      Kind="Settings" />
+                            <TextBlock Margin="4,0,0,0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </Button.ContentTemplate>
+            </Button>
         </mah:WindowCommands>
     </mah:MetroWindow.RightWindowCommands>
 

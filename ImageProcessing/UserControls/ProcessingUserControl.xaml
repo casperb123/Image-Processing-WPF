@@ -30,14 +30,15 @@
         <Border x:Name="borderManipulated"
                 BorderThickness="2"
                 BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-                Grid.Column="1">
+                Grid.Column="1"
+                Margin="0,0,0,5">
             <Grid>
                 <Image x:Name="imageManipulated" />
                 
                 <Rectangle x:Name="rectangleManipulated"
                            Visibility="Hidden">
                     <Rectangle.Fill>
-                        <SolidColorBrush Color="Black"
+                        <SolidColorBrush Color="{DynamicResource MahApps.Colors.ThemeBackground}"
                                          Opacity=".85" />
                     </Rectangle.Fill>
                 </Rectangle>

@@ -78,34 +78,34 @@ namespace ImageProcessing
             return modifiedBitmap;
         }
 
-        private Bitmap MedianFilter(Bitmap sourceBitmap, int matrixSize)
+        private Bitmap MedianFilter(Bitmap bitmap, int matrixSize)
         {
-            Rectangle rectangle = new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height);
-            BitmapData sourceData = sourceBitmap.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            BitmapData bitmapData = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
-            byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
-            byte[] resultBuffer = new byte[sourceData.Stride * sourceData.Height];
+            byte[] pixelBuffer = new byte[bitmapData.Stride * bitmapData.Height];
+            byte[] resultBuffer = new byte[bitmapData.Stride * bitmapData.Height];
 
-            Marshal.Copy(sourceData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
-            sourceBitmap.UnlockBits(sourceData);
+            Marshal.Copy(bitmapData.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            bitmap.UnlockBits(bitmapData);
 
             int filterOffset = (matrixSize - 1) / 2;
 
             List<int> neighbourPixels = new List<int>();
             byte[] middlePixel;
 
-            for (int offsetY = filterOffset; offsetY < sourceBitmap.Height - filterOffset; offsetY++)
+            for (int offsetY = filterOffset; offsetY < bitmap.Height - filterOffset; offsetY++)
             {
-                for (int offsetX = filterOffset; offsetX < sourceBitmap.Width - filterOffset; offsetX++)
+                for (int offsetX = filterOffset; offsetX < bitmap.Width - filterOffset; offsetX++)
                 {
-                    int byteOffset = offsetY * sourceData.Stride + offsetX * 4;
+                    int byteOffset = offsetY * bitmapData.Stride + offsetX * 4;
                     neighbourPixels.Clear();
 
                     for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
                     {
                         for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
                         {
-                            int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
+                            int calcOffset = byteOffset + (filterX * 4) + (filterY * bitmapData.Stride);
                             neighbourPixels.Add(BitConverter.ToInt32(pixelBuffer, calcOffset));
                         }
                     }
@@ -120,7 +120,7 @@ namespace ImageProcessing
                 }
             }
 
-            Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
+            Bitmap resultBitmap = new Bitmap(bitmap.Width, bitmap.Height);
             Rectangle resultRectangle = new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height);
             BitmapData resultData = resultBitmap.LockBits(resultRectangle, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
 
