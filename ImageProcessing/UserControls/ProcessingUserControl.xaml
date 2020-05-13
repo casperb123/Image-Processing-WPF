@@ -23,7 +23,8 @@
                 BorderThickness="2"
                 BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                 Grid.Column="1"
-                Visibility="Hidden">
+                Visibility="Hidden"
+                Margin="0,0,0,5">
             <Image x:Name="imageOriginal"
                    Grid.Column="1" />
         </Border>
