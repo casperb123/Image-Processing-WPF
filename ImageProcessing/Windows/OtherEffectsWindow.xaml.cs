@@ -22,16 +22,16 @@ namespace ImageProcessing.Windows
     {
         public OtherEffectsWindowViewModel ViewModel;
 
-        public OtherEffectsWindow(bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
+        public OtherEffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
         {
             InitializeComponent();
-            ViewModel = new OtherEffectsWindowViewModel(pixelate, medianFilter, pixelateSize, medianSize);
+            ViewModel = new OtherEffectsWindowViewModel(processingUserControlViewModel, pixelate, medianFilter, pixelateSize, medianSize);
             DataContext = ViewModel;
         }
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
-            DialogResult = true;
+            ViewModel.ProcessingUserControlViewModel.OtherEffectsWindow = null;
         }
     }
 }

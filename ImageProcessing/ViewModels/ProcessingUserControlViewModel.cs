@@ -1,4 +1,5 @@
 ﻿using ImageProcessing.UserControls;
+using ImageProcessing.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using System.ComponentModel;
@@ -30,7 +31,7 @@ namespace ImageProcessing.ViewModels
         private bool pixelate;
         private bool medianFilter;
 
-        private MainWindow mainWindow;
+        public MainWindow MainWindow;
         private ProcessingUserControl userControl;
         private Manipulation manipulation;
         private FileOperation fileOperation;
@@ -57,9 +58,9 @@ namespace ImageProcessing.ViewModels
                 OnPropertyChanged(nameof(Pixelate));
 
                 if (value)
-                    userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(0, 150, 0));
+                    userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
                 else
-                    userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+                    userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             }
         }
 
@@ -72,9 +73,9 @@ namespace ImageProcessing.ViewModels
                 OnPropertyChanged(nameof(MedianFilter));
 
                 if (value)
-                    userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(0, 150, 0));
+                    userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
                 else
-                    userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+                    userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             }
         }
 
@@ -143,6 +144,8 @@ namespace ImageProcessing.ViewModels
 
         public Bitmap OriginalImage { get; set; }
 
+        public OtherEffectsWindow OtherEffectsWindow { get; set; }
+
         public float Gamma
         {
             get { return gamma; }
@@ -209,15 +212,15 @@ namespace ImageProcessing.ViewModels
             PixelateSize = 1;
             MedianSize = 3;
 
-            this.mainWindow = mainWindow;
+            this.MainWindow = mainWindow;
             this.userControl = userControl;
             manipulation = new Manipulation();
             fileOperation = new FileOperation();
 
             manipulation.ImageFinished += OnImageFinished;
 
-            userControl.buttonPixelateSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
-            userControl.buttonMedianSize.Background = new SolidColorBrush(Color.FromRgb(150, 0, 0));
+            userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
+            userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
         }
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
@@ -261,7 +264,7 @@ namespace ImageProcessing.ViewModels
 
         public async void ResetImage()
         {
-            MessageDialogResult result = await mainWindow.ShowMessageAsync("Reset Image", "Are you sure that you want to reset the image?", MessageDialogStyle.AffirmativeAndNegative);
+            MessageDialogResult result = await MainWindow.ShowMessageAsync("Reset Image", "Are you sure that you want to reset the image?", MessageDialogStyle.AffirmativeAndNegative);
             if (result == MessageDialogResult.Negative)
                 return;
 
@@ -334,7 +337,7 @@ namespace ImageProcessing.ViewModels
                     encoder.Save(stream);
                 }
 
-                await mainWindow.ShowMessageAsync("Image Saved", "The image has been successfully saved!");
+                await MainWindow.ShowMessageAsync("Image Saved", "The image has been successfully saved!");
             }
         }
     }

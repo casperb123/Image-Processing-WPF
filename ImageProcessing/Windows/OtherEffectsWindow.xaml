@@ -11,6 +11,8 @@
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
+                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                 Topmost="True"
                  Closing="MetroWindow_Closing">
     <StackPanel Margin="5">
         <GroupBox Header="Pixelate"

@@ -12,6 +12,8 @@ namespace ImageProcessing.ViewModels
         private bool pixelate;
         private bool medianFilter;
 
+        public ProcessingUserControlViewModel ProcessingUserControlViewModel;
+
         public bool MedianFilter
         {
             get { return medianFilter; }
@@ -19,6 +21,8 @@ namespace ImageProcessing.ViewModels
             {
                 medianFilter = value;
                 OnPropertyChanged(nameof(medianFilter));
+
+                ProcessingUserControlViewModel.MedianFilter = value;
             }
         }
 
@@ -29,6 +33,8 @@ namespace ImageProcessing.ViewModels
             {
                 pixelate = value;
                 OnPropertyChanged(nameof(Pixelate));
+
+                ProcessingUserControlViewModel.Pixelate = value;
             }
         }
 
@@ -39,6 +45,8 @@ namespace ImageProcessing.ViewModels
             {
                 medianSize = value;
                 OnPropertyChanged(nameof(MedianSize));
+
+                ProcessingUserControlViewModel.MedianSize = value;
             }
         }
 
@@ -49,6 +57,8 @@ namespace ImageProcessing.ViewModels
             {
                 pixelateSize = value;
                 OnPropertyChanged(nameof(PixelateSize));
+
+                ProcessingUserControlViewModel.PixelateSize = value;
             }
         }
 
@@ -60,8 +70,9 @@ namespace ImageProcessing.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public OtherEffectsWindowViewModel(bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
+        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
         {
+            this.ProcessingUserControlViewModel = processingUserControlViewModel;
             Pixelate = pixelate;
             MedianFilter = medianFilter;
             PixelateSize = pixelateSize;

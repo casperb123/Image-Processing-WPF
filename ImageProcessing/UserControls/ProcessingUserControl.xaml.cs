@@ -12,23 +12,23 @@ namespace ImageProcessing.UserControls
     /// </summary>
     public partial class ProcessingUserControl : UserControl
     {
-        private ProcessingUserControlViewModel viewModel;
+        public ProcessingUserControlViewModel ViewModel;
 
         public ProcessingUserControl(MainWindow mainWindow)
         {
             InitializeComponent();
-            viewModel = new ProcessingUserControlViewModel(mainWindow, this);
-            DataContext = viewModel;
+            ViewModel = new ProcessingUserControlViewModel(mainWindow, this);
+            DataContext = ViewModel;
         }
 
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.OpenFile();
+            ViewModel.OpenFile();
         }
 
         private void ButtonResetImage_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.ResetImage();
+            ViewModel.ResetImage();
         }
 
         private void SliderHue_ValueChanged(object sender, RangeParameterChangedEventArgs e)
@@ -36,30 +36,28 @@ namespace ImageProcessing.UserControls
             if (!IsLoaded)
                 return;
 
-            viewModel.SetBoxColors();
+            ViewModel.SetBoxColors();
         }
 
         private void ButtonModify_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.ModifyImage();
+            ViewModel.ModifyImage();
         }
 
         private void ButtonSaveImage_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.SaveImage();
+            ViewModel.SaveImage();
         }
 
         private void ButtonOtherEffects_Click(object sender, RoutedEventArgs e)
         {
-            OtherEffectsWindow otherEffects = new OtherEffectsWindow(viewModel.Pixelate, viewModel.MedianFilter, viewModel.PixelateSize, viewModel.MedianSize);
-
-            if (otherEffects.ShowDialog() == true)
+            if (ViewModel.OtherEffectsWindow is null)
             {
-                viewModel.Pixelate = otherEffects.ViewModel.Pixelate;
-                viewModel.MedianFilter = otherEffects.ViewModel.MedianFilter;
-                viewModel.PixelateSize = otherEffects.ViewModel.PixelateSize;
-                viewModel.MedianSize = otherEffects.ViewModel.MedianSize;
+                ViewModel.OtherEffectsWindow = new OtherEffectsWindow(ViewModel, ViewModel.Pixelate, ViewModel.MedianFilter, ViewModel.PixelateSize, ViewModel.MedianSize);
+                ViewModel.OtherEffectsWindow.Show();
             }
+            else
+                ViewModel.OtherEffectsWindow.Focus();
         }
     }
 }
