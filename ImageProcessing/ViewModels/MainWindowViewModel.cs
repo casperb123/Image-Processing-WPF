@@ -1,20 +1,19 @@
 ﻿using ControlzEx.Theming;
 using ImageProcessing.UserControls;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Windows;
 
 namespace ImageProcessing.ViewModels
 {
     public class MainWindowViewModel
     {
+        public ProcessingUserControlViewModel ProcessingUserControlViewModel;
+
         public bool SettingsChanged { get; set; }
 
         public MainWindowViewModel(MainWindow mainWindow)
         {
             ProcessingUserControl processingUserControl = new ProcessingUserControl(mainWindow);
+            ProcessingUserControlViewModel = processingUserControl.ViewModel;
             mainWindow.userControlProcessing.Content = processingUserControl;
 
             mainWindow.comboBoxTheme.ItemsSource = ThemeManager.Current.BaseColors;

@@ -1,11 +1,9 @@
-﻿using ControlzEx.Theming;
-using ImageProcessing.Entities;
-using ImageProcessing.UserControls;
+﻿using ImageProcessing.Entities;
 using ImageProcessing.ViewModels;
 using MahApps.Metro.Controls;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace ImageProcessing
 {
@@ -47,9 +45,11 @@ namespace ImageProcessing
             viewModel.ChangeTheme(theme, color);
         }
 
-        private async void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
             await Settings.CurrentSettings.Save();
+            if (viewModel.ProcessingUserControlViewModel.OtherEffectsWindow != null)
+                viewModel.ProcessingUserControlViewModel.OtherEffectsWindow.Close();
         }
     }
 }

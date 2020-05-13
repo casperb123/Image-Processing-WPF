@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
-using Size = System.Drawing.Size;
 
 namespace ImageProcessing
 {
@@ -186,13 +185,13 @@ namespace ImageProcessing
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
 
-                if (medianFilter)
-                    modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
-
                 if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
 
-                float[][] matrixArray =
+                if (medianFilter)
+                    modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+
+                float[][] brightnessContrastArray =
                 {
                     new float[] {contrast, 0, 0, 0, 0}, // scale red
                     new float[] {0, contrast, 0, 0, 0}, // scale green
@@ -201,7 +200,7 @@ namespace ImageProcessing
                     new float[] {brightness, brightness, brightness, 0, 1}
                 };
 
-                ApplyColorMatrix(modifiedBitmap, matrixArray);
+                ApplyColorMatrix(modifiedBitmap, brightnessContrastArray);
 
                 if (invert)
                 {
