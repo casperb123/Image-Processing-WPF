@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ImageProcessing.Entities;
+using ImageProcessing.Entities.Filters;
+using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -129,7 +132,7 @@ namespace ImageProcessing
             return resultBitmap;
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, int pixelateSize, ConvolutionFilterBase filter, bool medianFilter, int medianSize)
         {
             if (obj is Bitmap bitmap)
             {
@@ -184,6 +187,8 @@ namespace ImageProcessing
 
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
+
+                modifiedBitmap = modifiedBitmap.ConvolutionFilter(filter);
 
                 if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);

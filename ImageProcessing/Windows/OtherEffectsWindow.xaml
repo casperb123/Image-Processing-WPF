@@ -7,7 +7,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Other Effects "
-                 Height="225"
+                 Height="403"
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
@@ -59,7 +59,8 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Median Filter">
+        <GroupBox Header="Median Filter"
+                  Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -85,7 +86,7 @@
                         mah:SliderHelper.EnableMouseWheel="MouseHover"
                         mah:SliderHelper.ChangeValueBy="SmallChange"
                         IsMoveToPointEnabled="True"
-                        SmallChange="1"
+                        SmallChange="2"
                         Grid.Row="1"
                         Value="{Binding Path=MedianSize}"
                         Margin="0,0,5,0"
@@ -93,12 +94,56 @@
                 <mah:NumericUpDown x:Name="numericMedianSize"
                                    Minimum="3"
                                    Maximum="15"
-                                   Interval="1"
+                                   Interval="2"
                                    Grid.Column="1"
                                    Grid.Row="1"
                                    Margin="5,0,0,0"
                                    Value="{Binding Path=MedianSize}"
                                    IsEnabled="{Binding Path=MedianFilter}" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Blur Filter">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width=".5*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <CheckBox x:Name="checkBoxBlurFilter"
+                          Content="Blur Filter"
+                          IsChecked="{Binding Path=BlurFilter}" />
+                <ComboBox x:Name="comboBoxBlurFilterSize"
+                          SelectedItem="{Binding Path=BlurFilterSize}"
+                          ItemsSource="{Binding Path=BlurFilterSizes}"
+                          Grid.Column="1"
+                          Grid.ColumnSpan="2"
+                          Margin="0,0,0,5" />
+
+                <Slider x:Name="sliderBlurFilterAmount"
+                        Minimum=".2"
+                        Maximum="4"
+                        AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="2"
+                        mah:SliderHelper.EnableMouseWheel="MouseHover"
+                        mah:SliderHelper.ChangeValueBy="SmallChange"
+                        IsMoveToPointEnabled="True"
+                        SmallChange=".1"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,5,0" />
+                <mah:NumericUpDown x:Name="numericBlurFilterAmount"
+                                   Minimum=".2"
+                                   Maximum="4"
+                                   Interval=".1"
+                                   Grid.Row="1"
+                                   Grid.Column="2"
+                                   Margin="5,0,0,0" />
             </Grid>
         </GroupBox>
     </StackPanel>

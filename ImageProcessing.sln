@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessing", "ImageProcessing\ImageProcessing.csproj", "{CCE974EC-CB58-4895-B803-527E6F323196}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessing.Entities", "ImageProcessing.Entities\ImageProcessing.Entities.csproj", "{F6DE844C-12F2-4A39-800B-2120196BB922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessing.Entities", "ImageProcessing.Entities\ImageProcessing.Entities.csproj", "{F6DE844C-12F2-4A39-800B-2120196BB922}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

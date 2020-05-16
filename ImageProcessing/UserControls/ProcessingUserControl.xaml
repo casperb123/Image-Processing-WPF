@@ -247,7 +247,13 @@
                         Content="{Binding Path=MedianSize}"
                         ContentStringFormat="Median Filter: {0}"
                         Focusable="False"
+                        Margin="0,0,0,5"
                         Click="ButtonOtherEffects_Click" />
+
+                <ComboBox x:Name="comboBoxFilter"
+                          SelectedItem="{Binding Path=Filter}"
+                          ItemsSource="{Binding Path=Filters}" 
+                          DisplayMemberPath="FilterName" />
             </StackPanel>
         </GroupBox>
 
