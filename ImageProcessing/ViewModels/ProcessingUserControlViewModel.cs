@@ -1,10 +1,8 @@
 ﻿using ImageProcessing.Entities;
-using ImageProcessing.Entities.Filters;
 using ImageProcessing.UserControls;
 using ImageProcessing.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
@@ -34,6 +32,8 @@ namespace ImageProcessing.ViewModels
         private int medianSize;
         private bool pixelate;
         private bool medianFilter;
+        private bool blurFilter;
+        private int blurAmount;
 
         private ConvolutionFilterBase filter;
         private ObservableCollection<ConvolutionFilterBase> filters;
@@ -53,6 +53,31 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
+            }
+        }
+
+        public int BlurAmount
+        {
+            get { return blurAmount; }
+            set
+            {
+                blurAmount = value;
+                OnPropertyChanged(nameof(BlurAmount));
+            }
+        }
+
+        public bool BlurFilter
+        {
+            get { return blurFilter; }
+            set
+            {
+                blurFilter = value;
+                OnPropertyChanged(nameof(BlurFilter));
+
+                if (value)
+                    userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
+                else
+                    userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             }
         }
 
@@ -238,34 +263,35 @@ namespace ImageProcessing.ViewModels
             invertedGrayScale = true;
             PixelateSize = 1;
             MedianSize = 3;
+            BlurAmount = 3;
 
-            Filters = new ObservableCollection<ConvolutionFilterBase>
-            {
-                new Blur3x3Filter(),
-                new Blur5x5Filter(),
-                new Gaussian3x3BlurFilter(),
-                new Gaussian5x5BlurFilter(),
-                new MotionBlurFilter(),
-                new MotionBlurLeftToRightFilter(),
-                new MotionBlurRightToLeftFilter(),
-                new SoftenFilter(),
-                new SharpenFilter(),
-                new Sharpen3x3Filter(),
-                new Sharpen3x3FactorFilter(),
-                new Sharpen5x5Filter(),
-                new IntenseSharpenFilter(),
-                new EdgeDetectionFilter(),
-                new EdgeDetection45DegreeFilter(),
-                new HorizontalEdgeDetectionFilter(),
-                new VerticalEdgeDetectionFilter(),
-                new EdgeDetectionTopLeftBottomRightFilter(),
-                new EmbossFilter(),
-                new Emboss45DegreeFilter(),
-                new EmbossTopLeftBottomRightFilter(),
-                new IntenseEmbossFilter(),
-                new HighPass3x3Filter()
-            };
-            Filter = Filters[0];
+            //Filters = new ObservableCollection<ConvolutionFilterBase>
+            //{
+            //    new Blur3x3Filter(),
+            //    new Blur5x5Filter(),
+            //    new Gaussian3x3BlurFilter(),
+            //    new Gaussian5x5BlurFilter(),
+            //    new MotionBlurFilter(),
+            //    new MotionBlurLeftToRightFilter(),
+            //    new MotionBlurRightToLeftFilter(),
+            //    new SoftenFilter(),
+            //    new SharpenFilter(),
+            //    new Sharpen3x3Filter(),
+            //    new Sharpen3x3FactorFilter(),
+            //    new Sharpen5x5Filter(),
+            //    new IntenseSharpenFilter(),
+            //    new EdgeDetectionFilter(),
+            //    new EdgeDetection45DegreeFilter(),
+            //    new HorizontalEdgeDetectionFilter(),
+            //    new VerticalEdgeDetectionFilter(),
+            //    new EdgeDetectionTopLeftBottomRightFilter(),
+            //    new EmbossFilter(),
+            //    new Emboss45DegreeFilter(),
+            //    new EmbossTopLeftBottomRightFilter(),
+            //    new IntenseEmbossFilter(),
+            //    new HighPass3x3Filter()
+            //};
+            //Filter = Filters[0];
 
             this.MainWindow = mainWindow;
             this.userControl = userControl;
@@ -276,6 +302,7 @@ namespace ImageProcessing.ViewModels
 
             userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
+            userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
         }
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
@@ -373,7 +400,7 @@ namespace ImageProcessing.ViewModels
             userControl.progressRingManipulated.Visibility = Visibility.Visible;
             userControl.buttonModify.IsEnabled = false;
 
-            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, Pixelate, PixelateSize, Filter, MedianFilter, MedianSize));
+            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, Pixelate, PixelateSize, MedianFilter, MedianSize, BlurFilter, BlurAmount));
             thread.Start();
         }
 

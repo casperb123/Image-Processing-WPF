@@ -132,7 +132,7 @@ namespace ImageProcessing
             return resultBitmap;
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, int pixelateSize, ConvolutionFilterBase filter, bool medianFilter, int medianSize)
+        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, int pixelateSize, bool medianFilter, int medianSize, bool blurFilter, int blurAmount)
         {
             if (obj is Bitmap bitmap)
             {
@@ -188,7 +188,11 @@ namespace ImageProcessing
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
 
-                modifiedBitmap = modifiedBitmap.ConvolutionFilter(filter);
+                if (blurFilter)
+                {
+                    BlurFilter filter = new BlurFilter(blurAmount);
+                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(filter);
+                }
 
                 if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);

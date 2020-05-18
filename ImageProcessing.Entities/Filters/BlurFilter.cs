@@ -1,238 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ImageProcessing.Entities.Filters
 {
-    public class Blur3x3Filter : ConvolutionFilterBase
+    public class BlurFilter : ConvolutionFilterBase
     {
-        public override string FilterName
+        public override string FilterName { get; set; }
+        public override double Factor { get; set; }
+        public override double Bias { get; set; }
+        public override double[,] FilterMatrix { get; set; }
+
+        public BlurFilter(int amount)
         {
-            get { return "Blur3x3Filter"; }
-        }
+            FilterName = $"Blur{amount}x{amount}Filter";
 
-        private double factor = 1.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
+            FilterMatrix = new double[amount, amount];
 
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
+            bool increase = true;
+            int amounts = 1;
+            int totalAmount = 0;
+            for (int i = 0; i < amount; i++)
+            {
+                int index = amount / 2;
+                FilterMatrix[i, index] = 1;
+                totalAmount++;
 
-        private double[,] filterMatrix =
-            new double[,] { { 0.0, 0.2, 0.0, },
-                            { 0.2, 0.2, 0.2, },
-                            { 0.0, 0.2, 0.0, }, };
+                for (int j = 1; j < amounts; j++)
+                {
+                    FilterMatrix[i, index + j] = 1;
+                    totalAmount++;
+                }
 
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
+                for (int j = 1; j < amounts; j++)
+                {
+                    FilterMatrix[i, index - j] = 1;
+                    totalAmount++;
+                }
 
-    public class Blur5x5Filter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "Blur5x5Filter"; }
-        }
+                if (amounts == (amount / 2) + 1)
+                    increase = false;
 
-        private double factor = 1.0 / 13.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
+                if (increase)
+                    amounts++;
+                else
+                    amounts--;
+            }
 
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
+            Factor = 1 / (1d * totalAmount);
 
-        private double[,] filterMatrix =
-            new double[,] { { 0, 0, 1, 0, 0, },
-                            { 0, 1, 1, 1, 0, },
-                            { 1, 1, 1, 1, 1, },
-                            { 0, 1, 1, 1, 0, },
-                            { 0, 0, 1, 0, 0, }, };
+            //if (filterName == "3x3")
+            //{
+            //    //FilterMatrix = new double[,]
+            //    //{
+            //    //    { 0, amount, 0 },
+            //    //    { amount, amount, amount },
+            //    //    { 0, amount, 0 }
+            //    //};
 
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
+            //    FilterMatrix = new double[amount, amount];
 
-    public class Gaussian3x3BlurFilter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "Gaussian3x3BlurFilter"; }
-        }
+            //    bool increase = true;
+            //    int amounts = 1;
+            //    for (int i = 0; i < amount; i++)
+            //    {
+            //        for (int j = 0; j < amounts; j++)
+            //        {
+            //            double divided = amount / 2;
+            //            int index = (int)Math.Round(divided);
+            //            int lol = 1;
+            //        }
 
-        private double factor = 1.0 / 16.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
+            //        if (amounts == 3)
+            //            increase = false;
 
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
+            //        if (increase)
+            //            amounts += 2;
+            //        else
+            //            amounts -= 2;
+            //    }
 
-        private double[,] filterMatrix =
-            new double[,] { { 1, 2, 1, },
-                            { 2, 4, 2, },
-                            { 1, 2, 1, }, };
+            //    Factor = 1 / (amount * 5);
+            //}
+            //else if (filterName == "5x5")
+            //{
+            //    FilterMatrix = new double[,]
+            //    {
+            //        { 0, 0, amount, 0, 0 },
+            //        { 0, amount, amount, amount, 0 },
+            //        { amount, amount, amount, amount, amount },
+            //        { 0, amount, amount, amount, 0 },
+            //        { 0, 0, amount, 0, 0 }
+            //    };
 
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
+            //    Factor = 1 / (amount * 13);
+            //}
+            //else if (filterName == "7x7")
+            //{
+            //    FilterMatrix = new double[,]
+            //    {
+            //        { 0, 0, 0, amount, 0, 0, 0 },
+            //        { 0, 0, amount, amount, amount, 0, 0 },
+            //        { 0, amount, amount, amount, amount, amount, 0 },
+            //        { amount, amount, amount, amount, amount, amount, amount },
+            //        { 0, amount, amount, amount, amount, amount, 0 },
+            //        { 0, 0, amount, amount, amount, 0, 0 },
+            //        { 0, 0, 0, amount, 0, 0, 0 }
+            //    };
 
-    public class Gaussian5x5BlurFilter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "Gaussian5x5BlurFilter"; }
-        }
+            //    Factor = 1 / (amount * 25);
+            //}
+            //else if (filterName == "9x9")
+            //{
+            //    FilterMatrix = new double[,]
+            //    {
+            //        { 0, 0, 0, 0, amount, 0, 0, 0, 0 },
+            //        { 0, 0, 0, amount, amount, amount, 0, 0, 0 },
+            //        { 0, 0, amount, amount, amount, amount, amount, 0, 0 },
+            //        { 0, amount, amount, amount, amount, amount, amount, amount, 0 },
+            //        { amount, amount, amount, amount, amount, amount, amount, amount, amount },
+            //        { 0, amount, amount, amount, amount, amount, amount, amount, 0 },
+            //        { 0, 0, amount, amount, amount, amount, amount, 0, 0 },
+            //        { 0, 0, 0, amount, amount, amount, 0, 0, 0 },
+            //        { 0, 0, 0, 0, amount, 0, 0, 0, 0 }
+            //    };
 
-        private double factor = 1.0 / 159.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
-
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
-
-        private double[,] filterMatrix =
-            new double[,] { { 2, 04, 05, 04, 2 },
-                            { 4, 09, 12, 09, 4 },
-                            { 5, 12, 15, 12, 5 },
-                            { 4, 09, 12, 09, 4 },
-                            { 2, 04, 05, 04, 2 }, };
-
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
-
-    public class MotionBlurFilter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "MotionBlurFilter"; }
-        }
-
-        private double factor = 1.0 / 18.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
-
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
-
-        private double[,] filterMatrix =
-            new double[,] { {1, 0, 0, 0, 0, 0, 0, 0, 1,},
-                            {0, 1, 0, 0, 0, 0, 0, 1, 0,},
-                            {0, 0, 1, 0, 0, 0, 1, 0, 0,},
-                            {0, 0, 0, 1, 0, 1, 0, 0, 0,},
-                            {0, 0, 0, 0, 1, 0, 0, 0, 0,},
-                            {0, 0, 0, 1, 0, 1, 0, 0, 0,},
-                            {0, 0, 1, 0, 0, 0, 1, 0, 0,},
-                            {0, 1, 0, 0, 0, 0, 0, 1, 0,},
-                            {1, 0, 0, 0, 0, 0, 0, 0, 1,}, };
-
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
-
-    public class MotionBlurLeftToRightFilter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "MotionBlurLeftToRightFilter"; }
-        }
-
-        private double factor = 1.0 / 9.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
-
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
-
-        private double[,] filterMatrix =
-            new double[,] { {1, 0, 0, 0, 0, 0, 0, 0, 0,},
-                            {0, 1, 0, 0, 0, 0, 0, 0, 0,},
-                            {0, 0, 1, 0, 0, 0, 0, 0, 0,},
-                            {0, 0, 0, 1, 0, 0, 0, 0, 0,},
-                            {0, 0, 0, 0, 1, 0, 0, 0, 0,},
-                            {0, 0, 0, 0, 0, 1, 0, 0, 0,},
-                            {0, 0, 0, 0, 0, 0, 1, 0, 0,},
-                            {0, 0, 0, 0, 0, 0, 0, 1, 0,},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 1,}, };
-
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
-        }
-    }
-
-    public class MotionBlurRightToLeftFilter : ConvolutionFilterBase
-    {
-        public override string FilterName
-        {
-            get { return "MotionBlurRightToLeftFilter"; }
-        }
-
-        private double factor = 1.0 / 9.0;
-        public override double Factor
-        {
-            get { return factor; }
-        }
-
-        private double bias = 0.0;
-        public override double Bias
-        {
-            get { return bias; }
-        }
-
-        private double[,] filterMatrix =
-            new double[,] { {0, 0, 0, 0, 0, 0, 0, 0, 1,},
-                            {0, 0, 0, 0, 0, 0, 0, 1, 0,},
-                            {0, 0, 0, 0, 0, 0, 1, 0, 0,},
-                            {0, 0, 0, 0, 0, 1, 0, 0, 0,},
-                            {0, 0, 0, 0, 1, 0, 0, 0, 0,},
-                            {0, 0, 0, 1, 0, 0, 0, 0, 0,},
-                            {0, 0, 1, 0, 0, 0, 0, 0, 0,},
-                            {0, 1, 0, 0, 0, 0, 0, 0, 0,},
-                            {1, 0, 0, 0, 0, 0, 0, 0, 0,}, };
-
-        public override double[,] FilterMatrix
-        {
-            get { return filterMatrix; }
+            //    Factor = 1 / (amount * 41);
+            //}
         }
     }
 }

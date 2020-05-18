@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
 
@@ -11,8 +12,34 @@ namespace ImageProcessing.ViewModels
         private int medianSize;
         private bool pixelate;
         private bool medianFilter;
+        private bool blurFilter;
+        private int blurFilterAmount;
 
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
+
+        public int BlurFilterAmount
+        {
+            get { return blurFilterAmount; }
+            set
+            {
+                blurFilterAmount = value;
+                OnPropertyChanged(nameof(BlurFilterAmount));
+
+                ProcessingUserControlViewModel.BlurAmount = blurFilterAmount;
+            }
+        }
+
+        public bool BlurFilter
+        {
+            get { return blurFilter; }
+            set
+            {
+                blurFilter = value;
+                OnPropertyChanged(nameof(BlurFilter));
+
+                ProcessingUserControlViewModel.BlurFilter = value;
+            }
+        }
 
         public bool MedianFilter
         {
@@ -70,13 +97,14 @@ namespace ImageProcessing.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
+        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize, int blurAmount)
         {
-            this.ProcessingUserControlViewModel = processingUserControlViewModel;
+            ProcessingUserControlViewModel = processingUserControlViewModel;
             Pixelate = pixelate;
             MedianFilter = medianFilter;
             PixelateSize = pixelateSize;
             MedianSize = medianSize;
+            BlurFilterAmount = blurAmount;
         }
     }
 }

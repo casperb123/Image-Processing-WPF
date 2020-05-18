@@ -35,7 +35,7 @@
                 Margin="0,0,0,5">
             <Grid>
                 <Image x:Name="imageManipulated" />
-                
+
                 <Rectangle x:Name="rectangleManipulated"
                            Visibility="Hidden">
                     <Rectangle.Fill>
@@ -249,11 +249,10 @@
                         Focusable="False"
                         Margin="0,0,0,5"
                         Click="ButtonOtherEffects_Click" />
-
-                <ComboBox x:Name="comboBoxFilter"
-                          SelectedItem="{Binding Path=Filter}"
-                          ItemsSource="{Binding Path=Filters}" 
-                          DisplayMemberPath="FilterName" />
+                <Button x:Name="buttonBlurFilter"
+                        Focusable="False"
+                        Content="{Binding Path=BlurAmount}"
+                        ContentStringFormat="Blur: {0}" />
             </StackPanel>
         </GroupBox>
 

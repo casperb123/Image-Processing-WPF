@@ -11,10 +11,10 @@ namespace ImageProcessing.Windows
     {
         public OtherEffectsWindowViewModel ViewModel;
 
-        public OtherEffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize)
+        public OtherEffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize, int blurAmount)
         {
             InitializeComponent();
-            ViewModel = new OtherEffectsWindowViewModel(processingUserControlViewModel, pixelate, medianFilter, pixelateSize, medianSize);
+            ViewModel = new OtherEffectsWindowViewModel(processingUserControlViewModel, pixelate, medianFilter, pixelateSize, medianSize, blurAmount);
             DataContext = ViewModel;
         }
 
