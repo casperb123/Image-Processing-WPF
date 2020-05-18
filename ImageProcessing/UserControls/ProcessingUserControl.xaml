@@ -252,7 +252,8 @@
                 <Button x:Name="buttonBlurFilter"
                         Focusable="False"
                         Content="{Binding Path=BlurAmount}"
-                        ContentStringFormat="Blur: {0}" />
+                        ContentStringFormat="Blur: {0}"
+                        Click="ButtonOtherEffects_Click" />
             </StackPanel>
         </GroupBox>
 

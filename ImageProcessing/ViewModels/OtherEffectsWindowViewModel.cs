@@ -97,13 +97,14 @@ namespace ImageProcessing.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize, int blurAmount)
+        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize, bool blurFilter, int blurAmount)
         {
             ProcessingUserControlViewModel = processingUserControlViewModel;
             Pixelate = pixelate;
             MedianFilter = medianFilter;
             PixelateSize = pixelateSize;
             MedianSize = medianSize;
+            BlurFilter = blurFilter;
             BlurFilterAmount = blurAmount;
         }
     }

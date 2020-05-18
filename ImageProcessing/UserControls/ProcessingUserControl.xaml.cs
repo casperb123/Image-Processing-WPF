@@ -52,7 +52,7 @@ namespace ImageProcessing.UserControls
         {
             if (ViewModel.OtherEffectsWindow is null)
             {
-                ViewModel.OtherEffectsWindow = new OtherEffectsWindow(ViewModel, ViewModel.Pixelate, ViewModel.MedianFilter, ViewModel.PixelateSize, ViewModel.MedianSize, ViewModel.BlurAmount);
+                ViewModel.OtherEffectsWindow = new OtherEffectsWindow(ViewModel, ViewModel.Pixelate, ViewModel.MedianFilter, ViewModel.PixelateSize, ViewModel.MedianSize, ViewModel.BlurFilter, ViewModel.BlurAmount);
                 ViewModel.OtherEffectsWindow.Show();
             }
             else
