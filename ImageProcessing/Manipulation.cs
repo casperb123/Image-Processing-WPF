@@ -188,14 +188,11 @@ namespace ImageProcessing
                     modifiedBitmap.UnlockBits(bitmapData);
                 }
 
-                if (blurFilter)
-                {
-                    BlurFilter filter = new BlurFilter(blurAmount);
-                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(filter);
-                }
-
                 if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
+
+                if (blurFilter)
+                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(new BlurFilter(blurAmount));
 
                 if (medianFilter)
                     modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
