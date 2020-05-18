@@ -26,29 +26,28 @@ namespace ImageProcessing.Entities
 
             sourceBitmap.UnlockBits(sourceData);
 
-            double blue = 0.0;
-            double green = 0.0;
-            double red = 0.0;
+            //double blue = 0.0;
+            //double green = 0.0;
+            //double red = 0.0;
 
             int filterWidth = filter.FilterMatrix.GetLength(1);
-            int filterHeight = filter.FilterMatrix.GetLength(0);
+            //int filterHeight = filter.FilterMatrix.GetLength(0);
 
             int filterOffset = (filterWidth - 1) / 2;
-            int calcOffset = 0;
+            //int calcOffset = 0;
 
-            int byteOffset = 0;
+            //int byteOffset = 0;
 
-            for (int offsetY = filterOffset; offsetY <
-                sourceBitmap.Height - filterOffset; offsetY++)
+            for (int offsetY = filterOffset; offsetY < sourceBitmap.Height - filterOffset; offsetY++)
             {
                 for (int offsetX = filterOffset; offsetX <
                     sourceBitmap.Width - filterOffset; offsetX++)
                 {
-                    blue = 0;
-                    green = 0;
-                    red = 0;
+                    double blue = 0;
+                    double green = 0;
+                    double red = 0;
 
-                    byteOffset = offsetY * sourceData.Stride + offsetX * 4;
+                    int byteOffset = offsetY * sourceData.Stride + offsetX * 4;
 
                     for (int filterY = -filterOffset;
                         filterY <= filterOffset; filterY++)
@@ -57,21 +56,11 @@ namespace ImageProcessing.Entities
                             filterX <= filterOffset; filterX++)
                         {
 
-                            calcOffset = byteOffset +
-                                         (filterX * 4) +
-                                         (filterY * sourceData.Stride);
+                            int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
 
-                            blue += (double)(pixelBuffer[calcOffset]) *
-                                    filter.FilterMatrix[filterY + filterOffset,
-                                                        filterX + filterOffset];
-
-                            green += (double)(pixelBuffer[calcOffset + 1]) *
-                                     filter.FilterMatrix[filterY + filterOffset,
-                                                        filterX + filterOffset];
-
-                            red += (double)(pixelBuffer[calcOffset + 2]) *
-                                   filter.FilterMatrix[filterY + filterOffset,
-                                                      filterX + filterOffset];
+                            blue += pixelBuffer[calcOffset] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            green += pixelBuffer[calcOffset + 1] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
+                            red += pixelBuffer[calcOffset + 2] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
                         }
                     }
 
@@ -94,9 +83,9 @@ namespace ImageProcessing.Entities
                     else if (red < 0)
                         red = 0;
 
-                    resultBuffer[byteOffset] = (byte)(blue);
-                    resultBuffer[byteOffset + 1] = (byte)(green);
-                    resultBuffer[byteOffset + 2] = (byte)(red);
+                    resultBuffer[byteOffset] = (byte)blue;
+                    resultBuffer[byteOffset + 1] = (byte)green;
+                    resultBuffer[byteOffset + 2] = (byte)red;
                     resultBuffer[byteOffset + 3] = 255;
                 }
             }
