@@ -3,6 +3,7 @@ using ImageProcessing.Windows;
 using MahApps.Metro.Controls;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ImageProcessing.UserControls
 {
@@ -57,6 +58,14 @@ namespace ImageProcessing.UserControls
             }
             else
                 ViewModel.OtherEffectsWindow.Focus();
+        }
+
+        private void ButtonGrayColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorPickerWindow colorPicker = new ColorPickerWindow(ViewModel.PixelColor.R, ViewModel.PixelColor.G, ViewModel.PixelColor.B, ViewModel.PixelColor.A);
+            
+            if (colorPicker.ShowDialog() == true)
+                ViewModel.PixelColor = colorPicker.ViewModel.Color;
         }
     }
 }

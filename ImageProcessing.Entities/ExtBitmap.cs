@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ImageProcessing.Entities
 {
@@ -26,22 +27,15 @@ namespace ImageProcessing.Entities
 
             sourceBitmap.UnlockBits(sourceData);
 
-            //double blue = 0.0;
-            //double green = 0.0;
-            //double red = 0.0;
-
             int filterWidth = filter.FilterMatrix.GetLength(1);
-            //int filterHeight = filter.FilterMatrix.GetLength(0);
-
             int filterOffset = (filterWidth - 1) / 2;
-            //int calcOffset = 0;
 
-            //int byteOffset = 0;
+            int imageWidth = sourceBitmap.Width;
+            int imageHeight = sourceBitmap.Height;
 
-            for (int offsetY = filterOffset; offsetY < sourceBitmap.Height - filterOffset; offsetY++)
+            Parallel.For(filterOffset, imageHeight - filterOffset, offsetY =>
             {
-                for (int offsetX = filterOffset; offsetX <
-                    sourceBitmap.Width - filterOffset; offsetX++)
+                Parallel.For(filterOffset, imageWidth - filterOffset, offsetX =>
                 {
                     double blue = 0;
                     double green = 0;
@@ -49,11 +43,9 @@ namespace ImageProcessing.Entities
 
                     int byteOffset = offsetY * sourceData.Stride + offsetX * 4;
 
-                    for (int filterY = -filterOffset;
-                        filterY <= filterOffset; filterY++)
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
                     {
-                        for (int filterX = -filterOffset;
-                            filterX <= filterOffset; filterX++)
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
                         {
 
                             int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
@@ -87,8 +79,8 @@ namespace ImageProcessing.Entities
                     resultBuffer[byteOffset + 1] = (byte)green;
                     resultBuffer[byteOffset + 2] = (byte)red;
                     resultBuffer[byteOffset + 3] = 255;
-                }
-            }
+                });
+            });
 
             Bitmap resultBitmap = new Bitmap(sourceBitmap.Width, sourceBitmap.Height);
 

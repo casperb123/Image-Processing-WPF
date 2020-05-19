@@ -56,7 +56,6 @@ namespace ImageProcessing
             Rectangle rectangle = new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height);
 
             for (int x = rectangle.X; x < rectangle.X + rectangle.Width && x < modifiedBitmap.Width; x += pixelateSize)
-            {
                 for (int y = rectangle.Y; y < rectangle.Y + rectangle.Height && y < modifiedBitmap.Height; y += pixelateSize)
                 {
                     int offsetX = pixelateSize / 2;
@@ -68,14 +67,9 @@ namespace ImageProcessing
                     Color pixel = modifiedBitmap.GetPixel(x + offsetX, y + offsetY);
 
                     for (int xx = x; xx < x + pixelateSize && xx < modifiedBitmap.Width; xx++)
-                    {
                         for (int yy = y; yy < y + pixelateSize && yy < modifiedBitmap.Height; yy++)
-                        {
                             modifiedBitmap.SetPixel(xx, yy, pixel);
-                        }
-                    }
                 }
-            }
 
             return modifiedBitmap;
         }
@@ -93,15 +87,17 @@ namespace ImageProcessing
 
             int filterOffset = (matrixSize - 1) / 2;
 
-            List<int> neighbourPixels = new List<int>();
-            byte[] middlePixel;
+            //List<int> neighbourPixels = new List<int>();
 
-            for (int offsetY = filterOffset; offsetY < bitmap.Height - filterOffset; offsetY++)
+            int imageWidth = bitmap.Width;
+            int imageHeight = bitmap.Height;
+
+            Parallel.For(filterOffset, imageHeight - filterOffset, offsetY =>
             {
-                for (int offsetX = filterOffset; offsetX < bitmap.Width - filterOffset; offsetX++)
+                Parallel.For(filterOffset, imageWidth - filterOffset, offsetX =>
                 {
+                    List<int> neighbourPixels = new List<int>();
                     int byteOffset = offsetY * bitmapData.Stride + offsetX * 4;
-                    neighbourPixels.Clear();
 
                     for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
                     {
@@ -113,14 +109,14 @@ namespace ImageProcessing
                     }
 
                     neighbourPixels.Sort();
-                    middlePixel = BitConverter.GetBytes(neighbourPixels[filterOffset]);
+                    byte[] middlePixel = BitConverter.GetBytes(neighbourPixels[filterOffset]);
 
                     resultBuffer[byteOffset] = middlePixel[0];
                     resultBuffer[byteOffset + 1] = middlePixel[1];
                     resultBuffer[byteOffset + 2] = middlePixel[2];
                     resultBuffer[byteOffset + 3] = middlePixel[3];
-                }
-            }
+                });
+            });
 
             Bitmap resultBitmap = new Bitmap(bitmap.Width, bitmap.Height);
             Rectangle resultRectangle = new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height);
@@ -132,7 +128,22 @@ namespace ImageProcessing
             return resultBitmap;
         }
 
-        public void Modify(object obj, double hueMin, double hueMax, float brightness, float contrast, float gamma, bool grayScale, bool invert, bool sepiaTone, bool pixelate, int pixelateSize, bool medianFilter, int medianSize, bool blurFilter, int blurAmount)
+        public void Modify(object obj,
+                           double hueMin,
+                           double hueMax,
+                           float brightness,
+                           float contrast,
+                           float gamma,
+                           bool grayScale,
+                           System.Windows.Media.Color pixelColor,
+                           bool invert,
+                           bool sepiaTone,
+                           bool pixelate,
+                           int pixelateSize,
+                           bool medianFilter,
+                           int medianSize,
+                           bool blurFilter,
+                           int blurAmount)
         {
             if (obj is Bitmap bitmap)
             {
@@ -192,7 +203,10 @@ namespace ImageProcessing
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
 
                 if (blurFilter)
-                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(new BlurFilter(blurAmount));
+                {
+                    GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
+                    modifiedBitmap = gaussianBlur.Process(blurAmount);
+                }
 
                 if (medianFilter)
                     modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);

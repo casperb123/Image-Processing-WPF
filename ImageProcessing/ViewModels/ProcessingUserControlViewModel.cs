@@ -34,6 +34,7 @@ namespace ImageProcessing.ViewModels
         private bool medianFilter;
         private bool blurFilter;
         private int blurAmount;
+        private Color pixelColor;
 
         private ConvolutionFilterBase filter;
         private ObservableCollection<ConvolutionFilterBase> filters;
@@ -53,6 +54,18 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
+            }
+        }
+
+        public Color PixelColor
+        {
+            get { return pixelColor; }
+            set
+            {
+                pixelColor = value;
+
+                if (userControl != null && userControl.IsLoaded)
+                    userControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
             }
         }
 
@@ -263,7 +276,8 @@ namespace ImageProcessing.ViewModels
             invertedGrayScale = true;
             PixelateSize = 1;
             MedianSize = 3;
-            BlurAmount = 3;
+            BlurAmount = 1;
+            PixelColor = Color.FromArgb(255, 0, 0, 0);
 
             //Filters = new ObservableCollection<ConvolutionFilterBase>
             //{
@@ -361,6 +375,7 @@ namespace ImageProcessing.ViewModels
             MedianSize = 3;
             Pixelate = false;
             MedianFilter = false;
+            PixelColor = Color.FromArgb(255, 0, 0, 0);
 
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);
@@ -400,7 +415,7 @@ namespace ImageProcessing.ViewModels
             userControl.progressRingManipulated.Visibility = Visibility.Visible;
             userControl.buttonModify.IsEnabled = false;
 
-            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, Invert, SepiaTone, Pixelate, PixelateSize, MedianFilter, MedianSize, BlurFilter, BlurAmount));
+            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, PixelColor, Invert, SepiaTone, Pixelate, PixelateSize, MedianFilter, MedianSize, BlurFilter, BlurAmount));
             thread.Start();
         }
 
