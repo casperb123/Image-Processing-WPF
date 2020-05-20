@@ -1,13 +1,10 @@
-﻿using ImageProcessing.Entities;
-using ImageProcessing.Entities.Filters;
+﻿using ImageProcessing.Entities.Filters;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Windows;
 using Color = System.Drawing.Color;
 
 namespace ImageProcessing

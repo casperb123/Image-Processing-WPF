@@ -22,8 +22,6 @@ namespace ImageProcessing
 
                 using (Graphics graphics = Graphics.FromImage(bitmap))
                     graphics.DrawImage(original, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-
-                //bitmap = new Bitmap(Image.FromFile(dialog.FileName));
             }
 
             return bitmap;
@@ -33,7 +31,7 @@ namespace ImageProcessing
         {
             using (MemoryStream memory = new MemoryStream())
             {
-                bitmap.Save(memory, ImageFormat.Bmp);
+                bitmap.Save(memory, ImageFormat.Png);
                 memory.Position = 0;
                 BitmapImage bitmapImage = new BitmapImage();
                 bitmapImage.BeginInit();

@@ -387,7 +387,8 @@ namespace ImageProcessing.ViewModels
             MedianSize = 3;
             Pixelate = false;
             MedianFilter = false;
-            PixelColor = Color.FromArgb(255, 0, 0, 0);
+            PixelColor = Color.FromArgb(255, 255, 0, 0);
+            ReplaceGrayColor = false;
 
             ModifiedImage = new Bitmap(OriginalImage);
             DisplayImage(ModifiedImage, 2);
