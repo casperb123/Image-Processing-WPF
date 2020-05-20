@@ -385,8 +385,10 @@ namespace ImageProcessing.ViewModels
             SepiaTone = false;
             PixelateSize = 1;
             MedianSize = 3;
+            BlurAmount = 1;
             Pixelate = false;
             MedianFilter = false;
+            BlurFilter = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
             ReplaceGrayColor = false;
 
