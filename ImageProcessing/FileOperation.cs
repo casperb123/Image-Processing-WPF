@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Windows;
 using System.Windows.Media.Imaging;
 
 namespace ImageProcessing
@@ -15,7 +16,15 @@ namespace ImageProcessing
             dialog.Filter = "Image Files|*.jpg;*.png;*.bmp";
 
             if (dialog.ShowDialog() == true)
-                bitmap = new Bitmap(Image.FromFile(dialog.FileName));
+            {
+                Bitmap original = new Bitmap(Image.FromFile(dialog.FileName));
+                bitmap = new Bitmap(original.Width, original.Height, PixelFormat.Format32bppArgb);
+
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                    graphics.DrawImage(original, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+
+                //bitmap = new Bitmap(Image.FromFile(dialog.FileName));
+            }
 
             return bitmap;
         }

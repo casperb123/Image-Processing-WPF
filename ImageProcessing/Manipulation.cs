@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows;
 using Color = System.Drawing.Color;
 
 namespace ImageProcessing
@@ -136,6 +137,7 @@ namespace ImageProcessing
                            float gamma,
                            bool grayScale,
                            System.Windows.Media.Color pixelColor,
+                           bool replaceGrayColor,
                            bool invert,
                            bool sepiaTone,
                            bool pixelate,
@@ -154,7 +156,7 @@ namespace ImageProcessing
                 {
                     // Lock the bitmap into system memory
                     // "PixelFormat" can be "Format24bppRgb", "Format32bppArgb", etc
-                    BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, modifiedBitmap.PixelFormat);
+                    BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
                     // Define variables for bytes per pixel, as well as Image Width & Height
                     int bytesPerPixel = Image.GetPixelFormatSize(modifiedBitmap.PixelFormat) / 8;
@@ -185,13 +187,21 @@ namespace ImageProcessing
 
                             if (grayScale || hue < hueMin || hue > hueMax)
                             {
-                                int avg = (oldRed + oldGreen + oldBlue) / 3;
-                                Color newColor = Color.FromArgb(avg, avg, avg);
+                                Color newColor;
+
+                                if (replaceGrayColor && !grayScale)
+                                    newColor = Color.FromArgb(pixelColor.A, pixelColor.R, pixelColor.G, pixelColor.B);
+                                else
+                                {
+                                    int avg = (oldRed + oldGreen + oldBlue) / 3;
+                                    newColor = Color.FromArgb(avg, avg, avg);
+                                }
 
                                 // Change each pixels color
                                 currentLine[x] = newColor.B;
                                 currentLine[x + 1] = newColor.G;
                                 currentLine[x + 2] = newColor.R;
+                                currentLine[x + 3] = newColor.A;
                             }
                         }
                     });
@@ -216,7 +226,7 @@ namespace ImageProcessing
                     new float[] {contrast, 0, 0, 0, 0}, // scale red
                     new float[] {0, contrast, 0, 0, 0}, // scale green
                     new float[] {0, 0, contrast, 0, 0}, // scale blue
-                    new float[] {0, 0, 0, 1.0f, 0}, // don't scale alpha
+                    new float[] {0, 0, 0, 1, 0}, // don't scale alpha
                     new float[] {brightness, brightness, brightness, 0, 1}
                 };
 

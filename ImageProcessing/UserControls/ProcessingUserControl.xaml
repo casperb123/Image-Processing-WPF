@@ -85,6 +85,10 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
                     <Rectangle x:Name="rectangleColorMin"
                                Stroke="Black"
@@ -131,18 +135,30 @@
                         </mah:RangeSlider.AutoToolTipRangeValuesTemplate>
                     </mah:RangeSlider>
 
-                    <Button x:Name="buttonGrayColorButton"
-                            Grid.Column="2"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Right"
-                            Focusable="False"
-                            Click="ButtonGrayColorButton_Click">
-                        <Rectangle x:Name="rectangleGrayColor"
-                                   Stroke="Black"
-                                   Fill="Gray"
-                                   Width="40"
-                                   Height="40" />
-                    </Button>
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Column="2"
+                                Grid.Row="1"
+                                HorizontalAlignment="Right">
+                        <CheckBox x:Name="checkBoxGrayColor"
+                                  Content="Replace Color"
+                                  Margin="0,0,5,0"
+                                  IsChecked="{Binding Path=ReplaceGrayColor}" />
+                        <Button x:Name="buttonGrayColor"
+                                Grid.Column="2"
+                                Grid.Row="1"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right"
+                                Focusable="False"
+                                Margin="5,0,0,0"
+                                IsEnabled="{Binding Path=ReplaceGrayColor}"
+                                Click="ButtonGrayColorButton_Click">
+                            <Rectangle x:Name="rectangleGrayColor"
+                                       Stroke="Black"
+                                       Fill="Black"
+                                       Width="40"
+                                       Height="40" />
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </GroupBox>
 

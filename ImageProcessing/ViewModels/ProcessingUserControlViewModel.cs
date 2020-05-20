@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Windows;
@@ -35,6 +36,7 @@ namespace ImageProcessing.ViewModels
         private bool blurFilter;
         private int blurAmount;
         private Color pixelColor;
+        private bool replaceGrayColor;
 
         private ConvolutionFilterBase filter;
         private ObservableCollection<ConvolutionFilterBase> filters;
@@ -54,6 +56,16 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
+            }
+        }
+
+        public bool ReplaceGrayColor
+        {
+            get { return replaceGrayColor; }
+            set
+            {
+                replaceGrayColor = value;
+                OnPropertyChanged(nameof(ReplaceGrayColor));
             }
         }
 
@@ -415,25 +427,44 @@ namespace ImageProcessing.ViewModels
             userControl.progressRingManipulated.Visibility = Visibility.Visible;
             userControl.buttonModify.IsEnabled = false;
 
-            Thread thread = new Thread(() => manipulation.Modify(OriginalImage, MinimumHue, MaximumHue, Brightness, Contrast, Gamma, GrayScale, PixelColor, Invert, SepiaTone, Pixelate, PixelateSize, MedianFilter, MedianSize, BlurFilter, BlurAmount));
+            Thread thread = new Thread(() => manipulation.Modify(OriginalImage,
+                                                                 MinimumHue,
+                                                                 MaximumHue,
+                                                                 Brightness,
+                                                                 Contrast,
+                                                                 Gamma,
+                                                                 GrayScale,
+                                                                 PixelColor,
+                                                                 ReplaceGrayColor,
+                                                                 Invert,
+                                                                 SepiaTone,
+                                                                 Pixelate,
+                                                                 PixelateSize,
+                                                                 MedianFilter,
+                                                                 MedianSize,
+                                                                 BlurFilter,
+                                                                 BlurAmount));
             thread.Start();
         }
 
         public async void SaveImage()
         {
             SaveFileDialog dialog = new SaveFileDialog();
-            dialog.Filter = "JPEG (*.jpg)|*.jpg|PNG (*.png)|*.png|BMP (*.bmp)|*.bmp";
+            dialog.Filter = "Image File (*.png)|*.png|Image File (*.jpg)|*.jpg|Image File (*.bmp)|*.bmp";
 
             if (dialog.ShowDialog() == true)
             {
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create((BitmapSource)userControl.imageManipulated.Source));
+                FileStream stream = new FileStream(dialog.FileName, FileMode.Create);
+                string format = Path.GetExtension(dialog.FileName);
 
-                using (FileStream stream = new FileStream(dialog.FileName, FileMode.Create))
-                {
-                    encoder.Save(stream);
-                }
+                if (format == ".png")
+                    ModifiedImage.Save(stream, ImageFormat.Png);
+                else if (format == ".jpg")
+                    ModifiedImage.Save(stream, ImageFormat.Jpeg);
+                else if (format == ".bmp")
+                    ModifiedImage.Save(stream, ImageFormat.Bmp);
 
+                stream.Close();
                 await MainWindow.ShowMessageAsync("Image Saved", "The image has been successfully saved!");
             }
         }

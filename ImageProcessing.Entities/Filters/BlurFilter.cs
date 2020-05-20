@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ImageProcessing.Entities.Filters
+﻿namespace ImageProcessing.Entities.Filters
 {
     public class BlurFilter : ConvolutionFilterBase
     {
