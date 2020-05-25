@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
@@ -33,8 +34,10 @@ namespace ImageProcessing.ViewModels
         private int medianSize;
         private bool pixelate;
         private bool medianFilter;
-        private bool blurFilter;
-        private int blurAmount;
+        private bool gaussianBlurFilter;
+        private int gaussianBlurAmount;
+        private bool meanBlurFilter;
+        private int meanBlurAmount;
         private Color pixelColor;
         private bool replaceGrayColor;
 
@@ -81,28 +84,45 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public int BlurAmount
+        public bool BlurFilters { get; set; }
+
+        public bool MeanBlurFilter
         {
-            get { return blurAmount; }
+            get { return meanBlurFilter; }
             set
             {
-                blurAmount = value;
-                OnPropertyChanged(nameof(BlurAmount));
+                meanBlurFilter = value;
+                OnPropertyChanged(nameof(MeanBlurFilter));
             }
         }
 
-        public bool BlurFilter
+        public int MeanBlurAmount
         {
-            get { return blurFilter; }
+            get { return meanBlurAmount; }
             set
             {
-                blurFilter = value;
-                OnPropertyChanged(nameof(BlurFilter));
+                meanBlurAmount = value;
+                OnPropertyChanged(nameof(MeanBlurAmount));
+            }
+        }
 
-                if (value)
-                    userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
-                else
-                    userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
+        public int GaussianBlurAmount
+        {
+            get { return gaussianBlurAmount; }
+            set
+            {
+                gaussianBlurAmount = value;
+                OnPropertyChanged(nameof(GaussianBlurAmount));
+            }
+        }
+
+        public bool GaussianBlurFilter
+        {
+            get { return gaussianBlurFilter; }
+            set
+            {
+                gaussianBlurFilter = value;
+                OnPropertyChanged(nameof(GaussianBlurFilter));
             }
         }
 
@@ -133,11 +153,6 @@ namespace ImageProcessing.ViewModels
             {
                 pixelate = value;
                 OnPropertyChanged(nameof(Pixelate));
-
-                if (value)
-                    userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
-                else
-                    userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             }
         }
 
@@ -148,11 +163,6 @@ namespace ImageProcessing.ViewModels
             {
                 medianFilter = value;
                 OnPropertyChanged(nameof(MedianFilter));
-
-                if (value)
-                    userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
-                else
-                    userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
             }
         }
 
@@ -288,47 +298,16 @@ namespace ImageProcessing.ViewModels
             invertedGrayScale = true;
             PixelateSize = 1;
             MedianSize = 3;
-            BlurAmount = 1;
+            GaussianBlurAmount = 1;
+            MeanBlurAmount = 3;
             PixelColor = Color.FromArgb(255, 0, 0, 0);
 
-            //Filters = new ObservableCollection<ConvolutionFilterBase>
-            //{
-            //    new Blur3x3Filter(),
-            //    new Blur5x5Filter(),
-            //    new Gaussian3x3BlurFilter(),
-            //    new Gaussian5x5BlurFilter(),
-            //    new MotionBlurFilter(),
-            //    new MotionBlurLeftToRightFilter(),
-            //    new MotionBlurRightToLeftFilter(),
-            //    new SoftenFilter(),
-            //    new SharpenFilter(),
-            //    new Sharpen3x3Filter(),
-            //    new Sharpen3x3FactorFilter(),
-            //    new Sharpen5x5Filter(),
-            //    new IntenseSharpenFilter(),
-            //    new EdgeDetectionFilter(),
-            //    new EdgeDetection45DegreeFilter(),
-            //    new HorizontalEdgeDetectionFilter(),
-            //    new VerticalEdgeDetectionFilter(),
-            //    new EdgeDetectionTopLeftBottomRightFilter(),
-            //    new EmbossFilter(),
-            //    new Emboss45DegreeFilter(),
-            //    new EmbossTopLeftBottomRightFilter(),
-            //    new IntenseEmbossFilter(),
-            //    new HighPass3x3Filter()
-            //};
-            //Filter = Filters[0];
-
-            this.MainWindow = mainWindow;
+            MainWindow = mainWindow;
             this.userControl = userControl;
             manipulation = new Manipulation();
             fileOperation = new FileOperation();
 
             manipulation.ImageFinished += OnImageFinished;
-
-            userControl.buttonPixelateSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
-            userControl.buttonMedianSize.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
-            userControl.buttonBlurFilter.BorderBrush = new SolidColorBrush(Color.FromRgb(200, 0, 0));
         }
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
@@ -385,15 +364,21 @@ namespace ImageProcessing.ViewModels
             SepiaTone = false;
             PixelateSize = 1;
             MedianSize = 3;
-            BlurAmount = 1;
+            GaussianBlurAmount = 1;
+            MeanBlurAmount = 3;
             Pixelate = false;
             MedianFilter = false;
-            BlurFilter = false;
+            GaussianBlurFilter = false;
+            MeanBlurFilter = false;
+            BlurFilters = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
             ReplaceGrayColor = false;
 
-            ModifiedImage = new Bitmap(OriginalImage);
-            DisplayImage(ModifiedImage, 2);
+            if (OriginalImage != null)
+            {
+                ModifiedImage = new Bitmap(OriginalImage);
+                DisplayImage(ModifiedImage, 2);
+            }
         }
 
         public void ToggleImages()
@@ -445,8 +430,11 @@ namespace ImageProcessing.ViewModels
                                                                  PixelateSize,
                                                                  MedianFilter,
                                                                  MedianSize,
-                                                                 BlurFilter,
-                                                                 BlurAmount));
+                                                                 BlurFilters,
+                                                                 GaussianBlurFilter,
+                                                                 GaussianBlurAmount,
+                                                                 MeanBlurFilter,
+                                                                 MeanBlurAmount));
             thread.Start();
         }
 

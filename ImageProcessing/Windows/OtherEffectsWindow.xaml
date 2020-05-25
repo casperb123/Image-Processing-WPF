@@ -7,7 +7,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Other Effects "
-                 Height="403"
+                 Height="483"
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
@@ -103,49 +103,104 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Blur Filter">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width=".5*" />
-                    <ColumnDefinition Width="80" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <CheckBox x:Name="checkBoxBlurFilter"
-                          Content="Blur Filter"
-                          IsChecked="{Binding Path=BlurFilter}"
+        <GroupBox Header="Blur Filters">
+            <StackPanel>
+                <CheckBox x:Name="checkBoxBlurFilters"
+                          Content="Blur Filters"
+                          IsChecked="{Binding Path=BlurFilters}"
                           Margin="0,0,0,5"/>
 
-                <Slider x:Name="sliderBlurFilterAmount"
-                        Minimum="1"
-                        Maximum="100"
-                        AutoToolTipPlacement="TopLeft"
-                        AutoToolTipPrecision="0"
-                        mah:SliderHelper.EnableMouseWheel="MouseHover"
-                        mah:SliderHelper.ChangeValueBy="SmallChange"
-                        IsMoveToPointEnabled="True"
-                        SmallChange="1"
-                        Grid.Row="1"
-                        Grid.ColumnSpan="2"
-                        Margin="0,0,5,0"
-                        IsSnapToTickEnabled="True"
-                        TickFrequency="1"
-                        IsEnabled="{Binding Path=BlurFilter}"
-                        Value="{Binding Path=BlurFilterAmount}" />
-                <mah:NumericUpDown x:Name="numericBlurFilterAmount"
-                                   Minimum="1"
-                                   Maximum="100"
-                                   Interval="1"
-                                   Grid.Row="1"
-                                   Grid.Column="2"
-                                   Margin="5,0,0,0"
-                                   IsEnabled="{Binding Path=BlurFilter}"
-                                   Value="{Binding Path=BlurFilterAmount}" />
-            </Grid>
+                <GroupBox Header="Mean Blur Filter"
+                          Margin="0,0,0,5"
+                          IsEnabled="{Binding Path=BlurFilters}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="80" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <RadioButton x:Name="checkBoxMeanBlurFilter"
+                                     Content="Mean Blur Filter"
+                                     IsChecked="{Binding Path=MeanBlurFilter}"
+                                     Margin="0,0,0,5"
+                                     GroupName="BlurFilter" />
+
+                        <Slider x:Name="sliderMeanBlurAmount"
+                                Minimum="3"
+                                Maximum="13"
+                                SmallChange="2"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                IsMoveToPointEnabled="True"
+                                IsSnapToTickEnabled="True"
+                                mah:SliderHelper.EnableMouseWheel="MouseHover"
+                                mah:SliderHelper.ChangeValueBy="SmallChange"
+                                TickFrequency="2"
+                                IsEnabled="{Binding Path=MeanBlurFilter}"
+                                Value="{Binding Path=MeanBlurAmount}"
+                                Margin="0,0,5,0"
+                                Grid.Row="1" />
+                        <mah:NumericUpDown x:Name="numericMeanBlurAmount"
+                                           Minimum="3"
+                                           Maximum="13"
+                                           Interval="2"
+                                           IsEnabled="{Binding Path=MeanBlurFilter}"
+                                           Value="{Binding Path=MeanBlurAmount}"
+                                           Margin="5,0,0,0"
+                                           Grid.Row="1"
+                                           Grid.Column="1" />
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="Gaussian Blur Filter"
+                          IsEnabled="{Binding Path=BlurFilters}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="80" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <RadioButton x:Name="checkBoxGaussianBlurFilter"
+                                     Content="Gaussian Blur Filter"
+                                     IsChecked="{Binding Path=GaussianBlurFilter}"
+                                     Margin="0,0,0,5"
+                                     GroupName="BlurFilter" />
+
+                        <Slider x:Name="sliderBlurFilterAmount"
+                                Minimum="1"
+                                Maximum="100"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                mah:SliderHelper.EnableMouseWheel="MouseHover"
+                                mah:SliderHelper.ChangeValueBy="SmallChange"
+                                IsMoveToPointEnabled="True"
+                                SmallChange="1"
+                                Grid.Row="1"
+                                Margin="0,0,5,0"
+                                IsSnapToTickEnabled="True"
+                                TickFrequency="1"
+                                IsEnabled="{Binding Path=GaussianBlurFilter}"
+                                Value="{Binding Path=GaussianBlurFilterAmount}" />
+                        <mah:NumericUpDown x:Name="numericBlurFilterAmount"
+                                           Minimum="1"
+                                           Maximum="100"
+                                           Interval="1"
+                                           Grid.Row="1"
+                                           Grid.Column="1"
+                                           Margin="5,0,0,0"
+                                           IsEnabled="{Binding Path=GaussianBlurFilter}"
+                                           Value="{Binding Path=GaussianBlurFilterAmount}" />
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
         </GroupBox>
     </StackPanel>
 </mah:MetroWindow>

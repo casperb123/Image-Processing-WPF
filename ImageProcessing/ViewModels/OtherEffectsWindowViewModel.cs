@@ -12,32 +12,71 @@ namespace ImageProcessing.ViewModels
         private int medianSize;
         private bool pixelate;
         private bool medianFilter;
-        private bool blurFilter;
-        private int blurFilterAmount;
+        private bool gaussianBlurFilter;
+        private int gaussianBlurAmount;
+        private bool meanBlurFilter;
+        private int meanBlurAmount;
+        private bool blurFilters;
 
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
 
-        public int BlurFilterAmount
+        public bool BlurFilters
         {
-            get { return blurFilterAmount; }
+            get { return blurFilters; }
             set
             {
-                blurFilterAmount = value;
-                OnPropertyChanged(nameof(BlurFilterAmount));
+                blurFilters = value;
+                OnPropertyChanged(nameof(BlurFilters));
 
-                ProcessingUserControlViewModel.BlurAmount = blurFilterAmount;
+                ProcessingUserControlViewModel.BlurFilters = value;
             }
         }
 
-        public bool BlurFilter
+        public bool MeanBlurFilter
         {
-            get { return blurFilter; }
+            get { return meanBlurFilter; }
             set
             {
-                blurFilter = value;
-                OnPropertyChanged(nameof(BlurFilter));
+                meanBlurFilter = value;
+                OnPropertyChanged(nameof(meanBlurFilter));
 
-                ProcessingUserControlViewModel.BlurFilter = value;
+                ProcessingUserControlViewModel.MeanBlurFilter = value;
+            }
+        }
+
+        public int MeanBlurAmount
+        {
+            get { return meanBlurAmount; }
+            set
+            {
+                meanBlurAmount = value;
+                OnPropertyChanged(nameof(MeanBlurAmount));
+
+                ProcessingUserControlViewModel.MeanBlurAmount = value;
+            }
+        }
+
+        public int GaussianBlurAmount
+        {
+            get { return gaussianBlurAmount; }
+            set
+            {
+                gaussianBlurAmount = value;
+                OnPropertyChanged(nameof(GaussianBlurAmount));
+
+                ProcessingUserControlViewModel.GaussianBlurAmount = gaussianBlurAmount;
+            }
+        }
+
+        public bool GaussianBlurFilter
+        {
+            get { return gaussianBlurFilter; }
+            set
+            {
+                gaussianBlurFilter = value;
+                OnPropertyChanged(nameof(GaussianBlurFilter));
+
+                ProcessingUserControlViewModel.GaussianBlurFilter = value;
             }
         }
 
@@ -97,15 +136,17 @@ namespace ImageProcessing.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel, bool pixelate, bool medianFilter, int pixelateSize, int medianSize, bool blurFilter, int blurAmount)
+        public OtherEffectsWindowViewModel(ProcessingUserControlViewModel processingUserControlViewModel)
         {
             ProcessingUserControlViewModel = processingUserControlViewModel;
-            Pixelate = pixelate;
-            MedianFilter = medianFilter;
-            PixelateSize = pixelateSize;
-            MedianSize = medianSize;
-            BlurFilter = blurFilter;
-            BlurFilterAmount = blurAmount;
+            Pixelate = ProcessingUserControlViewModel.Pixelate;
+            MedianFilter = ProcessingUserControlViewModel.MedianFilter;
+            PixelateSize = ProcessingUserControlViewModel.PixelateSize;
+            MedianSize = ProcessingUserControlViewModel.MedianSize;
+            GaussianBlurFilter = ProcessingUserControlViewModel.GaussianBlurFilter;
+            GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
+            MeanBlurFilter = ProcessingUserControlViewModel.MeanBlurFilter;
+            MeanBlurAmount = ProcessingUserControlViewModel.MeanBlurAmount;
         }
     }
 }

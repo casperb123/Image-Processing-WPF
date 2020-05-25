@@ -263,22 +263,8 @@
                           Content="Gray Scale"
                           Margin="0,0,0,5"
                           IsChecked="{Binding Path=GrayScale}" />
-                <Button x:Name="buttonPixelateSize"
-                        Content="{Binding Path=PixelateSize}"
-                        ContentStringFormat="Pixelate: {0}"
-                        Margin="0,0,0,5"
-                        Focusable="False"
-                        Click="ButtonOtherEffects_Click" />
-                <Button x:Name="buttonMedianSize"
-                        Content="{Binding Path=MedianSize}"
-                        ContentStringFormat="Median Filter: {0}"
-                        Focusable="False"
-                        Margin="0,0,0,5"
-                        Click="ButtonOtherEffects_Click" />
-                <Button x:Name="buttonBlurFilter"
-                        Focusable="False"
-                        Content="{Binding Path=BlurAmount}"
-                        ContentStringFormat="Blur: {0}"
+                <Button x:Name="buttonOtherEffects"
+                        Content="Other Effects"
                         Click="ButtonOtherEffects_Click" />
             </StackPanel>
         </GroupBox>

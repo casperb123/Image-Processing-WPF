@@ -1,4 +1,5 @@
-﻿using ImageProcessing.Entities.Filters;
+﻿using ImageProcessing.Entities;
+using ImageProcessing.Entities.Filters;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -141,8 +142,11 @@ namespace ImageProcessing
                            int pixelateSize,
                            bool medianFilter,
                            int medianSize,
-                           bool blurFilter,
-                           int blurAmount)
+                           bool blurFilters,
+                           bool gaussianBlurFilter,
+                           int gaussianBlurAmount,
+                           bool meanBlurFilter,
+                           int meanBlurAmount)
         {
             if (obj is Bitmap bitmap)
             {
@@ -209,10 +213,18 @@ namespace ImageProcessing
                 if (pixelate)
                     modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
 
-                if (blurFilter)
+                if (blurFilters)
                 {
-                    GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
-                    modifiedBitmap = gaussianBlur.Process(blurAmount);
+                    if (gaussianBlurFilter)
+                    {
+                        GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
+                        modifiedBitmap = gaussianBlur.Process(gaussianBlurAmount);
+                    }
+                    else if (meanBlurFilter)
+                    {
+                        MeanBlurFilter meanBlur = new MeanBlurFilter(meanBlurAmount);
+                        modifiedBitmap = modifiedBitmap.ConvolutionFilter(meanBlur);
+                    }
                 }
 
                 if (medianFilter)
