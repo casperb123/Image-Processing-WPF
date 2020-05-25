@@ -143,6 +143,7 @@ namespace ImageProcessing.ViewModels
             MedianFilter = ProcessingUserControlViewModel.MedianFilter;
             PixelateSize = ProcessingUserControlViewModel.PixelateSize;
             MedianSize = ProcessingUserControlViewModel.MedianSize;
+            BlurFilters = ProcessingUserControlViewModel.BlurFilters;
             GaussianBlurFilter = ProcessingUserControlViewModel.GaussianBlurFilter;
             GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
             MeanBlurFilter = ProcessingUserControlViewModel.MeanBlurFilter;
