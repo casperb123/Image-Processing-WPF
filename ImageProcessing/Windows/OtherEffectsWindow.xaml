@@ -188,7 +188,7 @@
                                 IsSnapToTickEnabled="True"
                                 TickFrequency="1"
                                 IsEnabled="{Binding Path=GaussianBlurFilter}"
-                                Value="{Binding Path=GaussianBlurFilterAmount}" />
+                                Value="{Binding Path=GaussianBlurAmount}" />
                         <mah:NumericUpDown x:Name="numericBlurFilterAmount"
                                            Minimum="1"
                                            Maximum="100"
@@ -197,7 +197,7 @@
                                            Grid.Column="1"
                                            Margin="5,0,0,0"
                                            IsEnabled="{Binding Path=GaussianBlurFilter}"
-                                           Value="{Binding Path=GaussianBlurFilterAmount}" />
+                                           Value="{Binding Path=GaussianBlurAmount}" />
                     </Grid>
                 </GroupBox>
             </StackPanel>
