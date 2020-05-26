@@ -31,7 +31,7 @@ namespace ImageProcessing.UserControls
             ViewModel.ResetImage();
         }
 
-        private void SliderHue_ValueChanged(object sender, RangeParameterChangedEventArgs e)
+        private void SliderHue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!IsLoaded)
                 return;

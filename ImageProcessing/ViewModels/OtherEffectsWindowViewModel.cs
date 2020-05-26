@@ -14,8 +14,8 @@ namespace ImageProcessing.ViewModels
         private bool medianFilter;
         private bool gaussianBlurFilter;
         private int gaussianBlurAmount;
-        private bool meanBlurFilter;
-        private int meanBlurAmount;
+        private bool boxBlurFilter;
+        private int boxBlurAmount;
         private bool blurFilters;
 
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
@@ -32,25 +32,25 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool MeanBlurFilter
+        public bool BoxBlurFilter
         {
-            get { return meanBlurFilter; }
+            get { return boxBlurFilter; }
             set
             {
-                meanBlurFilter = value;
-                OnPropertyChanged(nameof(meanBlurFilter));
+                boxBlurFilter = value;
+                OnPropertyChanged(nameof(boxBlurFilter));
 
                 ProcessingUserControlViewModel.MeanBlurFilter = value;
             }
         }
 
-        public int MeanBlurAmount
+        public int BoxBlurAmount
         {
-            get { return meanBlurAmount; }
+            get { return boxBlurAmount; }
             set
             {
-                meanBlurAmount = value;
-                OnPropertyChanged(nameof(MeanBlurAmount));
+                boxBlurAmount = value;
+                OnPropertyChanged(nameof(BoxBlurAmount));
 
                 ProcessingUserControlViewModel.MeanBlurAmount = value;
             }
@@ -146,8 +146,8 @@ namespace ImageProcessing.ViewModels
             BlurFilters = ProcessingUserControlViewModel.BlurFilters;
             GaussianBlurFilter = ProcessingUserControlViewModel.GaussianBlurFilter;
             GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
-            MeanBlurFilter = ProcessingUserControlViewModel.MeanBlurFilter;
-            MeanBlurAmount = ProcessingUserControlViewModel.MeanBlurAmount;
+            BoxBlurFilter = ProcessingUserControlViewModel.MeanBlurFilter;
+            BoxBlurAmount = ProcessingUserControlViewModel.MeanBlurAmount;
         }
     }
 }

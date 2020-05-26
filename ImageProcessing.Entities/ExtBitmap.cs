@@ -103,26 +103,14 @@ namespace ImageProcessing.Entities
                     int byteOffset = offsetY * sourceData.Stride + offsetX * 4;
 
                     for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
-                    {
-                        if (filterY < 0 && (offsetY + filterY) < 1)
-                            continue;
-                        else if (filterY > 0 && (offsetY + filterY) > imageHeight)
-                            continue;
-
-                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
+                       for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
                         {
-                            if (filterX < 0 && (offsetX + filterX) < 1)
-                                continue;
-                            else if (filterX > 0 && (offsetX + filterX) > imageWidth)
-                                continue;
-
-                            int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
+                           int calcOffset = byteOffset + (filterX * 4) + (filterY * sourceData.Stride);
 
                             blue += pixelBuffer[calcOffset] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
                             green += pixelBuffer[calcOffset + 1] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
                             red += pixelBuffer[calcOffset + 2] * filter.FilterMatrix[filterY + filterOffset, filterX + filterOffset];
                         }
-                    }
 
                     blue = filter.Factor * blue + filter.Bias;
                     green = filter.Factor * green + filter.Bias;

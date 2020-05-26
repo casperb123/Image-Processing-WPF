@@ -123,15 +123,15 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <RadioButton x:Name="checkBoxMeanBlurFilter"
-                                     Content="Mean Blur Filter"
-                                     IsChecked="{Binding Path=MeanBlurFilter}"
+                        <RadioButton x:Name="checkBoxBoxBlurFilter"
+                                     Content="Box Blur Filter"
+                                     IsChecked="{Binding Path=BoxBlurFilter}"
                                      Margin="0,0,0,5"
                                      GroupName="BlurFilter" />
 
                         <Slider x:Name="sliderMeanBlurAmount"
                                 Minimum="3"
-                                Maximum="13"
+                                Maximum="19"
                                 SmallChange="2"
                                 AutoToolTipPlacement="TopLeft"
                                 AutoToolTipPrecision="0"
@@ -140,16 +140,16 @@
                                 mah:SliderHelper.EnableMouseWheel="MouseHover"
                                 mah:SliderHelper.ChangeValueBy="SmallChange"
                                 TickFrequency="2"
-                                IsEnabled="{Binding Path=MeanBlurFilter}"
-                                Value="{Binding Path=MeanBlurAmount}"
+                                IsEnabled="{Binding Path=BoxBlurFilter}"
+                                Value="{Binding Path=BoxBlurAmount}"
                                 Margin="0,0,5,0"
                                 Grid.Row="1" />
                         <mah:NumericUpDown x:Name="numericMeanBlurAmount"
                                            Minimum="3"
-                                           Maximum="13"
+                                           Maximum="19"
                                            Interval="2"
-                                           IsEnabled="{Binding Path=MeanBlurFilter}"
-                                           Value="{Binding Path=MeanBlurAmount}"
+                                           IsEnabled="{Binding Path=BoxBlurFilter}"
+                                           Value="{Binding Path=BoxBlurAmount}"
                                            Margin="5,0,0,0"
                                            Grid.Row="1"
                                            Grid.Column="1" />

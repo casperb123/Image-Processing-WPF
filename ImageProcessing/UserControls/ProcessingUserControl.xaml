@@ -263,6 +263,10 @@
                           Content="Gray Scale"
                           Margin="0,0,0,5"
                           IsChecked="{Binding Path=GrayScale}" />
+                <CheckBox x:Name="checkBoxEmbossFilter"
+                          Content="Emboss"
+                          Margin="0,0,0,5"
+                          IsChecked="{Binding Path=Emboss}" />
                 <Button x:Name="buttonOtherEffects"
                         Content="Other Effects"
                         Click="ButtonOtherEffects_Click" />

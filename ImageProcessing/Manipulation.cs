@@ -146,7 +146,8 @@ namespace ImageProcessing
                            bool gaussianBlurFilter,
                            int gaussianBlurAmount,
                            bool meanBlurFilter,
-                           int meanBlurAmount)
+                           int meanBlurAmount,
+                           bool embossFilter)
         {
             if (obj is Bitmap bitmap)
             {
@@ -222,13 +223,19 @@ namespace ImageProcessing
                     }
                     else if (meanBlurFilter)
                     {
-                        MeanBlurFilter meanBlur = new MeanBlurFilter(meanBlurAmount);
+                        BoxBlurFilter meanBlur = new BoxBlurFilter(meanBlurAmount);
                         modifiedBitmap = modifiedBitmap.ConvolutionFilter(meanBlur);
                     }
                 }
 
                 if (medianFilter)
                     modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+
+                if (embossFilter)
+                {
+                    EmbossFilter emboss = new EmbossFilter();
+                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(emboss);
+                }
 
                 float[][] brightnessContrastArray =
                 {

@@ -8,11 +8,9 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 
@@ -38,6 +36,7 @@ namespace ImageProcessing.ViewModels
         private int gaussianBlurAmount;
         private bool meanBlurFilter;
         private int meanBlurAmount;
+        private bool emboss;
         private Color pixelColor;
         private bool replaceGrayColor;
 
@@ -81,6 +80,16 @@ namespace ImageProcessing.ViewModels
 
                 if (userControl != null && userControl.IsLoaded)
                     userControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
+            }
+        }
+
+        public bool Emboss
+        {
+            get { return emboss; }
+            set
+            {
+                emboss = value;
+                OnPropertyChanged(nameof(Emboss));
             }
         }
 
@@ -434,7 +443,8 @@ namespace ImageProcessing.ViewModels
                                                                  GaussianBlurFilter,
                                                                  GaussianBlurAmount,
                                                                  MeanBlurFilter,
-                                                                 MeanBlurAmount));
+                                                                 MeanBlurAmount,
+                                                                 Emboss));
             thread.Start();
         }
 

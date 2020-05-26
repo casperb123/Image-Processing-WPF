@@ -1,13 +1,13 @@
 ﻿namespace ImageProcessing.Entities.Filters
 {
-    public class MeanBlurFilter : ConvolutionFilterBase
+    public class BoxBlurFilter : ConvolutionFilterBase
     {
         public override string FilterName { get; set; }
         public override double Factor { get; set; }
         public override double Bias { get; set; }
         public override double[,] FilterMatrix { get; set; }
 
-        public MeanBlurFilter(int amount)
+        public BoxBlurFilter(int amount)
         {
             FilterName = $"Blur{amount}x{amount}Filter";
 
