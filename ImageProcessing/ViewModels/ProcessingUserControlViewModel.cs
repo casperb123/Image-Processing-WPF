@@ -34,8 +34,8 @@ namespace ImageProcessing.ViewModels
         private bool medianFilter;
         private bool gaussianBlurFilter;
         private int gaussianBlurAmount;
-        private bool meanBlurFilter;
-        private int meanBlurAmount;
+        private bool boxBlurFilter;
+        private int boxBlurAmount;
         private bool emboss;
         private Color pixelColor;
 
@@ -84,23 +84,23 @@ namespace ImageProcessing.ViewModels
 
         public bool BlurFilters { get; set; }
 
-        public bool MeanBlurFilter
+        public bool BoxBlurFilter
         {
-            get { return meanBlurFilter; }
+            get { return boxBlurFilter; }
             set
             {
-                meanBlurFilter = value;
-                OnPropertyChanged(nameof(MeanBlurFilter));
+                boxBlurFilter = value;
+                OnPropertyChanged(nameof(BoxBlurFilter));
             }
         }
 
-        public int MeanBlurAmount
+        public int BoxBlurAmount
         {
-            get { return meanBlurAmount; }
+            get { return boxBlurAmount; }
             set
             {
-                meanBlurAmount = value;
-                OnPropertyChanged(nameof(MeanBlurAmount));
+                boxBlurAmount = value;
+                OnPropertyChanged(nameof(BoxBlurAmount));
             }
         }
 
@@ -298,7 +298,7 @@ namespace ImageProcessing.ViewModels
             PixelateSize = 1;
             MedianSize = 3;
             GaussianBlurAmount = 1;
-            MeanBlurAmount = 3;
+            BoxBlurAmount = 3;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
 
             MainWindow = mainWindow;
@@ -365,11 +365,11 @@ namespace ImageProcessing.ViewModels
             PixelateSize = 1;
             MedianSize = 3;
             GaussianBlurAmount = 1;
-            MeanBlurAmount = 3;
+            BoxBlurAmount = 3;
             Pixelate = false;
             MedianFilter = false;
             GaussianBlurFilter = false;
-            MeanBlurFilter = false;
+            BoxBlurFilter = false;
             BlurFilters = false;
             GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
@@ -434,8 +434,8 @@ namespace ImageProcessing.ViewModels
                                                                  BlurFilters,
                                                                  GaussianBlurFilter,
                                                                  GaussianBlurAmount,
-                                                                 MeanBlurFilter,
-                                                                 MeanBlurAmount,
+                                                                 BoxBlurFilter,
+                                                                 BoxBlurAmount,
                                                                  Emboss));
             thread.Start();
         }

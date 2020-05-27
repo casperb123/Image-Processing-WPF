@@ -235,17 +235,6 @@ namespace ImageProcessing
                 modifiedBitmap = modifiedBitmap.ConvolutionFilter(emboss);
             }
 
-            //float[][] brightnessContrastArray =
-            //{
-            //    new float[] {contrast, 0, 0, 0, 0}, // scale red
-            //    new float[] {0, contrast, 0, 0, 0}, // scale green
-            //    new float[] {0, 0, contrast, 0, 0}, // scale blue
-            //    new float[] {0, 0, 0, 1, 0}, // don't scale alpha
-            //    new float[] {brightness, brightness, brightness, 0, 1}
-            //};
-
-            //ApplyColorMatrix(modifiedBitmap, brightnessContrastArray);
-
             if (invert)
             {
                 float[][] invertArray =
@@ -274,7 +263,17 @@ namespace ImageProcessing
                 ApplyColorMatrix(modifiedBitmap, sepiaArray);
             }
 
-            //SetGamma(modifiedBitmap, gamma);
+            float[][] brightnessContrastArray =
+            {
+                new float[] {contrast, 0, 0, 0, 0}, // scale red
+                new float[] {0, contrast, 0, 0, 0}, // scale green
+                new float[] {0, 0, contrast, 0, 0}, // scale blue
+                new float[] {0, 0, 0, 1, 0}, // don't scale alpha
+                new float[] {brightness, brightness, brightness, 0, 1}
+            };
+
+            ApplyColorMatrix(modifiedBitmap, brightnessContrastArray);
+            SetGamma(modifiedBitmap, gamma);
 
             OnImageFinished(modifiedBitmap);
         }

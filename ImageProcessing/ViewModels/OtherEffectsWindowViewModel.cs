@@ -40,7 +40,7 @@ namespace ImageProcessing.ViewModels
                 boxBlurFilter = value;
                 OnPropertyChanged(nameof(boxBlurFilter));
 
-                ProcessingUserControlViewModel.MeanBlurFilter = value;
+                ProcessingUserControlViewModel.BoxBlurFilter = value;
             }
         }
 
@@ -52,7 +52,7 @@ namespace ImageProcessing.ViewModels
                 boxBlurAmount = value;
                 OnPropertyChanged(nameof(BoxBlurAmount));
 
-                ProcessingUserControlViewModel.MeanBlurAmount = value;
+                ProcessingUserControlViewModel.BoxBlurAmount = value;
             }
         }
 
@@ -64,7 +64,7 @@ namespace ImageProcessing.ViewModels
                 gaussianBlurAmount = value;
                 OnPropertyChanged(nameof(GaussianBlurAmount));
 
-                ProcessingUserControlViewModel.GaussianBlurAmount = gaussianBlurAmount;
+                ProcessingUserControlViewModel.GaussianBlurAmount = value;
             }
         }
 
@@ -146,8 +146,8 @@ namespace ImageProcessing.ViewModels
             BlurFilters = ProcessingUserControlViewModel.BlurFilters;
             GaussianBlurFilter = ProcessingUserControlViewModel.GaussianBlurFilter;
             GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
-            BoxBlurFilter = ProcessingUserControlViewModel.MeanBlurFilter;
-            BoxBlurAmount = ProcessingUserControlViewModel.MeanBlurAmount;
+            BoxBlurFilter = ProcessingUserControlViewModel.BoxBlurFilter;
+            BoxBlurAmount = ProcessingUserControlViewModel.BoxBlurAmount;
         }
     }
 }
