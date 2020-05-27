@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="ImageProcessing.Windows.OtherEffectsWindow"
+﻿<mah:MetroWindow x:Class="ImageProcessing.Windows.EffectsWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,8 @@
                  xmlns:local="clr-namespace:ImageProcessing.Windows"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
-                 Title="Other Effects "
-                 Height="483"
+                 Title="Image Effects"
+                 Height="593"
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
@@ -15,7 +15,30 @@
                  Topmost="True"
                  Closing="MetroWindow_Closing">
     <StackPanel Margin="5">
-        <GroupBox Header="Pixelate"
+        <GroupBox x:Name="groupBoxInvert"
+                  Header="Invert"
+                  Margin="0,0,0,5">
+            <mah:ToggleSwitch x:Name="toggleSwitchInvert"
+                              OnContent="Enabled"
+                              OffContent="Disabled"
+                              IsOn="{Binding Path=Invert}" />
+        </GroupBox>
+
+        <GroupBox x:Name="groupBoxSepiaTone"
+                  Header="Sepia Tone"
+                  Margin="0,0,0,5">
+            <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
+                              OnContent="Enabled"
+                              OffContent="Disabled"
+                              IsOn="{Binding Path=SepiaTone}" />
+        </GroupBox>
+        
+        <mah:ToggleSwitch x:Name="toggleSwitchEmboss"
+                          Content="Emboss"
+                          IsOn="{Binding Path=Emboss}" />
+
+        <GroupBox x:Name="groupBoxPixelate"
+                  Header="Pixelate"
                   Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -26,7 +49,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
-                
+
                 <mah:ToggleSwitch x:Name="toggleSwitchPixelate"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
@@ -57,7 +80,8 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Median Filter"
+        <GroupBox x:Name="groupBoxMedianFilter"
+                  Header="Median Filter"
                   Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -106,7 +130,8 @@
                                   OffContent="Disabled"
                                   IsOn="{Binding Path=BlurFilters}" />
 
-                <GroupBox Header="Mean Blur Filter"
+                <GroupBox x:Name="groupBoxBoxBlurFilter"
+                          Header="Box Blur Filter"
                           Margin="0,0,0,5"
                           IsEnabled="{Binding Path=BlurFilters}">
                     <Grid>
@@ -119,11 +144,10 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <RadioButton x:Name="checkBoxBoxBlurFilter"
-                                     Content="Box Blur Filter"
-                                     IsChecked="{Binding Path=BoxBlurFilter}"
-                                     Margin="0,0,0,5"
-                                     GroupName="BlurFilter" />
+                        <mah:ToggleSwitch x:Name="toggleSwitchBoxBlurFilter"
+                                          OnContent="Enabled"
+                                          OffContent="Disabled"
+                                          IsOn="{Binding Path=BoxBlurFilter}" />
 
                         <Slider x:Name="sliderMeanBlurAmount"
                                 Minimum="3"
@@ -152,7 +176,8 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Header="Gaussian Blur Filter"
+                <GroupBox x:Name="groupBoxGaussianBlurFilter"
+                          Header="Gaussian Blur Filter"
                           IsEnabled="{Binding Path=BlurFilters}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -164,11 +189,10 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
 
-                        <RadioButton x:Name="checkBoxGaussianBlurFilter"
-                                     Content="Gaussian Blur Filter"
-                                     IsChecked="{Binding Path=GaussianBlurFilter}"
-                                     Margin="0,0,0,5"
-                                     GroupName="BlurFilter" />
+                        <mah:ToggleSwitch x:Name="radioButtonGaussianBlurFilter"
+                                          OnContent="Enabled"
+                                          OffContent="Disabled"
+                                          IsOn="{Binding Path=GaussianBlurFilter}" />
 
                         <Slider x:Name="sliderBlurFilterAmount"
                                 Minimum="1"

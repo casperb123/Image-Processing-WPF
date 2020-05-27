@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 using Color = System.Drawing.Color;
 
 namespace ImageProcessing
@@ -73,7 +74,7 @@ namespace ImageProcessing
             return modifiedBitmap;
         }
 
-        private Bitmap MedianFilter(Bitmap bitmap, int matrixSize)
+        public Bitmap MedianFilter(Bitmap bitmap, int matrixSize)
         {
             Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
             BitmapData bitmapData = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -127,6 +128,52 @@ namespace ImageProcessing
             return resultBitmap;
         }
 
+        private void InvertImage(Bitmap bitmap)
+        {
+            float[][] invertArray =
+            {
+                new float[] {-1, 0, 0, 0, 0},
+                new float[] {0, -1, 0, 0, 0},
+                new float[] {0, 0, -1, 0, 0},
+                new float[] {0, 0, 0, 1, 0},
+                new float[] {1, 1, 1, 0, 1}
+            };
+
+            ApplyColorMatrix(bitmap, invertArray);
+        }
+
+        private void SepiaTone(Bitmap bitmap)
+        {
+            float[][] sepiaArray =
+            {
+                new float[] {.393f, .349f, .272f, 0, 0},
+                new float[] {.769f, .686f, .534f, 0, 0},
+                new float[] {.189f, .168f, .131f, 0, 0},
+                new float[] {0, 0, 0, 1, 0},
+                new float[] {0, 0, 0, 0, 1}
+            };
+
+            ApplyColorMatrix(bitmap, sepiaArray);
+        }
+
+        private Bitmap Emboss(Bitmap bitmap)
+        {
+            EmbossFilter emboss = new EmbossFilter();
+            return bitmap.ConvolutionFilter(emboss);
+        }
+
+        private Bitmap BoxBlur(Bitmap bitmap, int amount)
+        {
+            BoxBlurFilter boxBlur = new BoxBlurFilter(amount);
+            return bitmap.ConvolutionFilter(boxBlur);
+        }
+
+        private Bitmap GaussianBlur(Bitmap bitmap, int amount)
+        {
+            GaussianBlurFilter gaussianBlur = new GaussianBlurFilter(bitmap);
+            return gaussianBlur.Process(amount);
+        }
+
         public void Modify(Bitmap bitmap,
                            double hueMin,
                            double hueMax,
@@ -136,18 +183,11 @@ namespace ImageProcessing
                            bool grayScale,
                            System.Windows.Media.Color pixelColor,
                            bool replaceGrayColor,
-                           bool invert,
-                           bool sepiaTone,
-                           bool pixelate,
                            int pixelateSize,
-                           bool medianFilter,
                            int medianSize,
-                           bool blurFilters,
-                           bool gaussianBlurFilter,
                            int gaussianBlurAmount,
-                           bool meanBlurFilter,
                            int meanBlurAmount,
-                           bool embossFilter)
+                           List<FilterType> filters)
         {
             Bitmap modifiedBitmap = new Bitmap(bitmap);
 
@@ -209,58 +249,34 @@ namespace ImageProcessing
                 modifiedBitmap.UnlockBits(bitmapData);
             }
 
-            if (pixelate)
-                modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
-
-            if (blurFilters)
+            foreach (FilterType filter in filters)
             {
-                if (gaussianBlurFilter)
+                switch (filter)
                 {
-                    GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
-                    modifiedBitmap = gaussianBlur.Process(gaussianBlurAmount);
+                    case FilterType.Invert:
+                        InvertImage(modifiedBitmap);
+                        break;
+                    case FilterType.Sepia:
+                        SepiaTone(modifiedBitmap);
+                        break;
+                    case FilterType.Emboss:
+                        modifiedBitmap = Emboss(modifiedBitmap);
+                        break;
+                    case FilterType.Pixelate:
+                        modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
+                        break;
+                    case FilterType.Median:
+                        modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+                        break;
+                    case FilterType.BoxBlur:
+                        modifiedBitmap = BoxBlur(modifiedBitmap, meanBlurAmount);
+                        break;
+                    case FilterType.GaussianBlur:
+                        modifiedBitmap = GaussianBlur(modifiedBitmap, gaussianBlurAmount);
+                        break;
+                    default:
+                        break;
                 }
-                else if (meanBlurFilter)
-                {
-                    BoxBlurFilter meanBlur = new BoxBlurFilter(meanBlurAmount);
-                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(meanBlur);
-                }
-            }
-
-            if (medianFilter)
-                modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
-
-            if (embossFilter)
-            {
-                EmbossFilter emboss = new EmbossFilter();
-                modifiedBitmap = modifiedBitmap.ConvolutionFilter(emboss);
-            }
-
-            if (invert)
-            {
-                float[][] invertArray =
-                {
-                    new float[] {-1, 0, 0, 0, 0},
-                    new float[] {0, -1, 0, 0, 0},
-                    new float[] {0, 0, -1, 0, 0},
-                    new float[] {0, 0, 0, 1, 0},
-                    new float[] {1, 1, 1, 0, 1}
-                };
-
-                ApplyColorMatrix(modifiedBitmap, invertArray);
-            }
-
-            if (sepiaTone)
-            {
-                float[][] sepiaArray =
-                {
-                        new float[] {.393f, .349f, .272f, 0, 0},
-                        new float[] {.769f, .686f, .534f, 0, 0},
-                        new float[] {.189f, .168f, .131f, 0, 0},
-                        new float[] {0, 0, 0, 1, 0},
-                        new float[] {0, 0, 0, 0, 1}
-                    };
-
-                ApplyColorMatrix(modifiedBitmap, sepiaArray);
             }
 
             float[][] brightnessContrastArray =

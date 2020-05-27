@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ImageProcessing.Entities.Filters
 {
-    public class GaussianBlur
+    public class GaussianBlurFilter
     {
         private readonly int[] _alpha;
         private readonly int[] _red;
@@ -20,7 +20,7 @@ namespace ImageProcessing.Entities.Filters
 
         private readonly ParallelOptions _pOptions = new ParallelOptions { MaxDegreeOfParallelism = 16 };
 
-        public GaussianBlur(Bitmap image)
+        public GaussianBlurFilter(Bitmap image)
         {
             var rct = new Rectangle(0, 0, image.Width, image.Height);
             var source = new int[rct.Width * rct.Height];

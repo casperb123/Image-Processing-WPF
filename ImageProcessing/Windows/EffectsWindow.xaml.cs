@@ -7,14 +7,14 @@ namespace ImageProcessing.Windows
     /// <summary>
     /// Interaction logic for PixelateSizeWindow.xaml
     /// </summary>
-    public partial class OtherEffectsWindow : MetroWindow
+    public partial class EffectsWindow : MetroWindow
     {
-        public OtherEffectsWindowViewModel ViewModel;
+        public EffectsWindowViewModel ViewModel;
 
-        public OtherEffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel)
+        public EffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel)
         {
             InitializeComponent();
-            ViewModel = new OtherEffectsWindowViewModel(processingUserControlViewModel);
+            ViewModel = new EffectsWindowViewModel(processingUserControlViewModel, this);
             DataContext = ViewModel;
         }
 

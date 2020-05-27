@@ -68,8 +68,13 @@
                               IsOn="{Binding Path=ShowChanges}" />
         </StackPanel>
 
-        <StackPanel VerticalAlignment="Bottom"
-                    Margin="0,0,10,10">
+        <StackPanel Margin="0,0,10,0"
+                    VerticalAlignment="Bottom"
+                    Grid.Row="1">
+            <Button x:Name="buttonImageEffects"
+                    Content="Image Effects"
+                    Margin="0,0,0,5"
+                    Click="ButtonImageEffects_Click" />
             <Button x:Name="buttonSaveImage"
                     Content="Save Image"
                     Click="ButtonSaveImage_Click" />
@@ -257,24 +262,6 @@
                 </Grid>
             </GroupBox>
         </Grid>
-
-        <GroupBox Header="Image Effects"
-                  Grid.Row="1">
-            <StackPanel>
-                <mah:ToggleSwitch x:Name="toggleSwitchInvert"
-                                  Content="Invert Image"
-                                  IsOn="{Binding Path=Invert}" />
-                <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
-                                  Content="Sepia Tone"
-                                  IsOn="{Binding Path=SepiaTone}" />
-                <mah:ToggleSwitch x:Name="toggleSwitchEmbossFilter"
-                                  Content="Emboss"
-                                  IsOn="{Binding Path=Emboss}" />
-                <Button x:Name="buttonOtherEffects"
-                        Content="Other Effects"
-                        Click="ButtonOtherEffects_Click" />
-            </StackPanel>
-        </GroupBox>
 
         <StackPanel Orientation="Horizontal"
                     Grid.Row="2"

@@ -1,9 +1,8 @@
-﻿using ImageProcessing.Entities;
-using ImageProcessing.UserControls;
+﻿using ImageProcessing.UserControls;
 using ImageProcessing.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -24,30 +23,34 @@ namespace ImageProcessing.ViewModels
         private float contrast;
         private float gamma;
         private bool showChanges;
-        private bool invert;
-        private bool sepiaTone;
         private bool grayScale;
         private bool replaceColor;
         private int pixelateSize;
         private int medianSize;
-        private bool pixelate;
-        private bool medianFilter;
-        private bool gaussianBlurFilter;
         private int gaussianBlurAmount;
-        private bool boxBlurFilter;
         private int boxBlurAmount;
-        private bool emboss;
         private Color pixelColor;
 
-        private ConvolutionFilterBase filter;
-        private ObservableCollection<ConvolutionFilterBase> filters;
-
         public MainWindow MainWindow;
-        private ProcessingUserControl userControl;
-        private Manipulation manipulation;
-        private FileOperation fileOperation;
+        private readonly ProcessingUserControl userControl;
+        private readonly Manipulation manipulation;
+        private readonly FileOperation fileOperation;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public enum FilterType
+        {
+            Invalid,
+            Invert,
+            Sepia,
+            Emboss,
+            Pixelate,
+            Median,
+            BoxBlur,
+            GaussianBlur
+        }
+
+        public List<FilterType> Filters { get; set; }
 
         public bool ShowChanges
         {
@@ -72,27 +75,7 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool Emboss
-        {
-            get { return emboss; }
-            set
-            {
-                emboss = value;
-                OnPropertyChanged(nameof(Emboss));
-            }
-        }
-
         public bool BlurFilters { get; set; }
-
-        public bool BoxBlurFilter
-        {
-            get { return boxBlurFilter; }
-            set
-            {
-                boxBlurFilter = value;
-                OnPropertyChanged(nameof(BoxBlurFilter));
-            }
-        }
 
         public int BoxBlurAmount
         {
@@ -111,56 +94,6 @@ namespace ImageProcessing.ViewModels
             {
                 gaussianBlurAmount = value;
                 OnPropertyChanged(nameof(GaussianBlurAmount));
-            }
-        }
-
-        public bool GaussianBlurFilter
-        {
-            get { return gaussianBlurFilter; }
-            set
-            {
-                gaussianBlurFilter = value;
-                OnPropertyChanged(nameof(GaussianBlurFilter));
-            }
-        }
-
-        public ConvolutionFilterBase Filter
-        {
-            get { return filter; }
-            set
-            {
-                filter = value;
-                OnPropertyChanged(nameof(Filter));
-            }
-        }
-
-        public ObservableCollection<ConvolutionFilterBase> Filters
-        {
-            get { return filters; }
-            private set
-            {
-                filters = value;
-                OnPropertyChanged(nameof(Filters));
-            }
-        }
-
-        public bool Pixelate
-        {
-            get { return pixelate; }
-            set
-            {
-                pixelate = value;
-                OnPropertyChanged(nameof(Pixelate));
-            }
-        }
-
-        public bool MedianFilter
-        {
-            get { return medianFilter; }
-            set
-            {
-                medianFilter = value;
-                OnPropertyChanged(nameof(MedianFilter));
             }
         }
 
@@ -207,31 +140,11 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool SepiaTone
-        {
-            get { return sepiaTone; }
-            set
-            {
-                sepiaTone = value;
-                OnPropertyChanged(nameof(SepiaTone));
-            }
-        }
-
-        public bool Invert
-        {
-            get { return invert; }
-            set
-            {
-                invert = value;
-                OnPropertyChanged(nameof(Invert));
-            }
-        }
-
         public Bitmap ModifiedImage { get; set; }
 
         public Bitmap OriginalImage { get; set; }
 
-        public OtherEffectsWindow OtherEffectsWindow { get; set; }
+        public EffectsWindow OtherEffectsWindow { get; set; }
 
         public float Gamma
         {
@@ -291,6 +204,7 @@ namespace ImageProcessing.ViewModels
 
         public ProcessingUserControlViewModel(MainWindow mainWindow, ProcessingUserControl userControl)
         {
+            Filters = new List<FilterType>();
             MaximumHue = 360;
             Contrast = 1;
             Gamma = 1;
@@ -360,16 +274,10 @@ namespace ImageProcessing.ViewModels
             Brightness = 0;
             Contrast = 1;
             Gamma = 1;
-            Invert = false;
-            SepiaTone = false;
             PixelateSize = 1;
             MedianSize = 3;
             GaussianBlurAmount = 1;
             BoxBlurAmount = 3;
-            Pixelate = false;
-            MedianFilter = false;
-            GaussianBlurFilter = false;
-            BoxBlurFilter = false;
             BlurFilters = false;
             GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
@@ -425,18 +333,11 @@ namespace ImageProcessing.ViewModels
                                                                  GrayScale,
                                                                  PixelColor,
                                                                  ReplaceColor,
-                                                                 Invert,
-                                                                 SepiaTone,
-                                                                 Pixelate,
                                                                  PixelateSize,
-                                                                 MedianFilter,
                                                                  MedianSize,
-                                                                 BlurFilters,
-                                                                 GaussianBlurFilter,
                                                                  GaussianBlurAmount,
-                                                                 BoxBlurFilter,
                                                                  BoxBlurAmount,
-                                                                 Emboss));
+                                                                 Filters));
             thread.Start();
         }
 
