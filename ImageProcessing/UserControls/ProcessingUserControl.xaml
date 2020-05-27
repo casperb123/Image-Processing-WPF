@@ -15,7 +15,7 @@
     
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -63,9 +63,9 @@
                     Content="Reset Image"
                     Margin="0,0,0,5"
                     Click="ButtonResetImage_Click" />
-            <CheckBox x:Name="checkBoxShowChanges"
-                      Content="Show Changes"
-                      IsChecked="{Binding Path=ShowChanges}" />
+            <mah:ToggleSwitch x:Name="toggleSwitchShowChanges"
+                              Content="Show Changes"
+                              IsOn="{Binding Path=ShowChanges}" />
         </StackPanel>
 
         <StackPanel VerticalAlignment="Bottom"
@@ -96,14 +96,13 @@
 
                     <StackPanel Grid.ColumnSpan="2"
                                 VerticalAlignment="Center">
-                        <CheckBox x:Name="radioButtonGrayScale"
-                                  Content="Gray Scale"
-                                  IsChecked="{Binding Path=GrayScale}"
-                                  Margin="0,0,0,5" />
-                        <CheckBox x:Name="radioButtonReplaceColor"
-                                  Content="Replace Color"
-                                  IsEnabled="{Binding Path=GrayScale, Converter={StaticResource InverseBooleanConverter}}"
-                                  IsChecked="{Binding Path=ReplaceColor}" />
+                        <mah:ToggleSwitch x:Name="toggleSwitchGrayScale"
+                                          Content="Gray Scale"
+                                          IsOn="{Binding Path=GrayScale}" />
+                        <mah:ToggleSwitch x:Name="toggleSwitchReplaceColor"
+                                          Content="Replace Color"
+                                          IsEnabled="{Binding Path=GrayScale, Converter={StaticResource InverseBooleanConverter}}"
+                                          IsOn="{Binding Path=ReplaceColor}" />
                     </StackPanel>
 
                     <Button x:Name="buttonGrayColor"
@@ -111,7 +110,9 @@
                             HorizontalAlignment="Right"
                             Focusable="False"
                             Margin="5,0,0,0"
+                            Height="auto"
                             IsEnabled="{Binding Path=ReplaceColor}"
+                            VerticalAlignment="Center"
                             Click="ButtonGrayColorButton_Click">
                         <Rectangle x:Name="rectangleGrayColor"
                                    Stroke="Black"
@@ -260,18 +261,15 @@
         <GroupBox Header="Image Effects"
                   Grid.Row="1">
             <StackPanel>
-                <CheckBox x:Name="checkBoxInvert"
-                          Content="Invert Image"
-                          Margin="0,0,0,5"
-                          IsChecked="{Binding Path=Invert}" />
-                <CheckBox x:Name="checkBoxSepia"
-                          Content="Sepia Tone"
-                          Margin="0,0,0,5"
-                          IsChecked="{Binding Path=SepiaTone}" />
-                <CheckBox x:Name="checkBoxEmbossFilter"
-                          Content="Emboss"
-                          Margin="0,0,0,5"
-                          IsChecked="{Binding Path=Emboss}" />
+                <mah:ToggleSwitch x:Name="toggleSwitchInvert"
+                                  Content="Invert Image"
+                                  IsOn="{Binding Path=Invert}" />
+                <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
+                                  Content="Sepia Tone"
+                                  IsOn="{Binding Path=SepiaTone}" />
+                <mah:ToggleSwitch x:Name="toggleSwitchEmbossFilter"
+                                  Content="Emboss"
+                                  IsOn="{Binding Path=Emboss}" />
                 <Button x:Name="buttonOtherEffects"
                         Content="Other Effects"
                         Click="ButtonOtherEffects_Click" />
