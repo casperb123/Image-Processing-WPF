@@ -27,7 +27,7 @@ namespace ImageProcessing.ViewModels
         private bool invert;
         private bool sepiaTone;
         private bool grayScale;
-        private bool invertedGrayScale;
+        private bool replaceColor;
         private int pixelateSize;
         private int medianSize;
         private bool pixelate;
@@ -38,7 +38,6 @@ namespace ImageProcessing.ViewModels
         private int meanBlurAmount;
         private bool emboss;
         private Color pixelColor;
-        private bool replaceGrayColor;
 
         private ConvolutionFilterBase filter;
         private ObservableCollection<ConvolutionFilterBase> filters;
@@ -58,16 +57,6 @@ namespace ImageProcessing.ViewModels
                 showChanges = value;
                 OnPropertyChanged(nameof(ShowChanges));
                 ToggleImages();
-            }
-        }
-
-        public bool ReplaceGrayColor
-        {
-            get { return replaceGrayColor; }
-            set
-            {
-                replaceGrayColor = value;
-                OnPropertyChanged(nameof(ReplaceGrayColor));
             }
         }
 
@@ -195,16 +184,6 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool InvertedGrayScale
-        {
-            get { return invertedGrayScale; }
-            private set
-            {
-                invertedGrayScale = value;
-                OnPropertyChanged(nameof(InvertedGrayScale));
-            }
-        }
-
         public bool GrayScale
         {
             get { return grayScale; }
@@ -212,7 +191,19 @@ namespace ImageProcessing.ViewModels
             {
                 grayScale = value;
                 OnPropertyChanged(nameof(GrayScale));
-                InvertedGrayScale = !value;
+
+                if (value)
+                    ReplaceColor = false;
+            }
+        }
+
+        public bool ReplaceColor
+        {
+            get { return replaceColor; }
+            set
+            {
+                replaceColor = value;
+                OnPropertyChanged(nameof(ReplaceColor));
             }
         }
 
@@ -304,12 +295,11 @@ namespace ImageProcessing.ViewModels
             Contrast = 1;
             Gamma = 1;
             showChanges = true;
-            invertedGrayScale = true;
             PixelateSize = 1;
             MedianSize = 3;
             GaussianBlurAmount = 1;
             MeanBlurAmount = 3;
-            PixelColor = Color.FromArgb(255, 0, 0, 0);
+            PixelColor = Color.FromArgb(255, 255, 0, 0);
 
             MainWindow = mainWindow;
             this.userControl = userControl;
@@ -355,6 +345,7 @@ namespace ImageProcessing.ViewModels
                 return;
 
             OriginalImage = bitmap;
+            ModifiedImage = bitmap;
             DisplayImage(OriginalImage, 3);
         }
 
@@ -380,8 +371,9 @@ namespace ImageProcessing.ViewModels
             GaussianBlurFilter = false;
             MeanBlurFilter = false;
             BlurFilters = false;
+            GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
-            ReplaceGrayColor = false;
+            ReplaceColor = false;
 
             if (OriginalImage != null)
             {
@@ -432,7 +424,7 @@ namespace ImageProcessing.ViewModels
                                                                  Gamma,
                                                                  GrayScale,
                                                                  PixelColor,
-                                                                 ReplaceGrayColor,
+                                                                 ReplaceColor,
                                                                  Invert,
                                                                  SepiaTone,
                                                                  Pixelate,

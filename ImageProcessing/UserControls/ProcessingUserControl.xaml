@@ -5,9 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ImageProcessing.UserControls"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:ImageProcessing.Converters"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+    
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
@@ -77,8 +82,7 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <GroupBox Header="Color Isolation"
-                      IsEnabled="{Binding Path=InvertedGrayScale, Mode=OneWay}">
+            <GroupBox Header="Color Isolation">
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
@@ -86,20 +90,48 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
+
+                    <StackPanel Grid.ColumnSpan="2"
+                                VerticalAlignment="Center">
+                        <CheckBox x:Name="radioButtonGrayScale"
+                                  Content="Gray Scale"
+                                  IsChecked="{Binding Path=GrayScale}"
+                                  Margin="0,0,0,5" />
+                        <CheckBox x:Name="radioButtonReplaceColor"
+                                  Content="Replace Color"
+                                  IsEnabled="{Binding Path=GrayScale, Converter={StaticResource InverseBooleanConverter}}"
+                                  IsChecked="{Binding Path=ReplaceColor}" />
+                    </StackPanel>
+
+                    <Button x:Name="buttonGrayColor"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Focusable="False"
+                            Margin="5,0,0,0"
+                            IsEnabled="{Binding Path=ReplaceColor}"
+                            Click="ButtonGrayColorButton_Click">
+                        <Rectangle x:Name="rectangleGrayColor"
+                                   Stroke="Black"
+                                   Fill="Black"
+                                   Width="40"
+                                   Height="40" />
+                    </Button>
 
                     <Rectangle x:Name="rectangleColorMin"
                                Stroke="Black"
                                Fill="Red"
                                Width="80"
                                Height="80"
-                               Margin="0,0,5,0" />
+                               Margin="0,0,5,0"
+                               Grid.Row="1" />
                     <Rectangle x:Name="rectangleColorMax"
                                Stroke="Black"
                                Fill="Red"
                                Grid.Column="1"
+                               Grid.Row="1"
                                Width="80"
                                Height="80"
                                Margin="5,0,0,0" />
@@ -111,11 +143,13 @@
                                      LowerValue="{Binding Path=MinimumHue}"
                                      UpperValue="{Binding Path=MaximumHue}"
                                      Grid.Column="2"
+                                     Grid.Row="1"
                                      Margin="10,0,0,0"
                                      AutoToolTipPlacement="TopLeft"
                                      mah:SliderHelper.EnableMouseWheel="MouseHover"
                                      mah:SliderHelper.ChangeValueBy="LargeChange"
                                      LargeChange="10"
+                                     IsEnabled="{Binding Path=GrayScale, Converter={StaticResource InverseBooleanConverter}}"
                                      LowerValueChanged="SliderHue_ValueChanged"
                                      UpperValueChanged="SliderHue_ValueChanged">
                         <mah:RangeSlider.AutoToolTipRangeValuesTemplate>
@@ -134,31 +168,6 @@
                             </DataTemplate>
                         </mah:RangeSlider.AutoToolTipRangeValuesTemplate>
                     </mah:RangeSlider>
-
-                    <StackPanel Orientation="Horizontal"
-                                Grid.Column="2"
-                                Grid.Row="1"
-                                HorizontalAlignment="Right">
-                        <CheckBox x:Name="checkBoxGrayColor"
-                                  Content="Replace Color"
-                                  Margin="0,0,5,0"
-                                  IsChecked="{Binding Path=ReplaceGrayColor}" />
-                        <Button x:Name="buttonGrayColor"
-                                Grid.Column="2"
-                                Grid.Row="1"
-                                VerticalAlignment="Bottom"
-                                HorizontalAlignment="Right"
-                                Focusable="False"
-                                Margin="5,0,0,0"
-                                IsEnabled="{Binding Path=ReplaceGrayColor}"
-                                Click="ButtonGrayColorButton_Click">
-                            <Rectangle x:Name="rectangleGrayColor"
-                                       Stroke="Black"
-                                       Fill="Black"
-                                       Width="40"
-                                       Height="40" />
-                        </Button>
-                    </StackPanel>
                 </Grid>
             </GroupBox>
 
@@ -259,10 +268,6 @@
                           Content="Sepia Tone"
                           Margin="0,0,0,5"
                           IsChecked="{Binding Path=SepiaTone}" />
-                <CheckBox x:Name="checkBoxGrayScale"
-                          Content="Gray Scale"
-                          Margin="0,0,0,5"
-                          IsChecked="{Binding Path=GrayScale}" />
                 <CheckBox x:Name="checkBoxEmbossFilter"
                           Content="Emboss"
                           Margin="0,0,0,5"

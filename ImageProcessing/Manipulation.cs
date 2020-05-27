@@ -127,7 +127,7 @@ namespace ImageProcessing
             return resultBitmap;
         }
 
-        public void Modify(object obj,
+        public void Modify(Bitmap bitmap,
                            double hueMin,
                            double hueMax,
                            float brightness,
@@ -149,123 +149,121 @@ namespace ImageProcessing
                            int meanBlurAmount,
                            bool embossFilter)
         {
-            if (obj is Bitmap bitmap)
+            Bitmap modifiedBitmap = new Bitmap(bitmap);
+
+            // Use "unsafe" because C# doesn't support pointer aritmetic by default
+            unsafe
             {
-                Bitmap modifiedBitmap = new Bitmap(bitmap);
+                // Lock the bitmap into system memory
+                // "PixelFormat" can be "Format24bppRgb", "Format32bppArgb", etc
+                BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
-                // Use "unsafe" because C# doesn't support pointer aritmetic by default
-                unsafe
+                // Define variables for bytes per pixel, as well as Image Width & Height
+                int bytesPerPixel = Image.GetPixelFormatSize(modifiedBitmap.PixelFormat) / 8;
+                int heightInPixels = modifiedBitmap.Height;
+                int widthInBytes = modifiedBitmap.Width * bytesPerPixel;
+
+                // Define a pointer to the first pixel in the locked image
+                // Scan0 gets or sets the address of the first pixel data in the bitmap
+                // This can also be thought of as the first scan line in the bitmap
+                byte* ptrFirstPixel = (byte*)bitmapData.Scan0;
+
+                // Step thru each pixel in the image using pointers
+                // Parallel.For execute a 'for' loop in which iterations may run in parallel
+                Parallel.For(0, heightInPixels, y =>
                 {
-                    // Lock the bitmap into system memory
-                    // "PixelFormat" can be "Format24bppRgb", "Format32bppArgb", etc
-                    BitmapData bitmapData = modifiedBitmap.LockBits(new Rectangle(0, 0, modifiedBitmap.Width, modifiedBitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                    // Use the 'Stride' (scanline width) property to step line by line through the image
+                    byte* currentLine = ptrFirstPixel + (y * bitmapData.Stride);
 
-                    // Define variables for bytes per pixel, as well as Image Width & Height
-                    int bytesPerPixel = Image.GetPixelFormatSize(modifiedBitmap.PixelFormat) / 8;
-                    int heightInPixels = modifiedBitmap.Height;
-                    int widthInBytes = modifiedBitmap.Width * bytesPerPixel;
-
-                    // Define a pointer to the first pixel in the locked image
-                    // Scan0 gets or sets the address of the first pixel data in the bitmap
-                    // This can also be thought of as the first scan line in the bitmap
-                    byte* ptrFirstPixel = (byte*)bitmapData.Scan0;
-
-                    // Step thru each pixel in the image using pointers
-                    // Parallel.For execute a 'for' loop in which iterations may run in parallel
-                    Parallel.For(0, heightInPixels, y =>
+                    for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                     {
-                        // Use the 'Stride' (scanline width) property to step line by line through the image
-                        byte* currentLine = ptrFirstPixel + (y * bitmapData.Stride);
+                        // Get each pixel color (R, G & B)
+                        int oldBlue = currentLine[x];
+                        int oldGreen = currentLine[x + 1];
+                        int oldRed = currentLine[x + 2];
 
-                        for (int x = 0; x < widthInBytes; x += bytesPerPixel)
+                        Color color = Color.FromArgb(oldRed, oldGreen, oldBlue);
+                        double hue = color.GetHue();
+
+                        if (grayScale || hue < hueMin || hue > hueMax)
                         {
-                            // Get each pixel color (R, G & B)
-                            int oldBlue = currentLine[x];
-                            int oldGreen = currentLine[x + 1];
-                            int oldRed = currentLine[x + 2];
+                            Color newColor;
 
-                            Color color = Color.FromArgb(oldRed, oldGreen, oldBlue);
-                            double hue = color.GetHue();
-
-                            if (grayScale || hue < hueMin || hue > hueMax)
+                            if (replaceGrayColor)
+                                newColor = Color.FromArgb(pixelColor.A, pixelColor.R, pixelColor.G, pixelColor.B);
+                            else
                             {
-                                Color newColor;
-
-                                if (replaceGrayColor && !grayScale)
-                                    newColor = Color.FromArgb(pixelColor.A, pixelColor.R, pixelColor.G, pixelColor.B);
-                                else
-                                {
-                                    int avg = (oldRed + oldGreen + oldBlue) / 3;
-                                    newColor = Color.FromArgb(avg, avg, avg);
-                                }
-
-                                // Change each pixels color
-                                currentLine[x] = newColor.B;
-                                currentLine[x + 1] = newColor.G;
-                                currentLine[x + 2] = newColor.R;
-                                currentLine[x + 3] = newColor.A;
+                                int avg = (oldRed + oldGreen + oldBlue) / 3;
+                                newColor = Color.FromArgb(avg, avg, avg);
                             }
+
+                            // Change each pixels color
+                            currentLine[x] = newColor.B;
+                            currentLine[x + 1] = newColor.G;
+                            currentLine[x + 2] = newColor.R;
+                            currentLine[x + 3] = newColor.A;
                         }
-                    });
-
-                    modifiedBitmap.UnlockBits(bitmapData);
-                }
-
-                if (pixelate)
-                    modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
-
-                if (blurFilters)
-                {
-                    if (gaussianBlurFilter)
-                    {
-                        GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
-                        modifiedBitmap = gaussianBlur.Process(gaussianBlurAmount);
                     }
-                    else if (meanBlurFilter)
-                    {
-                        BoxBlurFilter meanBlur = new BoxBlurFilter(meanBlurAmount);
-                        modifiedBitmap = modifiedBitmap.ConvolutionFilter(meanBlur);
-                    }
-                }
+                });
 
-                if (medianFilter)
-                    modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+                modifiedBitmap.UnlockBits(bitmapData);
+            }
 
-                if (embossFilter)
+            if (pixelate)
+                modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
+
+            if (blurFilters)
+            {
+                if (gaussianBlurFilter)
                 {
-                    EmbossFilter emboss = new EmbossFilter();
-                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(emboss);
+                    GaussianBlur gaussianBlur = new GaussianBlur(modifiedBitmap);
+                    modifiedBitmap = gaussianBlur.Process(gaussianBlurAmount);
                 }
-
-                float[][] brightnessContrastArray =
+                else if (meanBlurFilter)
                 {
-                    new float[] {contrast, 0, 0, 0, 0}, // scale red
-                    new float[] {0, contrast, 0, 0, 0}, // scale green
-                    new float[] {0, 0, contrast, 0, 0}, // scale blue
-                    new float[] {0, 0, 0, 1, 0}, // don't scale alpha
-                    new float[] {brightness, brightness, brightness, 0, 1}
+                    BoxBlurFilter meanBlur = new BoxBlurFilter(meanBlurAmount);
+                    modifiedBitmap = modifiedBitmap.ConvolutionFilter(meanBlur);
+                }
+            }
+
+            if (medianFilter)
+                modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+
+            if (embossFilter)
+            {
+                EmbossFilter emboss = new EmbossFilter();
+                modifiedBitmap = modifiedBitmap.ConvolutionFilter(emboss);
+            }
+
+            //float[][] brightnessContrastArray =
+            //{
+            //    new float[] {contrast, 0, 0, 0, 0}, // scale red
+            //    new float[] {0, contrast, 0, 0, 0}, // scale green
+            //    new float[] {0, 0, contrast, 0, 0}, // scale blue
+            //    new float[] {0, 0, 0, 1, 0}, // don't scale alpha
+            //    new float[] {brightness, brightness, brightness, 0, 1}
+            //};
+
+            //ApplyColorMatrix(modifiedBitmap, brightnessContrastArray);
+
+            if (invert)
+            {
+                float[][] invertArray =
+                {
+                    new float[] {-1, 0, 0, 0, 0},
+                    new float[] {0, -1, 0, 0, 0},
+                    new float[] {0, 0, -1, 0, 0},
+                    new float[] {0, 0, 0, 1, 0},
+                    new float[] {1, 1, 1, 0, 1}
                 };
 
-                ApplyColorMatrix(modifiedBitmap, brightnessContrastArray);
+                ApplyColorMatrix(modifiedBitmap, invertArray);
+            }
 
-                if (invert)
+            if (sepiaTone)
+            {
+                float[][] sepiaArray =
                 {
-                    float[][] invertArray =
-                    {
-                        new float[] {-1, 0, 0, 0, 0},
-                        new float[] {0, -1, 0, 0, 0},
-                        new float[] {0, 0, -1, 0, 0},
-                        new float[] {0, 0, 0, 1, 0},
-                        new float[] {1, 1, 1, 0, 1}
-                    };
-
-                    ApplyColorMatrix(modifiedBitmap, invertArray);
-                }
-
-                if (sepiaTone)
-                {
-                    float[][] sepiaArray =
-                    {
                         new float[] {.393f, .349f, .272f, 0, 0},
                         new float[] {.769f, .686f, .534f, 0, 0},
                         new float[] {.189f, .168f, .131f, 0, 0},
@@ -273,13 +271,12 @@ namespace ImageProcessing
                         new float[] {0, 0, 0, 0, 1}
                     };
 
-                    ApplyColorMatrix(modifiedBitmap, sepiaArray);
-                }
-
-                SetGamma(modifiedBitmap, gamma);
-
-                OnImageFinished(modifiedBitmap);
+                ApplyColorMatrix(modifiedBitmap, sepiaArray);
             }
+
+            //SetGamma(modifiedBitmap, gamma);
+
+            OnImageFinished(modifiedBitmap);
         }
 
         //public Bitmap[,] MakeTiles(object obj)

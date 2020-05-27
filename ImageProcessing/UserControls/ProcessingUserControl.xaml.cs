@@ -1,8 +1,10 @@
 ﻿using ImageProcessing.ViewModels;
 using ImageProcessing.Windows;
 using MahApps.Metro.Controls;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ImageProcessing.UserControls
