@@ -256,7 +256,7 @@ namespace ImageProcessing
                     case FilterType.Invert:
                         InvertImage(modifiedBitmap);
                         break;
-                    case FilterType.Sepia:
+                    case FilterType.SepiaTone:
                         SepiaTone(modifiedBitmap);
                         break;
                     case FilterType.Emboss:

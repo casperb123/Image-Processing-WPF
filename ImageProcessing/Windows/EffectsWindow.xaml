@@ -7,7 +7,7 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Image Effects"
-                 Height="593"
+                 Height="718"
                  Width="340"
                  SizeToContent="Height"
                  ResizeMode="NoResize"
@@ -16,7 +16,7 @@
                  Closing="MetroWindow_Closing">
     <StackPanel Margin="5">
         <GroupBox x:Name="groupBoxInvert"
-                  Header="Invert"
+                  Header="Invert Image - Not applied"
                   Margin="0,0,0,5">
             <mah:ToggleSwitch x:Name="toggleSwitchInvert"
                               OnContent="Enabled"
@@ -25,20 +25,25 @@
         </GroupBox>
 
         <GroupBox x:Name="groupBoxSepiaTone"
-                  Header="Sepia Tone"
+                  Header="Sepia Tone - Not applied"
                   Margin="0,0,0,5">
             <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
                               OnContent="Enabled"
                               OffContent="Disabled"
                               IsOn="{Binding Path=SepiaTone}" />
         </GroupBox>
-        
-        <mah:ToggleSwitch x:Name="toggleSwitchEmboss"
-                          Content="Emboss"
-                          IsOn="{Binding Path=Emboss}" />
+
+        <GroupBox x:Name="groupBoxEmboss"
+                  Header="Emboss - Not applied"
+                  Margin="0,0,0,5">
+            <mah:ToggleSwitch x:Name="toggleSwitchEmboss"
+                              OnContent="Enabled"
+                              OffContent="Disabled"
+                              IsOn="{Binding Path=Emboss}" />
+        </GroupBox>
 
         <GroupBox x:Name="groupBoxPixelate"
-                  Header="Pixelate"
+                  Header="Pixelate - Not applied"
                   Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -80,8 +85,8 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox x:Name="groupBoxMedianFilter"
-                  Header="Median Filter"
+        <GroupBox x:Name="groupBoxMedian"
+                  Header="Median - Not applied"
                   Margin="0,0,0,5">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -93,10 +98,10 @@
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <mah:ToggleSwitch x:Name="toggleSwitchMedianFilter"
+                <mah:ToggleSwitch x:Name="toggleSwitchMedian"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
-                                  IsOn="{Binding Path=MedianFilter}" />
+                                  IsOn="{Binding Path=Median}" />
 
                 <Slider x:Name="sliderMedianSize"
                         Minimum="3"
@@ -110,7 +115,7 @@
                         Grid.Row="1"
                         Value="{Binding Path=MedianSize}"
                         Margin="0,0,5,0"
-                        IsEnabled="{Binding Path=MedianFilter}" />
+                        IsEnabled="{Binding Path=Median}" />
                 <mah:NumericUpDown x:Name="numericMedianSize"
                                    Minimum="3"
                                    Maximum="15"
@@ -123,104 +128,95 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Blur Filters">
-            <StackPanel>
-                <mah:ToggleSwitch x:Name="toggleSwitchBlurFilters"
+        <GroupBox x:Name="groupBoxBoxBlur"
+                  Header="Box Blur - Not applied"
+                  Margin="0,0,0,5"
+                  IsEnabled="{Binding Path=BlurFilters}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <mah:ToggleSwitch x:Name="toggleSwitchBoxBlur"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
-                                  IsOn="{Binding Path=BlurFilters}" />
+                                  IsOn="{Binding Path=BoxBlur}" />
 
-                <GroupBox x:Name="groupBoxBoxBlurFilter"
-                          Header="Box Blur Filter"
-                          Margin="0,0,0,5"
-                          IsEnabled="{Binding Path=BlurFilters}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="80" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
+                <Slider x:Name="sliderMeanBlurAmount"
+                        Minimum="3"
+                        Maximum="19"
+                        SmallChange="2"
+                        AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="0"
+                        IsMoveToPointEnabled="True"
+                        IsSnapToTickEnabled="True"
+                        mah:SliderHelper.EnableMouseWheel="MouseHover"
+                        mah:SliderHelper.ChangeValueBy="SmallChange"
+                        TickFrequency="2"
+                        IsEnabled="{Binding Path=BoxBlur}"
+                        Value="{Binding Path=BoxBlurAmount}"
+                        Margin="0,0,5,0"
+                        Grid.Row="1" />
+                <mah:NumericUpDown x:Name="numericMeanBlurAmount"
+                                   Minimum="3"
+                                   Maximum="19"
+                                   Interval="2"
+                                   IsEnabled="{Binding Path=BoxBlurFilter}"
+                                   Value="{Binding Path=BoxBlurAmount}"
+                                   Margin="5,0,0,0"
+                                   Grid.Row="1"
+                                   Grid.Column="1" />
+            </Grid>
+        </GroupBox>
 
-                        <mah:ToggleSwitch x:Name="toggleSwitchBoxBlurFilter"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=BoxBlurFilter}" />
+        <GroupBox x:Name="groupBoxGaussianBlur"
+                  Header="Gaussian Blur - Not applied"
+                  IsEnabled="{Binding Path=BlurFilters}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="80" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
 
-                        <Slider x:Name="sliderMeanBlurAmount"
-                                Minimum="3"
-                                Maximum="19"
-                                SmallChange="2"
-                                AutoToolTipPlacement="TopLeft"
-                                AutoToolTipPrecision="0"
-                                IsMoveToPointEnabled="True"
-                                IsSnapToTickEnabled="True"
-                                mah:SliderHelper.EnableMouseWheel="MouseHover"
-                                mah:SliderHelper.ChangeValueBy="SmallChange"
-                                TickFrequency="2"
-                                IsEnabled="{Binding Path=BoxBlurFilter}"
-                                Value="{Binding Path=BoxBlurAmount}"
-                                Margin="0,0,5,0"
-                                Grid.Row="1" />
-                        <mah:NumericUpDown x:Name="numericMeanBlurAmount"
-                                           Minimum="3"
-                                           Maximum="19"
-                                           Interval="2"
-                                           IsEnabled="{Binding Path=BoxBlurFilter}"
-                                           Value="{Binding Path=BoxBlurAmount}"
-                                           Margin="5,0,0,0"
-                                           Grid.Row="1"
-                                           Grid.Column="1" />
-                    </Grid>
-                </GroupBox>
+                <mah:ToggleSwitch x:Name="radioButtonGaussianBlur"
+                                  OnContent="Enabled"
+                                  OffContent="Disabled"
+                                  IsOn="{Binding Path=GaussianBlur}" />
 
-                <GroupBox x:Name="groupBoxGaussianBlurFilter"
-                          Header="Gaussian Blur Filter"
-                          IsEnabled="{Binding Path=BlurFilters}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="80" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-
-                        <mah:ToggleSwitch x:Name="radioButtonGaussianBlurFilter"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=GaussianBlurFilter}" />
-
-                        <Slider x:Name="sliderBlurFilterAmount"
-                                Minimum="1"
-                                Maximum="100"
-                                AutoToolTipPlacement="TopLeft"
-                                AutoToolTipPrecision="0"
-                                mah:SliderHelper.EnableMouseWheel="MouseHover"
-                                mah:SliderHelper.ChangeValueBy="SmallChange"
-                                IsMoveToPointEnabled="True"
-                                SmallChange="1"
-                                Grid.Row="1"
-                                Margin="0,0,5,0"
-                                IsSnapToTickEnabled="True"
-                                TickFrequency="1"
-                                IsEnabled="{Binding Path=GaussianBlurFilter}"
-                                Value="{Binding Path=GaussianBlurAmount}" />
-                        <mah:NumericUpDown x:Name="numericBlurFilterAmount"
-                                           Minimum="1"
-                                           Maximum="100"
-                                           Interval="1"
-                                           Grid.Row="1"
-                                           Grid.Column="1"
-                                           Margin="5,0,0,0"
-                                           IsEnabled="{Binding Path=GaussianBlurFilter}"
-                                           Value="{Binding Path=GaussianBlurAmount}" />
-                    </Grid>
-                </GroupBox>
-            </StackPanel>
+                <Slider x:Name="sliderBlurFilterAmount"
+                        Minimum="1"
+                        Maximum="100"
+                        AutoToolTipPlacement="TopLeft"
+                        AutoToolTipPrecision="0"
+                        mah:SliderHelper.EnableMouseWheel="MouseHover"
+                        mah:SliderHelper.ChangeValueBy="SmallChange"
+                        IsMoveToPointEnabled="True"
+                        SmallChange="1"
+                        Grid.Row="1"
+                        Margin="0,0,5,0"
+                        IsSnapToTickEnabled="True"
+                        TickFrequency="1"
+                        IsEnabled="{Binding Path=GaussianBlur}"
+                        Value="{Binding Path=GaussianBlurAmount}" />
+                <mah:NumericUpDown x:Name="numericBlurFilterAmount"
+                                   Minimum="1"
+                                   Maximum="100"
+                                   Interval="1"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Margin="5,0,0,0"
+                                   IsEnabled="{Binding Path=GaussianBlurFilter}"
+                                   Value="{Binding Path=GaussianBlurAmount}" />
+            </Grid>
         </GroupBox>
     </StackPanel>
 </mah:MetroWindow>

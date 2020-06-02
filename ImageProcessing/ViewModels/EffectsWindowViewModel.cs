@@ -3,55 +3,40 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Windows.Controls;
 using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 
 namespace ImageProcessing.ViewModels
 {
     public class EffectsWindowViewModel : INotifyPropertyChanged
     {
-        private bool invertFilter;
-        private bool sepiaToneFilter;
-        private bool embossFilter;
+        private bool invert;
+        private bool sepiaTone;
+        private bool emboss;
         private int pixelateSize;
         private int medianSize;
         private bool pixelate;
-        private bool medianFilter;
-        private bool gaussianBlurFilter;
+        private bool median;
+        private bool gaussianBlur;
         private int gaussianBlurAmount;
-        private bool boxBlurFilter;
+        private bool boxBlur;
         private int boxBlurAmount;
         private bool blurFilters;
 
         private EffectsWindow window;
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
 
-        public bool BlurFilters
+        public bool BoxBlur
         {
-            get { return blurFilters; }
+            get { return boxBlur; }
             set
             {
-                blurFilters = value;
-                OnPropertyChanged(nameof(BlurFilters));
-
-                if (!value)
-                {
-                    BoxBlurFilter = false;
-                    GaussianBlurFilter = false;
-                }
-
-                ProcessingUserControlViewModel.BlurFilters = value;
-            }
-        }
-
-        public bool BoxBlurFilter
-        {
-            get { return boxBlurFilter; }
-            set
-            {
-                boxBlurFilter = value;
-                OnPropertyChanged(nameof(boxBlurFilter));
+                boxBlur = value;
+                OnPropertyChanged(nameof(boxBlur));
 
                 if (value)
                 {
@@ -60,7 +45,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Add(FilterType.BoxBlur);
                     else
                     {
-                        GaussianBlurFilter = false;
+                        GaussianBlur = false;
                         ProcessingUserControlViewModel.Filters.Insert(gaussianIndex, FilterType.BoxBlur);
                     }
                 }
@@ -71,11 +56,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.BoxBlur);
-                if (index != -1)
-                    window.groupBoxBoxBlurFilter.Header = "Box Blur Filter";
-                else
-                    window.groupBoxBoxBlurFilter.Header = $"Box Blur Filter - {index + 1}";
+                UpdateHeaders();
             }
         }
 
@@ -103,13 +84,13 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool GaussianBlurFilter
+        public bool GaussianBlur
         {
-            get { return gaussianBlurFilter; }
+            get { return gaussianBlur; }
             set
             {
-                gaussianBlurFilter = value;
-                OnPropertyChanged(nameof(GaussianBlurFilter));
+                gaussianBlur = value;
+                OnPropertyChanged(nameof(GaussianBlur));
 
                 if (value)
                 {
@@ -118,7 +99,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Add(FilterType.GaussianBlur);
                     else
                     {
-                        BoxBlurFilter = false;
+                        BoxBlur = false;
                         ProcessingUserControlViewModel.Filters.Insert(boxIndex, FilterType.GaussianBlur);
                     }
                 }
@@ -129,21 +110,17 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.GaussianBlur);
-                if (index == -1)
-                    window.groupBoxGaussianBlurFilter.Header = "Gaussian Blur Filter";
-                else
-                    window.groupBoxGaussianBlurFilter.Header = $"Gaussian Blur Filter - {index + 1}";
+                UpdateHeaders();
             }
         }
 
-        public bool MedianFilter
+        public bool Median
         {
-            get { return medianFilter; }
+            get { return median; }
             set
             {
-                medianFilter = value;
-                OnPropertyChanged(nameof(medianFilter));
+                median = value;
+                OnPropertyChanged(nameof(Median));
 
                 if (value)
                     ProcessingUserControlViewModel.Filters.Add(FilterType.Median);
@@ -154,11 +131,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.Median);
-                if (index == -1)
-                    window.groupBoxMedianFilter.Header = "Median Filter";
-                else
-                    window.groupBoxMedianFilter.Header = $"Median Filter - {index + 1}";
+                UpdateHeaders();
             }
         }
 
@@ -179,11 +152,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.Pixelate);
-                if (index == -1)
-                    window.groupBoxPixelate.Header = "Pixelate";
-                else
-                    window.groupBoxPixelate.Header = $"Pixelate - {index + 1}";
+                UpdateHeaders();
             }
         }
 
@@ -211,13 +180,13 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public bool EmbossFilter
+        public bool Emboss
         {
-            get { return embossFilter; }
+            get { return emboss; }
             set
             {
-                embossFilter = value;
-                OnPropertyChanged(nameof(EmbossFilter));
+                emboss = value;
+                OnPropertyChanged(nameof(Emboss));
 
                 if (value)
                     ProcessingUserControlViewModel.Filters.Add(FilterType.Emboss);
@@ -228,46 +197,38 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.Emboss);
-                if (index == -1)
-                    window.toggleSwitchEmboss.Header = null;
-                else
-                    window.toggleSwitchEmboss.Header = (index + 1).ToString();
+                UpdateHeaders();
             }
         }
 
-        public bool SepiaToneFilter
+        public bool SepiaTone
         {
-            get { return sepiaToneFilter; }
+            get { return sepiaTone; }
             set
             {
-                sepiaToneFilter = value;
-                OnPropertyChanged(nameof(SepiaToneFilter));
+                sepiaTone = value;
+                OnPropertyChanged(nameof(SepiaTone));
 
                 if (value)
-                    ProcessingUserControlViewModel.Filters.Add(FilterType.Sepia);
+                    ProcessingUserControlViewModel.Filters.Add(FilterType.SepiaTone);
                 else
                 {
-                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.Sepia);
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.SepiaTone);
                     if (filterType != FilterType.Invalid)
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.Sepia);
-                if (index == -1)
-                    window.toggleSwitchSepiaTone.Header = null;
-                else
-                    window.toggleSwitchSepiaTone.Header = (index + 1).ToString();
+                UpdateHeaders();
             }
         }
 
-        public bool InvertFilter
+        public bool Invert
         {
-            get { return invertFilter; }
+            get { return invert; }
             set
             {
-                invertFilter = value;
-                OnPropertyChanged(nameof(InvertFilter));
+                invert = value;
+                OnPropertyChanged(nameof(Invert));
 
                 if (value)
                     ProcessingUserControlViewModel.Filters.Add(FilterType.Invert);
@@ -278,11 +239,7 @@ namespace ImageProcessing.ViewModels
                         ProcessingUserControlViewModel.Filters.Remove(filterType);
                 }
 
-                int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.Invert);
-                if (index == -1)
-                    window.toggleSwitchInvert.Header = null;
-                else
-                    window.toggleSwitchInvert.Header = (index + 1).ToString();
+                UpdateHeaders();
             }
         }
 
@@ -299,41 +256,75 @@ namespace ImageProcessing.ViewModels
             ProcessingUserControlViewModel = processingUserControlViewModel;
             window = effectsWindow;
 
-            foreach (FilterType filter in ProcessingUserControlViewModel.Filters)
+            foreach (FilterType filter in ProcessingUserControlViewModel.Filters.ToList())
             {
                 switch (filter)
                 {
                     case FilterType.Invert:
-                        InvertFilter = true;
+                        invert = true;
                         break;
-                    case FilterType.Sepia:
-                        SepiaToneFilter = true;
+                    case FilterType.SepiaTone:
+                        sepiaTone = true;
                         break;
                     case FilterType.Emboss:
-                        EmbossFilter = true;
+                        emboss = true;
                         break;
                     case FilterType.Pixelate:
-                        Pixelate = true;
+                        pixelate = true;
                         break;
                     case FilterType.Median:
-                        MedianFilter = true;
+                        median = true;
                         break;
                     case FilterType.BoxBlur:
-                        BoxBlurFilter = true;
+                        boxBlur = true;
                         break;
                     case FilterType.GaussianBlur:
-                        GaussianBlurFilter = true;
+                        gaussianBlur = true;
                         break;
                     default:
                         break;
                 }
             }
 
+            Thread thread = new Thread(() => WaitForLoadedUpdateHeaders());
+            thread.Start();
+
             PixelateSize = ProcessingUserControlViewModel.PixelateSize;
             MedianSize = ProcessingUserControlViewModel.MedianSize;
-            BlurFilters = ProcessingUserControlViewModel.BlurFilters;
             GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
             BoxBlurAmount = ProcessingUserControlViewModel.BoxBlurAmount;
+        }
+
+        private void UpdateHeaders()
+        {
+            if (!window.IsLoaded)
+                return;
+
+            IEnumerable<FilterType> enumValues = Enum.GetValues(typeof(FilterType)).Cast<FilterType>();
+            foreach (FilterType filterType in enumValues)
+            {
+                if (filterType == FilterType.Invalid)
+                    continue;
+
+                FilterType filter = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == filterType);
+                GroupBox groupBox = window.FindName($"groupBox{filterType}") as GroupBox;
+                string filterName = ProcessingUserControlViewModel.FilterNames.FirstOrDefault(x => x.Key == filterType).Value;
+
+                int index = ProcessingUserControlViewModel.Filters.IndexOf(filter);
+                if (index == -1)
+                    groupBox.Header = $"{filterName} - Not applied";
+                else
+                    groupBox.Header = $"{filterName} - {index + 1}";
+            }
+        }
+
+        private void WaitForLoadedUpdateHeaders()
+        {
+            window.Dispatcher.Invoke(() =>
+            {
+                while (!window.IsLoaded) { }
+                UpdateHeaders();
+            });
         }
     }
 }

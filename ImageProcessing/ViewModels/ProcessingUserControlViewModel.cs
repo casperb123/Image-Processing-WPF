@@ -42,13 +42,15 @@ namespace ImageProcessing.ViewModels
         {
             Invalid,
             Invert,
-            Sepia,
+            SepiaTone,
             Emboss,
             Pixelate,
             Median,
             BoxBlur,
             GaussianBlur
         }
+
+        public Dictionary<FilterType, string> FilterNames;
 
         public List<FilterType> Filters { get; set; }
 
@@ -74,8 +76,6 @@ namespace ImageProcessing.ViewModels
                     userControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
             }
         }
-
-        public bool BlurFilters { get; set; }
 
         public int BoxBlurAmount
         {
@@ -205,6 +205,17 @@ namespace ImageProcessing.ViewModels
         public ProcessingUserControlViewModel(MainWindow mainWindow, ProcessingUserControl userControl)
         {
             Filters = new List<FilterType>();
+            FilterNames = new Dictionary<FilterType, string>
+            {
+                { FilterType.Invert, "Invert Image" },
+                { FilterType.SepiaTone, "Sepia Tone" },
+                { FilterType.Emboss, "Emboss" },
+                { FilterType.Pixelate, "Pixelate" },
+                { FilterType.Median, "Median" },
+                { FilterType.BoxBlur, "Box Blur" },
+                { FilterType.GaussianBlur, "Gaussian Blur" }
+            };
+
             MaximumHue = 360;
             Contrast = 1;
             Gamma = 1;
@@ -278,10 +289,10 @@ namespace ImageProcessing.ViewModels
             MedianSize = 3;
             GaussianBlurAmount = 1;
             BoxBlurAmount = 3;
-            BlurFilters = false;
             GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
             ReplaceColor = false;
+            Filters.Clear();
 
             if (OriginalImage != null)
             {
