@@ -53,13 +53,7 @@ namespace ImageProcessing.UserControls
 
         private void ButtonImageEffects_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.OtherEffectsWindow is null)
-            {
-                ViewModel.OtherEffectsWindow = new EffectsWindow(ViewModel);
-                ViewModel.OtherEffectsWindow.Show();
-            }
-            else
-                ViewModel.OtherEffectsWindow.Focus();
+            ViewModel.ShowEffectsWindow();
         }
 
         private void ButtonGrayColorButton_Click(object sender, RoutedEventArgs e)

@@ -48,8 +48,8 @@ namespace ImageProcessing
         private async void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
             await Settings.CurrentSettings.Save();
-            if (viewModel.ProcessingUserControlViewModel.OtherEffectsWindow != null)
-                viewModel.ProcessingUserControlViewModel.OtherEffectsWindow.Close();
+            if (viewModel.ProcessingUserControlViewModel.EffectsWindow != null)
+                viewModel.ProcessingUserControlViewModel.EffectsWindow.Close();
         }
     }
 }

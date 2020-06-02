@@ -11,16 +11,22 @@ namespace ImageProcessing.Windows
     {
         public EffectsWindowViewModel ViewModel;
 
-        public EffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel)
+        public EffectsWindow(ProcessingUserControlViewModel processingUserControlViewModel, double top = -1, double left = -1)
         {
             InitializeComponent();
             ViewModel = new EffectsWindowViewModel(processingUserControlViewModel, this);
             DataContext = ViewModel;
+
+            if (top > -1 && left > -1)
+            {
+                Top = top;
+                Left = left;
+            }
         }
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
-            ViewModel.ProcessingUserControlViewModel.OtherEffectsWindow = null;
+            ViewModel.ProcessingUserControlViewModel.EffectsWindow = null;
         }
     }
 }

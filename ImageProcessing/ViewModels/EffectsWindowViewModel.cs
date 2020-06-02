@@ -25,7 +25,6 @@ namespace ImageProcessing.ViewModels
         private int gaussianBlurAmount;
         private bool boxBlur;
         private int boxBlurAmount;
-        private bool blurFilters;
 
         private EffectsWindow window;
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;

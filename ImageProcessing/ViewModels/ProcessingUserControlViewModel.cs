@@ -144,7 +144,7 @@ namespace ImageProcessing.ViewModels
 
         public Bitmap OriginalImage { get; set; }
 
-        public EffectsWindow OtherEffectsWindow { get; set; }
+        public EffectsWindow EffectsWindow { get; set; }
 
         public float Gamma
         {
@@ -294,6 +294,12 @@ namespace ImageProcessing.ViewModels
             ReplaceColor = false;
             Filters.Clear();
 
+            if (EffectsWindow != null)
+            {
+                EffectsWindow.Close();
+                ShowEffectsWindow(EffectsWindow.Top, EffectsWindow.Left);
+            }
+
             if (OriginalImage != null)
             {
                 ModifiedImage = new Bitmap(OriginalImage);
@@ -372,6 +378,17 @@ namespace ImageProcessing.ViewModels
                 stream.Close();
                 await MainWindow.ShowMessageAsync("Image Saved", "The image has been successfully saved!");
             }
+        }
+
+        public void ShowEffectsWindow(double top = -1, double left = -1)
+        {
+            if (EffectsWindow is null)
+            {
+                EffectsWindow = new EffectsWindow(this, top, left);
+                EffectsWindow.Show();
+            }
+            else
+                EffectsWindow.Focus();
         }
     }
 }
