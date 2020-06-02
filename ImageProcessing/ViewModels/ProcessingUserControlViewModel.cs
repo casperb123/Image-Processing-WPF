@@ -296,8 +296,10 @@ namespace ImageProcessing.ViewModels
 
             if (EffectsWindow != null)
             {
+                double top = EffectsWindow.Top;
+                double left = EffectsWindow.Left;
                 EffectsWindow.Close();
-                ShowEffectsWindow(EffectsWindow.Top, EffectsWindow.Left);
+                ShowEffectsWindow(top, left);
             }
 
             if (OriginalImage != null)
