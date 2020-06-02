@@ -286,7 +286,14 @@ namespace ImageProcessing.ViewModels
                 }
             }
 
-            Thread thread = new Thread(() => WaitForLoadedUpdateHeaders());
+            Thread thread = new Thread(() =>
+            {
+                window.Dispatcher.Invoke(() =>
+                {
+                    while (!window.IsLoaded) { }
+                    UpdateHeaders();
+                });
+            });
             thread.Start();
 
             PixelateSize = ProcessingUserControlViewModel.PixelateSize;
@@ -297,9 +304,6 @@ namespace ImageProcessing.ViewModels
 
         private void UpdateHeaders()
         {
-            if (!window.IsLoaded)
-                return;
-
             IEnumerable<FilterType> enumValues = Enum.GetValues(typeof(FilterType)).Cast<FilterType>();
             foreach (FilterType filterType in enumValues)
             {
@@ -316,15 +320,6 @@ namespace ImageProcessing.ViewModels
                 else
                     groupBox.Header = $"{filterName} - {index + 1}";
             }
-        }
-
-        private void WaitForLoadedUpdateHeaders()
-        {
-            window.Dispatcher.Invoke(() =>
-            {
-                while (!window.IsLoaded) { }
-                UpdateHeaders();
-            });
         }
     }
 }
