@@ -16,6 +16,7 @@ namespace ImageProcessing.Windows
             InitializeComponent();
             ViewModel = new EffectsWindowViewModel(processingUserControlViewModel, this);
             DataContext = ViewModel;
+            processingUserControlViewModel.UserControl.buttonImageEffects.Content = "Close";
 
             if (top > -1 && left > -1)
             {
@@ -26,6 +27,7 @@ namespace ImageProcessing.Windows
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
+            ViewModel.ProcessingUserControlViewModel.UserControl.buttonImageEffects.Content = "Open";
             ViewModel.ProcessingUserControlViewModel.EffectsWindow = null;
         }
     }

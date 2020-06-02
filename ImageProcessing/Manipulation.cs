@@ -187,6 +187,7 @@ namespace ImageProcessing
                            int medianSize,
                            int gaussianBlurAmount,
                            int meanBlurAmount,
+                           bool imageEffects,
                            List<FilterType> filters)
         {
             Bitmap modifiedBitmap = new Bitmap(bitmap);
@@ -249,33 +250,36 @@ namespace ImageProcessing
                 modifiedBitmap.UnlockBits(bitmapData);
             }
 
-            foreach (FilterType filter in filters)
+            if (imageEffects)
             {
-                switch (filter)
+                foreach (FilterType filter in filters)
                 {
-                    case FilterType.Invert:
-                        InvertImage(modifiedBitmap);
-                        break;
-                    case FilterType.SepiaTone:
-                        SepiaTone(modifiedBitmap);
-                        break;
-                    case FilterType.Emboss:
-                        modifiedBitmap = Emboss(modifiedBitmap);
-                        break;
-                    case FilterType.Pixelate:
-                        modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
-                        break;
-                    case FilterType.Median:
-                        modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
-                        break;
-                    case FilterType.BoxBlur:
-                        modifiedBitmap = BoxBlur(modifiedBitmap, meanBlurAmount);
-                        break;
-                    case FilterType.GaussianBlur:
-                        modifiedBitmap = GaussianBlur(modifiedBitmap, gaussianBlurAmount);
-                        break;
-                    default:
-                        break;
+                    switch (filter)
+                    {
+                        case FilterType.Invert:
+                            InvertImage(modifiedBitmap);
+                            break;
+                        case FilterType.SepiaTone:
+                            SepiaTone(modifiedBitmap);
+                            break;
+                        case FilterType.Emboss:
+                            modifiedBitmap = Emboss(modifiedBitmap);
+                            break;
+                        case FilterType.Pixelate:
+                            modifiedBitmap = Pixelate(modifiedBitmap, pixelateSize);
+                            break;
+                        case FilterType.Median:
+                            modifiedBitmap = MedianFilter(modifiedBitmap, medianSize);
+                            break;
+                        case FilterType.BoxBlur:
+                            modifiedBitmap = BoxBlur(modifiedBitmap, meanBlurAmount);
+                            break;
+                        case FilterType.GaussianBlur:
+                            modifiedBitmap = GaussianBlur(modifiedBitmap, gaussianBlurAmount);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 

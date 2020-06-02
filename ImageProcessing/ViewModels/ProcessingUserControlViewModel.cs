@@ -17,6 +17,7 @@ namespace ImageProcessing.ViewModels
 {
     public class ProcessingUserControlViewModel : INotifyPropertyChanged
     {
+        private bool imageEffects;
         private float minimumHue;
         private float maximumHue;
         private float brightness;
@@ -32,7 +33,7 @@ namespace ImageProcessing.ViewModels
         private Color pixelColor;
 
         public MainWindow MainWindow;
-        private readonly ProcessingUserControl userControl;
+        public readonly ProcessingUserControl UserControl;
         private readonly Manipulation manipulation;
         private readonly FileOperation fileOperation;
 
@@ -72,8 +73,8 @@ namespace ImageProcessing.ViewModels
             {
                 pixelColor = value;
 
-                if (userControl != null && userControl.IsLoaded)
-                    userControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
+                if (UserControl != null && UserControl.IsLoaded)
+                    UserControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
             }
         }
 
@@ -196,6 +197,16 @@ namespace ImageProcessing.ViewModels
             }
         }
 
+        public bool ImageEffects
+        {
+            get { return imageEffects; }
+            set
+            {
+                imageEffects = value;
+                OnPropertyChanged(nameof(ImageEffects));
+            }
+        }
+
         private void OnPropertyChanged(string prop)
         {
             if (!string.IsNullOrWhiteSpace(prop))
@@ -227,7 +238,7 @@ namespace ImageProcessing.ViewModels
             PixelColor = Color.FromArgb(255, 255, 0, 0);
 
             MainWindow = mainWindow;
-            this.userControl = userControl;
+            this.UserControl = userControl;
             manipulation = new Manipulation();
             fileOperation = new FileOperation();
 
@@ -236,12 +247,12 @@ namespace ImageProcessing.ViewModels
 
         private void OnImageFinished(object sender, Manipulation.ImageEventArgs e)
         {
-            userControl.Dispatcher.Invoke(() =>
+            UserControl.Dispatcher.Invoke(() =>
             {
-                userControl.rectangleManipulated.Visibility = Visibility.Hidden;
-                userControl.progressRingManipulated.Visibility = Visibility.Hidden;
-                userControl.progressRingManipulated.IsActive = false;
-                userControl.buttonModify.IsEnabled = true;
+                UserControl.rectangleManipulated.Visibility = Visibility.Hidden;
+                UserControl.progressRingManipulated.Visibility = Visibility.Hidden;
+                UserControl.progressRingManipulated.IsActive = false;
+                UserControl.buttonModify.IsEnabled = true;
 
                 ModifiedImage = e.Bitmap;
                 DisplayImage(e.Bitmap, 2);
@@ -253,13 +264,13 @@ namespace ImageProcessing.ViewModels
             ImageSource source = fileOperation.BitmapToBitmapImage(bitmap);
 
             if (window == 1)
-                userControl.imageOriginal.Source = source;
+                UserControl.imageOriginal.Source = source;
             else if (window == 2)
-                userControl.imageManipulated.Source = source;
+                UserControl.imageManipulated.Source = source;
             else if (window == 3)
             {
-                userControl.imageOriginal.Source = source;
-                userControl.imageManipulated.Source = source;
+                UserControl.imageOriginal.Source = source;
+                UserControl.imageManipulated.Source = source;
             }
         }
 
@@ -294,7 +305,7 @@ namespace ImageProcessing.ViewModels
             ReplaceColor = false;
             Filters.Clear();
 
-            if (EffectsWindow != null)
+            if (ImageEffects && EffectsWindow != null)
             {
                 double top = EffectsWindow.Top;
                 double left = EffectsWindow.Left;
@@ -311,15 +322,15 @@ namespace ImageProcessing.ViewModels
 
         public void ToggleImages()
         {
-            if (userControl.borderManipulated.Visibility == Visibility.Visible)
+            if (UserControl.borderManipulated.Visibility == Visibility.Visible)
             {
-                userControl.borderManipulated.Visibility = Visibility.Hidden;
-                userControl.borderOriginal.Visibility = Visibility.Visible;
+                UserControl.borderManipulated.Visibility = Visibility.Hidden;
+                UserControl.borderOriginal.Visibility = Visibility.Visible;
             }
             else
             {
-                userControl.borderOriginal.Visibility = Visibility.Hidden;
-                userControl.borderManipulated.Visibility = Visibility.Visible;
+                UserControl.borderOriginal.Visibility = Visibility.Hidden;
+                UserControl.borderManipulated.Visibility = Visibility.Visible;
             }
         }
 
@@ -332,16 +343,16 @@ namespace ImageProcessing.ViewModels
             Brush brushMin = new SolidColorBrush(brushColorMin);
             Brush brushMax = new SolidColorBrush(brushColorMax);
 
-            userControl.rectangleColorMin.Fill = brushMin;
-            userControl.rectangleColorMax.Fill = brushMax;
+            UserControl.rectangleColorMin.Fill = brushMin;
+            UserControl.rectangleColorMax.Fill = brushMax;
         }
 
         public void ModifyImage()
         {
-            userControl.rectangleManipulated.Visibility = Visibility.Visible;
-            userControl.progressRingManipulated.IsActive = true;
-            userControl.progressRingManipulated.Visibility = Visibility.Visible;
-            userControl.buttonModify.IsEnabled = false;
+            UserControl.rectangleManipulated.Visibility = Visibility.Visible;
+            UserControl.progressRingManipulated.IsActive = true;
+            UserControl.progressRingManipulated.Visibility = Visibility.Visible;
+            UserControl.buttonModify.IsEnabled = false;
 
             Thread thread = new Thread(() => manipulation.Modify(OriginalImage,
                                                                  MinimumHue,
@@ -356,6 +367,7 @@ namespace ImageProcessing.ViewModels
                                                                  MedianSize,
                                                                  GaussianBlurAmount,
                                                                  BoxBlurAmount,
+                                                                 ImageEffects,
                                                                  Filters));
             thread.Start();
         }

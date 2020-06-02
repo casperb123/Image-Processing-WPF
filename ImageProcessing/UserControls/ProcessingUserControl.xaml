@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </UserControl.Resources>
-    
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -71,10 +71,20 @@
         <StackPanel Margin="0,0,10,0"
                     VerticalAlignment="Bottom"
                     Grid.Row="1">
-            <Button x:Name="buttonImageEffects"
-                    Content="Image Effects"
-                    Margin="0,0,0,5"
-                    Click="ButtonImageEffects_Click" />
+            <GroupBox Header="Image Effects"
+                      Margin="0,0,0,5">
+                <StackPanel>
+                    <mah:ToggleSwitch x:Name="toggleSwitchImageEffects"
+                                      OnContent="Enabled"
+                                      OffContent="Disabled"
+                                      IsOn="{Binding Path=ImageEffects}"
+                                      Margin="0,0,0,5"/>
+                    <Button x:Name="buttonImageEffects"
+                            Content="Open"
+                            Click="ButtonImageEffects_Click" />
+                </StackPanel>
+            </GroupBox>
+
             <Button x:Name="buttonSaveImage"
                     Content="Save Image"
                     Click="ButtonSaveImage_Click" />
