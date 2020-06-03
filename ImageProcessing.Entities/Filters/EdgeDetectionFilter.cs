@@ -4,22 +4,20 @@ using System.Text;
 
 namespace ImageProcessing.Entities.Filters
 {
-    public class EmbossFilter : ConvolutionFilterBase
+    public class EdgeDetectionFilter : ConvolutionFilterBase
     {
         public override double Factor { get; set; }
         public override double Bias { get; set; }
         public override double[,] FilterMatrix { get; set; }
 
-        public EmbossFilter()
+        public EdgeDetectionFilter()
         {
             Factor = 1;
-            Bias = 128;
-
             FilterMatrix = new double[,]
             {
-                { 2, 0, 0 },
-                { 0, -1, 0 },
-                { 0, 0, -1 }
+                { -1, -1, -1, },
+                { -1,  8, -1, },
+                { -1, -1, -1, }
             };
         }
     }

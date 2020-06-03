@@ -2,15 +2,12 @@
 {
     public class BoxBlurFilter : ConvolutionFilterBase
     {
-        public override string FilterName { get; set; }
         public override double Factor { get; set; }
         public override double Bias { get; set; }
         public override double[,] FilterMatrix { get; set; }
 
         public BoxBlurFilter(int amount)
         {
-            FilterName = $"Blur{amount}x{amount}Filter";
-
             FilterMatrix = new double[amount, amount];
 
             int totalAmount = 0;

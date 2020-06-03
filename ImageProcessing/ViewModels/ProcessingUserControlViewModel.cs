@@ -48,7 +48,12 @@ namespace ImageProcessing.ViewModels
             Pixelate,
             Median,
             BoxBlur,
-            GaussianBlur
+            GaussianBlur,
+            EdgeDetection,
+            EdgeDetection45Degree,
+            EdgeDetectionHorizontal,
+            EdgeDetectionVertical,
+            EdgeDetectionTopLeft
         }
 
         public Dictionary<FilterType, string> FilterNames;
@@ -224,7 +229,12 @@ namespace ImageProcessing.ViewModels
                 { FilterType.Pixelate, "Pixelate" },
                 { FilterType.Median, "Median" },
                 { FilterType.BoxBlur, "Box Blur" },
-                { FilterType.GaussianBlur, "Gaussian Blur" }
+                { FilterType.GaussianBlur, "Gaussian Blur" },
+                { FilterType.EdgeDetection, "Edge Detection" },
+                { FilterType.EdgeDetection45Degree, "Edge Detection 45 Degree" },
+                { FilterType.EdgeDetectionHorizontal, "Edge Detection Horizontal" },
+                { FilterType.EdgeDetectionVertical, "Edge Detection Vertical" },
+                { FilterType.EdgeDetectionTopLeft, "Edge Detection Top Left" }
             };
 
             MaximumHue = 360;
@@ -238,7 +248,7 @@ namespace ImageProcessing.ViewModels
             PixelColor = Color.FromArgb(255, 255, 0, 0);
 
             MainWindow = mainWindow;
-            this.UserControl = userControl;
+            UserControl = userControl;
             manipulation = new Manipulation();
             fileOperation = new FileOperation();
 

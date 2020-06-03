@@ -174,6 +174,36 @@ namespace ImageProcessing
             return gaussianBlur.Process(amount);
         }
 
+        private Bitmap EdgeDetection(Bitmap bitmap)
+        {
+            EdgeDetectionFilter edgeDetection = new EdgeDetectionFilter();
+            return bitmap.ConvolutionFilter(edgeDetection);
+        }
+
+        private Bitmap EdgeDetection45Degree(Bitmap bitmap)
+        {
+            EdgeDetection45DegreeFilter edgeDetection45Degree = new EdgeDetection45DegreeFilter();
+            return bitmap.ConvolutionFilter(edgeDetection45Degree);
+        }
+
+        private Bitmap EdgeDetectionHorizontal(Bitmap bitmap)
+        {
+            EdgeDetectionHorizontalFilter edgeDetectionHorizontal = new EdgeDetectionHorizontalFilter();
+            return bitmap.ConvolutionFilter(edgeDetectionHorizontal);
+        }
+
+        private Bitmap EdgeDetectionVertical(Bitmap bitmap)
+        {
+            EdgeDetectionVerticalFilter edgeDetectionVertical = new EdgeDetectionVerticalFilter();
+            return bitmap.ConvolutionFilter(edgeDetectionVertical);
+        }
+
+        private Bitmap EdgeDetectionTopLeft(Bitmap bitmap)
+        {
+            EdgeDetectionTopLeftFilter edgeDetectionTopLeft = new EdgeDetectionTopLeftFilter();
+            return bitmap.ConvolutionFilter(edgeDetectionTopLeft);
+        }
+
         public void Modify(Bitmap bitmap,
                            double hueMin,
                            double hueMax,
@@ -276,6 +306,21 @@ namespace ImageProcessing
                             break;
                         case FilterType.GaussianBlur:
                             modifiedBitmap = GaussianBlur(modifiedBitmap, gaussianBlurAmount);
+                            break;
+                        case FilterType.EdgeDetection:
+                            modifiedBitmap = EdgeDetection(modifiedBitmap);
+                            break;
+                        case FilterType.EdgeDetection45Degree:
+                            modifiedBitmap = EdgeDetection45Degree(modifiedBitmap);
+                            break;
+                        case FilterType.EdgeDetectionHorizontal:
+                            modifiedBitmap = EdgeDetectionHorizontal(modifiedBitmap);
+                            break;
+                        case FilterType.EdgeDetectionVertical:
+                            modifiedBitmap = EdgeDetectionVertical(modifiedBitmap);
+                            break;
+                        case FilterType.EdgeDetectionTopLeft:
+                            modifiedBitmap = EdgeDetectionTopLeft(modifiedBitmap);
                             break;
                         default:
                             break;

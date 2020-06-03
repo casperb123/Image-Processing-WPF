@@ -25,6 +25,11 @@ namespace ImageProcessing.ViewModels
         private int gaussianBlurAmount;
         private bool boxBlur;
         private int boxBlurAmount;
+        private bool edgeDetection;
+        private bool edgeDetection45Degree;
+        private bool edgeDetectionHorizontal;
+        private bool edgeDetectionVertical;
+        private bool edgeDetectionTopLeft;
 
         private EffectsWindow window;
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
@@ -242,6 +247,251 @@ namespace ImageProcessing.ViewModels
             }
         }
 
+        public bool EdgeDetection
+        {
+            get { return edgeDetection; }
+            set
+            {
+                edgeDetection = value;
+                OnPropertyChanged(nameof(EdgeDetection));
+
+                if (value)
+                {
+                    int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection45Degree);
+                    int index2 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionHorizontal);
+                    int index3 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionVertical);
+                    int index4 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionTopLeft);
+
+                    if (index > -1)
+                    {
+                        EdgeDetection45Degree = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index, FilterType.EdgeDetection);
+                    }
+                    else if (index2 > -1)
+                    {
+                        EdgeDetectionHorizontal = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index2, FilterType.EdgeDetection);
+                    }
+                    else if (index3 > -1)
+                    {
+                        EdgeDetectionVertical = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index3, FilterType.EdgeDetection);
+                    }
+                    else if (index4 > -1)
+                    {
+                        EdgeDetectionTopLeft = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index4, FilterType.EdgeDetection);
+                    }
+                    else
+                        ProcessingUserControlViewModel.Filters.Add(FilterType.EdgeDetection);
+                }
+                else
+                {
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.EdgeDetection);
+                    if (filterType != FilterType.Invalid)
+                        ProcessingUserControlViewModel.Filters.Remove(filterType);
+                }
+
+                UpdateHeaders();
+            }
+        }
+
+        public bool EdgeDetection45Degree
+        {
+            get { return edgeDetection45Degree; }
+            set
+            {
+                edgeDetection45Degree = value;
+                OnPropertyChanged(nameof(EdgeDetection45Degree));
+
+                if (value)
+                {
+                    int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection);
+                    int index2 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionHorizontal);
+                    int index3 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionVertical);
+                    int index4 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionTopLeft);
+
+                    if (index > -1)
+                    {
+                        EdgeDetection = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index, FilterType.EdgeDetection45Degree);
+                    }
+                    else if (index2 > -1)
+                    {
+                        EdgeDetectionHorizontal = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index2, FilterType.EdgeDetection45Degree);
+                    }
+                    else if (index3 > -1)
+                    {
+                        EdgeDetectionVertical = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index3, FilterType.EdgeDetection45Degree);
+                    }
+                    else if (index4 > -1)
+                    {
+                        EdgeDetectionTopLeft = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index4, FilterType.EdgeDetection45Degree);
+                    }
+                    else
+                        ProcessingUserControlViewModel.Filters.Add(FilterType.EdgeDetection45Degree);
+                }
+                else
+                {
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.EdgeDetection45Degree);
+                    if (filterType != FilterType.Invalid)
+                        ProcessingUserControlViewModel.Filters.Remove(filterType);
+                }
+
+                UpdateHeaders();
+            }
+        }
+
+        public bool EdgeDetectionHorizontal
+        {
+            get { return edgeDetectionHorizontal; }
+            set
+            {
+                edgeDetectionHorizontal = value;
+                OnPropertyChanged(nameof(EdgeDetectionHorizontal));
+
+                if (value)
+                {
+                    int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection);
+                    int index2 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection45Degree);
+                    int index3 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionVertical);
+                    int index4 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionTopLeft);
+
+                    if (index > -1)
+                    {
+                        EdgeDetection = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index, FilterType.EdgeDetectionHorizontal);
+                    }
+                    else if (index2 > -1)
+                    {
+                        EdgeDetection45Degree = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index2, FilterType.EdgeDetectionHorizontal);
+                    }
+                    else if (index3 > -1)
+                    {
+                        EdgeDetectionVertical = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index3, FilterType.EdgeDetectionHorizontal);
+                    }
+                    else if (index4 > -1)
+                    {
+                        EdgeDetectionTopLeft = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index4, FilterType.EdgeDetectionHorizontal);
+                    }
+                    else
+                        ProcessingUserControlViewModel.Filters.Add(FilterType.EdgeDetectionHorizontal);
+                }
+                else
+                {
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.EdgeDetectionHorizontal);
+                    if (filterType != FilterType.Invalid)
+                        ProcessingUserControlViewModel.Filters.Remove(filterType);
+                }
+
+                UpdateHeaders();
+            }
+        }
+
+        public bool EdgeDetectionVertical
+        {
+            get { return edgeDetectionVertical; }
+            set
+            {
+                edgeDetectionVertical = value;
+                OnPropertyChanged(nameof(EdgeDetectionVertical));
+
+                if (value)
+                {
+                    int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection);
+                    int index2 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection45Degree);
+                    int index3 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionHorizontal);
+                    int index4 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionTopLeft);
+
+                    if (index > -1)
+                    {
+                        EdgeDetection = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index, FilterType.EdgeDetectionVertical);
+                    }
+                    else if (index2 > -1)
+                    {
+                        EdgeDetection45Degree = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index2, FilterType.EdgeDetectionVertical);
+                    }
+                    else if (index3 > -1)
+                    {
+                        EdgeDetectionHorizontal = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index3, FilterType.EdgeDetectionVertical);
+                    }
+                    else if (index4 > -1)
+                    {
+                        EdgeDetectionTopLeft = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index4, FilterType.EdgeDetectionVertical);
+                    }
+                    else
+                        ProcessingUserControlViewModel.Filters.Add(FilterType.EdgeDetectionVertical);
+                }
+                else
+                {
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.EdgeDetectionVertical);
+                    if (filterType != FilterType.Invalid)
+                        ProcessingUserControlViewModel.Filters.Remove(filterType);
+                }
+
+                UpdateHeaders();
+            }
+        }
+
+        public bool EdgeDetectionTopLeft
+        {
+            get { return edgeDetectionTopLeft; }
+            set
+            {
+                edgeDetectionTopLeft = value;
+                OnPropertyChanged(nameof(EdgeDetectionTopLeft));
+
+                if (value)
+                {
+                    int index = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection);
+                    int index2 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetection45Degree);
+                    int index3 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionHorizontal);
+                    int index4 = ProcessingUserControlViewModel.Filters.IndexOf(FilterType.EdgeDetectionVertical);
+
+                    if (index > -1)
+                    {
+                        EdgeDetection = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index, FilterType.EdgeDetectionTopLeft);
+                    }
+                    else if (index2 > -1)
+                    {
+                        EdgeDetection45Degree = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index2, FilterType.EdgeDetectionTopLeft);
+                    }
+                    else if (index3 > -1)
+                    {
+                        EdgeDetectionHorizontal = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index3, FilterType.EdgeDetectionTopLeft);
+                    }
+                    else if (index4 > -1)
+                    {
+                        EdgeDetectionVertical = false;
+                        ProcessingUserControlViewModel.Filters.Insert(index4, FilterType.EdgeDetectionTopLeft);
+                    }
+                    else
+                        ProcessingUserControlViewModel.Filters.Add(FilterType.EdgeDetectionTopLeft);
+                }
+                else
+                {
+                    FilterType filterType = ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == FilterType.EdgeDetectionTopLeft);
+                    if (filterType != FilterType.Invalid)
+                        ProcessingUserControlViewModel.Filters.Remove(filterType);
+                }
+
+                UpdateHeaders();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string prop)
@@ -279,6 +529,21 @@ namespace ImageProcessing.ViewModels
                         break;
                     case FilterType.GaussianBlur:
                         gaussianBlur = true;
+                        break;
+                    case FilterType.EdgeDetection:
+                        edgeDetection = true;
+                        break;
+                    case FilterType.EdgeDetection45Degree:
+                        edgeDetection45Degree = true;
+                        break;
+                    case FilterType.EdgeDetectionHorizontal:
+                        edgeDetectionHorizontal = true;
+                        break;
+                    case FilterType.EdgeDetectionVertical:
+                        edgeDetectionVertical = true;
+                        break;
+                    case FilterType.EdgeDetectionTopLeft:
+                        edgeDetectionTopLeft = true;
                         break;
                     default:
                         break;
