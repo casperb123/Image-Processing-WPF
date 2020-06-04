@@ -1,4 +1,5 @@
-﻿using ImageProcessing.Windows;
+﻿using ImageProcessing.UserControls;
+using ImageProcessing.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +8,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 
 namespace ImageProcessing.ViewModels
@@ -33,6 +36,7 @@ namespace ImageProcessing.ViewModels
 
         private EffectsWindow window;
         public ProcessingUserControlViewModel ProcessingUserControlViewModel;
+        public delegate Point GetPosition(IInputElement element);
 
         public bool BoxBlur
         {
@@ -505,7 +509,7 @@ namespace ImageProcessing.ViewModels
             ProcessingUserControlViewModel = processingUserControlViewModel;
             window = effectsWindow;
 
-            foreach (FilterType filter in ProcessingUserControlViewModel.Filters.ToList())
+            foreach (FilterType filter in ProcessingUserControlViewModel.Filters)
             {
                 switch (filter)
                 {
@@ -550,15 +554,15 @@ namespace ImageProcessing.ViewModels
                 }
             }
 
-            Thread thread = new Thread(() =>
-            {
-                window.Dispatcher.Invoke(() =>
-                {
-                    while (!window.IsLoaded) { }
-                    UpdateHeaders();
-                });
-            });
-            thread.Start();
+            //Thread thread = new Thread(() =>
+            //{
+            //    window.Dispatcher.Invoke(() =>
+            //    {
+            //        while (!window.IsLoaded) { }
+            //        UpdateHeaders();
+            //    });
+            //});
+            //thread.Start();
 
             PixelateSize = ProcessingUserControlViewModel.PixelateSize;
             MedianSize = ProcessingUserControlViewModel.MedianSize;
@@ -584,6 +588,34 @@ namespace ImageProcessing.ViewModels
                 else
                     groupBox.Header = $"{filterName} - {index + 1}";
             }
+        }
+
+        private Button GetButton(StackPanel stackPanel, int index)
+        {
+            return stackPanel.Children[index] as Button;
+        }
+
+        public int GetCurrentButtonIndex(StackPanel stackPanel, GetPosition position)
+        {
+            int curIndex = -1;
+            for (int i = 0; i < stackPanel.Children.Count; i++)
+            {
+                Button button = GetButton(stackPanel, i);
+                if (GetMouseTarget(button, position))
+                {
+                    curIndex = i;
+                    break;
+                }
+            }
+
+            return curIndex;
+        }
+
+        private bool GetMouseTarget(Visual target, GetPosition position)
+        {
+            Rect rect = VisualTreeHelper.GetDescendantBounds(target);
+            Point point = position((IInputElement)target);
+            return rect.Contains(point);
         }
     }
 }

@@ -4,6 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:ImageProcessing.Windows"
+                 xmlns:root="clr-namespace:ImageProcessing"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Image Effects"
@@ -12,18 +13,71 @@
                  SizeToContent="Height"
                  ResizeMode="NoResize"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
-                 Topmost="True"
                  Closing="MetroWindow_Closing">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,0,2.5,0">
+        <Label Content="Effects"
+               HorizontalContentAlignment="Center" />
+        <Grid x:Name="gridEffects"
+              Grid.Row="1"
+              Background="Transparent"
+              AllowDrop="True"
+              DragOver="Effects_DragOver"
+              Drop="Effects_Drop">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel x:Name="stackPanelEffects"
+                        root:Spacing.Vertical="5"
+                        DragOver="Effects_DragOver"
+                        Drop="Effects_Drop">
+                <Button x:Name="buttonInvert"
+                        Content="Invert"
+                        PreviewMouseMove="Button_PreviewMouseMove" />
+            </StackPanel>
+        </Grid>
+
+        <Label Content="Enabled Effects"
+               HorizontalContentAlignment="Center"
+               Grid.Column="1" />
+        <Grid x:Name="gridEnabledEffects"
+              Grid.Row="1"
+              Grid.Column="1"
+              AllowDrop="True"
+              Background="Transparent"
+              DragOver="Effects_DragOver"
+              Drop="EnabledEffects_Drop">
+            <StackPanel x:Name="stackPanelEnabledEffects"
+                        root:Spacing.Vertical="5"
+                        AllowDrop="True"
+                        DragOver="Effects_DragOver"
+                        Drop="EnabledEffects_Drop" />
+        </Grid>
+    </Grid>
+
+    <!--<Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="0,0,2.5,0"
+                    root:Spacing.Vertical="5">
             <GroupBox x:Name="groupBoxInvert"
-                      Header="Invert Image - Not applied"
-                      Margin="0,0,0,5">
+                      Header="Invert Image - Not applied">
                 <mah:ToggleSwitch x:Name="toggleSwitchInvert"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
@@ -31,8 +85,7 @@
             </GroupBox>
 
             <GroupBox x:Name="groupBoxSepiaTone"
-                      Header="Sepia Tone - Not applied"
-                      Margin="0,0,0,5">
+                      Header="Sepia Tone - Not applied">
                 <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
@@ -40,8 +93,7 @@
             </GroupBox>
 
             <GroupBox x:Name="groupBoxEmboss"
-                      Header="Emboss - Not applied"
-                      Margin="0,0,0,5">
+                      Header="Emboss - Not applied">
                 <mah:ToggleSwitch x:Name="toggleSwitchEmboss"
                                   OnContent="Enabled"
                                   OffContent="Disabled"
@@ -49,10 +101,9 @@
             </GroupBox>
 
             <GroupBox Header="Edge Detection Filters">
-                <StackPanel>
+                <StackPanel root:Spacing.Vertical="5">
                     <GroupBox x:Name="groupBoxEdgeDetection"
-                              Header="Edge Detection - Not applied"
-                              Margin="0,0,0,5">
+                              Header="Edge Detection - Not applied">
                         <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetection"
                                           OnContent="Enabled"
                                           OffContent="Disabled"
@@ -60,8 +111,7 @@
                     </GroupBox>
 
                     <GroupBox x:Name="groupBoxEdgeDetection45Degree"
-                              Header="Edge Detection 45 Degree - Not applied"
-                              Margin="0,0,0,5">
+                              Header="Edge Detection 45 Degree - Not applied">
                         <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetection45Degree"
                                           OnContent="Enabled"
                                           OffContent="Disabled"
@@ -69,8 +119,7 @@
                     </GroupBox>
 
                     <GroupBox x:Name="groupBoxEdgeDetectionHorizontal"
-                              Header="Edge Detection Horizontal - Not applied"
-                              Margin="0,0,0,5">
+                              Header="Edge Detection Horizontal - Not applied">
                         <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetectionHorizontal"
                                           OnContent="Enabled"
                                           OffContent="Disabled"
@@ -78,8 +127,7 @@
                     </GroupBox>
 
                     <GroupBox x:Name="groupBoxEdgeDetectionVertical"
-                              Header="Edge Detection Vertical - Not applied"
-                              Margin="0,0,0,5">
+                              Header="Edge Detection Vertical - Not applied">
                         <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetectionVertical"
                                           OnContent="Enabled"
                                           OffContent="Disabled"
@@ -98,10 +146,10 @@
         </StackPanel>
 
         <StackPanel Grid.Column="1"
-                    Margin="2.5,0,0,0">
+                    Margin="2.5,0,0,0"
+                    root:Spacing.Vertical="5">
             <GroupBox x:Name="groupBoxPixelate"
-                      Header="Pixelate - Not applied"
-                      Margin="0,0,0,5">
+                      Header="Pixelate - Not applied">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
@@ -143,8 +191,7 @@
             </GroupBox>
             
             <GroupBox x:Name="groupBoxMedian"
-                      Header="Median - Not applied"
-                      Margin="0,0,0,5">
+                      Header="Median - Not applied">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*" />
@@ -186,10 +233,9 @@
             </GroupBox>
 
             <GroupBox Header="Blur Filters">
-                <StackPanel>
+                <StackPanel root:Spacing.Vertical="5">
                     <GroupBox x:Name="groupBoxBoxBlur"
                               Header="Box Blur - Not applied"
-                              Margin="0,0,0,5"
                               IsEnabled="{Binding Path=BlurFilters}">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -280,5 +326,5 @@
                 </StackPanel>
             </GroupBox>
         </StackPanel>
-    </Grid>
+    </Grid>-->
 </mah:MetroWindow>
