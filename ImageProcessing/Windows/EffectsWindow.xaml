@@ -18,12 +18,12 @@
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
             <mah:Flyout x:Name="flyoutEffectSettings"
-                        Position="Right"
+                        Position="Bottom"
                         Theme="Adapt"
                         IsPinned="False"
-                        MinWidth="250"
                         Header="{Binding Path=CurrentImageEffect.EffectName}">
-                <StackPanel Margin="5">
+                <StackPanel VerticalAlignment="Center"
+                            Margin="0,0,15,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
@@ -98,11 +98,13 @@
               Margin="2.5,0,0,0"
               DragOver="Effects_DragOver"
               Drop="EnabledEffects_Drop">
-            <StackPanel x:Name="stackPanelEnabledEffects"
-                        root:Spacing.Vertical="5"
-                        AllowDrop="True"
-                        DragOver="Effects_DragOver"
-                        Drop="EnabledEffects_Drop" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="stackPanelEnabledEffects"
+                            root:Spacing.Vertical="5"
+                            AllowDrop="True"
+                            DragOver="Effects_DragOver"
+                            Drop="EnabledEffects_Drop" />
+            </ScrollViewer>
         </Grid>
     </Grid>
 </mah:MetroWindow>
