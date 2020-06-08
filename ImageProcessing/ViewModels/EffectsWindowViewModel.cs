@@ -1,17 +1,11 @@
 ﻿using ImageProcessing.Entities;
-using ImageProcessing.UserControls;
 using ImageProcessing.Windows;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
@@ -20,12 +14,7 @@ namespace ImageProcessing.ViewModels
 {
     public class EffectsWindowViewModel : INotifyPropertyChanged
     {
-        private int pixelateSize;
-        private int medianSize;
-        private int gaussianBlurAmount;
-        private int boxBlurAmount;
         private ImageEffect currentImageEffect;
-
         private Point startPoint;
 
         private EffectsWindow window;
@@ -39,54 +28,6 @@ namespace ImageProcessing.ViewModels
             {
                 currentImageEffect = value;
                 OnPropertyChanged(nameof(CurrentImageEffect));
-            }
-        }
-
-        public int BoxBlurAmount
-        {
-            get { return boxBlurAmount; }
-            set
-            {
-                boxBlurAmount = value;
-                OnPropertyChanged(nameof(BoxBlurAmount));
-
-                ProcessingUserControlViewModel.BoxBlurAmount = value;
-            }
-        }
-
-        public int GaussianBlurAmount
-        {
-            get { return gaussianBlurAmount; }
-            set
-            {
-                gaussianBlurAmount = value;
-                OnPropertyChanged(nameof(GaussianBlurAmount));
-
-                ProcessingUserControlViewModel.GaussianBlurAmount = value;
-            }
-        }
-
-        public int MedianSize
-        {
-            get { return medianSize; }
-            set
-            {
-                medianSize = value;
-                OnPropertyChanged(nameof(MedianSize));
-
-                ProcessingUserControlViewModel.MedianSize = value;
-            }
-        }
-
-        public int PixelateSize
-        {
-            get { return pixelateSize; }
-            set
-            {
-                pixelateSize = value;
-                OnPropertyChanged(nameof(PixelateSize));
-
-                ProcessingUserControlViewModel.PixelateSize = value;
             }
         }
 
@@ -105,11 +46,6 @@ namespace ImageProcessing.ViewModels
             ProcessingUserControlViewModel = processingUserControlViewModel;
             window = effectsWindow;
             CreateFilterButtons(processingUserControlViewModel.Filters, processingUserControlViewModel.EnabledFilters);
-
-            PixelateSize = ProcessingUserControlViewModel.PixelateSize;
-            MedianSize = ProcessingUserControlViewModel.MedianSize;
-            GaussianBlurAmount = ProcessingUserControlViewModel.GaussianBlurAmount;
-            BoxBlurAmount = ProcessingUserControlViewModel.BoxBlurAmount;
         }
 
         private Button GetButton(StackPanel stackPanel, int index)

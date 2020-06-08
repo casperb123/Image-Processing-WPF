@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ImageProcessing.Entities.Filters
+﻿namespace ImageProcessing.Entities.Filters
 {
     public class EdgeDetectionTopLeftFilter : ConvolutionFilterBase
     {

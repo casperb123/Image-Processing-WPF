@@ -1,8 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-
-namespace ImageProcessing.Entities
+﻿namespace ImageProcessing.Entities
 {
     public abstract class ConvolutionFilterBase
     {

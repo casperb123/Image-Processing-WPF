@@ -27,10 +27,6 @@ namespace ImageProcessing.ViewModels
         private bool showChanges;
         private bool grayScale;
         private bool replaceColor;
-        private int pixelateSize;
-        private int medianSize;
-        private int gaussianBlurAmount;
-        private int boxBlurAmount;
         private Color pixelColor;
 
         public MainWindow MainWindow;
@@ -81,46 +77,6 @@ namespace ImageProcessing.ViewModels
 
                 if (UserControl != null && UserControl.IsLoaded)
                     UserControl.rectangleGrayColor.Fill = new SolidColorBrush(value);
-            }
-        }
-
-        public int BoxBlurAmount
-        {
-            get { return boxBlurAmount; }
-            set
-            {
-                boxBlurAmount = value;
-                OnPropertyChanged(nameof(BoxBlurAmount));
-            }
-        }
-
-        public int GaussianBlurAmount
-        {
-            get { return gaussianBlurAmount; }
-            set
-            {
-                gaussianBlurAmount = value;
-                OnPropertyChanged(nameof(GaussianBlurAmount));
-            }
-        }
-
-        public int MedianSize
-        {
-            get { return medianSize; }
-            set
-            {
-                medianSize = value;
-                OnPropertyChanged(nameof(MedianSize));
-            }
-        }
-
-        public int PixelateSize
-        {
-            get { return pixelateSize; }
-            set
-            {
-                pixelateSize = value;
-                OnPropertyChanged(nameof(PixelateSize));
             }
         }
 
@@ -242,11 +198,8 @@ namespace ImageProcessing.ViewModels
             Contrast = 1;
             Gamma = 1;
             showChanges = true;
-            PixelateSize = 1;
-            MedianSize = 3;
-            GaussianBlurAmount = 1;
-            BoxBlurAmount = 3;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
+            imageEffects = true;
 
             MainWindow = mainWindow;
             UserControl = userControl;
@@ -307,10 +260,6 @@ namespace ImageProcessing.ViewModels
             Brightness = 0;
             Contrast = 1;
             Gamma = 1;
-            PixelateSize = 1;
-            MedianSize = 3;
-            GaussianBlurAmount = 1;
-            BoxBlurAmount = 3;
             GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
             ReplaceColor = false;
