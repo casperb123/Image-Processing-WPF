@@ -55,7 +55,7 @@
             </mah:Flyout>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
-    
+
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -67,7 +67,8 @@
         </Grid.RowDefinitions>
 
         <Label Content="Effects"
-               HorizontalContentAlignment="Center" />
+               HorizontalContentAlignment="Center"
+               Margin="0,0,2.5,0" />
         <Grid x:Name="gridEffects"
               Grid.Row="1"
               Background="Transparent"
@@ -89,7 +90,8 @@
 
         <Label Content="Enabled Effects"
                HorizontalContentAlignment="Center"
-               Grid.Column="1" />
+               Grid.Column="1"
+               Margin="2.5,0,0,0" />
         <Grid x:Name="gridEnabledEffects"
               Grid.Row="1"
               Grid.Column="1"
