@@ -14,6 +14,47 @@
                  ResizeMode="NoResize"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  Closing="MetroWindow_Closing">
+    <mah:MetroWindow.Flyouts>
+        <mah:FlyoutsControl>
+            <mah:Flyout x:Name="flyoutEffectSettings"
+                        Position="Right"
+                        Theme="Adapt"
+                        IsPinned="False"
+                        MinWidth="250"
+                        Header="{Binding Path=CurrentImageEffect.EffectName}">
+                <StackPanel Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="80" />
+                        </Grid.ColumnDefinitions>
+
+                        <Slider x:Name="sliderEffectValue"
+                                Minimum="{Binding Path=CurrentImageEffect.MinimumValue}"
+                                Maximum="{Binding Path=CurrentImageEffect.MaximumValue}"
+                                AutoToolTipPlacement="TopLeft"
+                                AutoToolTipPrecision="0"
+                                mah:SliderHelper.EnableMouseWheel="MouseHover"
+                                mah:SliderHelper.ChangeValueBy="SmallChange"
+                                IsMoveToPointEnabled="True"
+                                SmallChange="{Binding Path=CurrentImageEffect.Interval}"
+                                TickFrequency="{Binding Path=CurrentImageEffect.Interval}"
+                                IsSnapToTickEnabled="True"
+                                Value="{Binding Path=CurrentImageEffect.CurrentValue}"
+                                Margin="0,0,5,0" />
+                        <mah:NumericUpDown x:Name="numericEffectValue"
+                                           Minimum="{Binding Path=CurrentImageEffect.MinimumValue}"
+                                           Maximum="{Binding Path=CurrentImageEffect.MaximumValue}"
+                                           Interval="{Binding Path=CurrentImageEffect.Interval}"
+                                           Grid.Column="1"
+                                           Margin="5,0,0,0"
+                                           Value="{Binding Path=CurrentImageEffect.CurrentValue}" />
+                    </Grid>
+                </StackPanel>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </mah:MetroWindow.Flyouts>
+    
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -31,7 +72,8 @@
               Background="Transparent"
               AllowDrop="True"
               DragOver="Effects_DragOver"
-              Drop="Effects_Drop">
+              Drop="Effects_Drop"
+              Margin="0,0,2.5,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
@@ -39,11 +81,7 @@
             <StackPanel x:Name="stackPanelEffects"
                         root:Spacing.Vertical="5"
                         DragOver="Effects_DragOver"
-                        Drop="Effects_Drop">
-                <Button x:Name="buttonInvert"
-                        Content="Invert"
-                        PreviewMouseMove="Button_PreviewMouseMove" />
-            </StackPanel>
+                        Drop="Effects_Drop" />
         </Grid>
 
         <Label Content="Enabled Effects"
@@ -54,6 +92,7 @@
               Grid.Column="1"
               AllowDrop="True"
               Background="Transparent"
+              Margin="2.5,0,0,0"
               DragOver="Effects_DragOver"
               Drop="EnabledEffects_Drop">
             <StackPanel x:Name="stackPanelEnabledEffects"
@@ -63,268 +102,4 @@
                         Drop="EnabledEffects_Drop" />
         </Grid>
     </Grid>
-
-    <!--<Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="1*" />
-        </Grid.RowDefinitions>
-
-        <StackPanel Margin="0,0,2.5,0"
-                    root:Spacing.Vertical="5">
-            <GroupBox x:Name="groupBoxInvert"
-                      Header="Invert Image - Not applied">
-                <mah:ToggleSwitch x:Name="toggleSwitchInvert"
-                                  OnContent="Enabled"
-                                  OffContent="Disabled"
-                                  IsOn="{Binding Path=Invert}" />
-            </GroupBox>
-
-            <GroupBox x:Name="groupBoxSepiaTone"
-                      Header="Sepia Tone - Not applied">
-                <mah:ToggleSwitch x:Name="toggleSwitchSepiaTone"
-                                  OnContent="Enabled"
-                                  OffContent="Disabled"
-                                  IsOn="{Binding Path=SepiaTone}" />
-            </GroupBox>
-
-            <GroupBox x:Name="groupBoxEmboss"
-                      Header="Emboss - Not applied">
-                <mah:ToggleSwitch x:Name="toggleSwitchEmboss"
-                                  OnContent="Enabled"
-                                  OffContent="Disabled"
-                                  IsOn="{Binding Path=Emboss}" />
-            </GroupBox>
-
-            <GroupBox Header="Edge Detection Filters">
-                <StackPanel root:Spacing.Vertical="5">
-                    <GroupBox x:Name="groupBoxEdgeDetection"
-                              Header="Edge Detection - Not applied">
-                        <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetection"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=EdgeDetection}" />
-                    </GroupBox>
-
-                    <GroupBox x:Name="groupBoxEdgeDetection45Degree"
-                              Header="Edge Detection 45 Degree - Not applied">
-                        <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetection45Degree"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=EdgeDetection45Degree}" />
-                    </GroupBox>
-
-                    <GroupBox x:Name="groupBoxEdgeDetectionHorizontal"
-                              Header="Edge Detection Horizontal - Not applied">
-                        <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetectionHorizontal"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=EdgeDetectionHorizontal}" />
-                    </GroupBox>
-
-                    <GroupBox x:Name="groupBoxEdgeDetectionVertical"
-                              Header="Edge Detection Vertical - Not applied">
-                        <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetectionVertical"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=EdgeDetectionVertical}" />
-                    </GroupBox>
-
-                    <GroupBox x:Name="groupBoxEdgeDetectionTopLeft"
-                              Header="Edge Detection Top Left - Not applied">
-                        <mah:ToggleSwitch x:Name="toggleSwitchEdgeDetectionTopLeft"
-                                          OnContent="Enabled"
-                                          OffContent="Disabled"
-                                          IsOn="{Binding Path=EdgeDetectionTopLeft}" />
-                    </GroupBox>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-
-        <StackPanel Grid.Column="1"
-                    Margin="2.5,0,0,0"
-                    root:Spacing.Vertical="5">
-            <GroupBox x:Name="groupBoxPixelate"
-                      Header="Pixelate - Not applied">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
-                    <mah:ToggleSwitch x:Name="toggleSwitchPixelate"
-                                      OnContent="Enabled"
-                                      OffContent="Disabled"
-                                      IsOn="{Binding Path=Pixelate}" />
-
-                    <Slider x:Name="sliderPixelateSize"
-                            Minimum="1"
-                            Maximum="100"
-                            AutoToolTipPlacement="TopLeft"
-                            AutoToolTipPrecision="0"
-                            mah:SliderHelper.EnableMouseWheel="MouseHover"
-                            mah:SliderHelper.ChangeValueBy="SmallChange"
-                            IsMoveToPointEnabled="True"
-                            SmallChange="1"
-                            Grid.Row="1"
-                            Value="{Binding Path=PixelateSize}"
-                            Margin="0,0,5,0"
-                            IsEnabled="{Binding Path=Pixelate}" />
-                    <mah:NumericUpDown x:Name="numericPixelateSize"
-                                       Minimum="1"
-                                       Maximum="100"
-                                       Interval="1"
-                                       Grid.Column="1"
-                                       Grid.Row="1"
-                                       Margin="5,0,0,0"
-                                       Value="{Binding Path=PixelateSize}"
-                                       IsEnabled="{Binding Path=Pixelate}" />
-                </Grid>
-            </GroupBox>
-            
-            <GroupBox x:Name="groupBoxMedian"
-                      Header="Median - Not applied">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-
-                    <mah:ToggleSwitch x:Name="toggleSwitchMedian"
-                                      OnContent="Enabled"
-                                      OffContent="Disabled"
-                                      IsOn="{Binding Path=Median}" />
-
-                    <Slider x:Name="sliderMedianSize"
-                            Minimum="3"
-                            Maximum="15"
-                            AutoToolTipPlacement="TopLeft"
-                            AutoToolTipPrecision="0"
-                            mah:SliderHelper.EnableMouseWheel="MouseHover"
-                            mah:SliderHelper.ChangeValueBy="SmallChange"
-                            IsMoveToPointEnabled="True"
-                            SmallChange="2"
-                            Grid.Row="1"
-                            Value="{Binding Path=MedianSize}"
-                            Margin="0,0,5,0"
-                            IsEnabled="{Binding Path=Median}" />
-                    <mah:NumericUpDown x:Name="numericMedianSize"
-                                       Minimum="3"
-                                       Maximum="15"
-                                       Interval="2"
-                                       Grid.Column="1"
-                                       Grid.Row="1"
-                                       Margin="5,0,0,0"
-                                       Value="{Binding Path=MedianSize}"
-                                       IsEnabled="{Binding Path=MedianFilter}" />
-                </Grid>
-            </GroupBox>
-
-            <GroupBox Header="Blur Filters">
-                <StackPanel root:Spacing.Vertical="5">
-                    <GroupBox x:Name="groupBoxBoxBlur"
-                              Header="Box Blur - Not applied"
-                              IsEnabled="{Binding Path=BlurFilters}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="80" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-
-                            <mah:ToggleSwitch x:Name="toggleSwitchBoxBlur"
-                                              OnContent="Enabled"
-                                              OffContent="Disabled"
-                                              IsOn="{Binding Path=BoxBlur}" />
-
-                            <Slider x:Name="sliderMeanBlurAmount"
-                                    Minimum="3"
-                                    Maximum="19"
-                                    SmallChange="2"
-                                    AutoToolTipPlacement="TopLeft"
-                                    AutoToolTipPrecision="0"
-                                    IsMoveToPointEnabled="True"
-                                    IsSnapToTickEnabled="True"
-                                    mah:SliderHelper.EnableMouseWheel="MouseHover"
-                                    mah:SliderHelper.ChangeValueBy="SmallChange"
-                                    TickFrequency="2"
-                                    IsEnabled="{Binding Path=BoxBlur}"
-                                    Value="{Binding Path=BoxBlurAmount}"
-                                    Margin="0,0,5,0"
-                                    Grid.Row="1" />
-                            <mah:NumericUpDown x:Name="numericMeanBlurAmount"
-                                               Minimum="3"
-                                               Maximum="19"
-                                               Interval="2"
-                                               IsEnabled="{Binding Path=BoxBlurFilter}"
-                                               Value="{Binding Path=BoxBlurAmount}"
-                                               Margin="5,0,0,0"
-                                               Grid.Row="1"
-                                               Grid.Column="1" />
-                        </Grid>
-                    </GroupBox>
-
-                    <GroupBox x:Name="groupBoxGaussianBlur"
-                              Header="Gaussian Blur - Not applied"
-                              IsEnabled="{Binding Path=BlurFilters}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="80" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
-                            </Grid.RowDefinitions>
-
-                            <mah:ToggleSwitch x:Name="radioButtonGaussianBlur"
-                                              OnContent="Enabled"
-                                              OffContent="Disabled"
-                                              IsOn="{Binding Path=GaussianBlur}" />
-
-                            <Slider x:Name="sliderBlurFilterAmount"
-                                    Minimum="1"
-                                    Maximum="100"
-                                    AutoToolTipPlacement="TopLeft"
-                                    AutoToolTipPrecision="0"
-                                    mah:SliderHelper.EnableMouseWheel="MouseHover"
-                                    mah:SliderHelper.ChangeValueBy="SmallChange"
-                                    IsMoveToPointEnabled="True"
-                                    SmallChange="1"
-                                    Grid.Row="1"
-                                    Margin="0,0,5,0"
-                                    IsSnapToTickEnabled="True"
-                                    TickFrequency="1"
-                                    IsEnabled="{Binding Path=GaussianBlur}"
-                                    Value="{Binding Path=GaussianBlurAmount}" />
-                            <mah:NumericUpDown x:Name="numericBlurFilterAmount"
-                                               Minimum="1"
-                                               Maximum="100"
-                                               Interval="1"
-                                               Grid.Row="1"
-                                               Grid.Column="1"
-                                               Margin="5,0,0,0"
-                                               IsEnabled="{Binding Path=GaussianBlurFilter}"
-                                               Value="{Binding Path=GaussianBlurAmount}" />
-                        </Grid>
-                    </GroupBox>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-    </Grid>-->
 </mah:MetroWindow>

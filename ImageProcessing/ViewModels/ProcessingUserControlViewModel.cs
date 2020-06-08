@@ -1,4 +1,5 @@
-﻿using ImageProcessing.UserControls;
+﻿using ImageProcessing.Entities;
+using ImageProcessing.UserControls;
 using ImageProcessing.Windows;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
@@ -56,9 +57,9 @@ namespace ImageProcessing.ViewModels
             EdgeDetectionTopLeft
         }
 
-        public Dictionary<FilterType, string> FilterNames;
+        public Dictionary<FilterType, ImageEffect> Filters;
 
-        public List<FilterType> Filters { get; set; }
+        public List<FilterType> EnabledFilters { get; set; }
 
         public bool ShowChanges
         {
@@ -220,21 +221,21 @@ namespace ImageProcessing.ViewModels
 
         public ProcessingUserControlViewModel(MainWindow mainWindow, ProcessingUserControl userControl)
         {
-            Filters = new List<FilterType>();
-            FilterNames = new Dictionary<FilterType, string>
+            EnabledFilters = new List<FilterType>();
+            Filters = new Dictionary<FilterType, ImageEffect>
             {
-                { FilterType.Invert, "Invert Image" },
-                { FilterType.SepiaTone, "Sepia Tone" },
-                { FilterType.Emboss, "Emboss" },
-                { FilterType.Pixelate, "Pixelate" },
-                { FilterType.Median, "Median" },
-                { FilterType.BoxBlur, "Box Blur" },
-                { FilterType.GaussianBlur, "Gaussian Blur" },
-                { FilterType.EdgeDetection, "Edge Detection" },
-                { FilterType.EdgeDetection45Degree, "Edge Detection 45 Degree" },
-                { FilterType.EdgeDetectionHorizontal, "Edge Detection Horizontal" },
-                { FilterType.EdgeDetectionVertical, "Edge Detection Vertical" },
-                { FilterType.EdgeDetectionTopLeft, "Edge Detection Top Left" }
+                { FilterType.Invert, new ImageEffect("Invert Image", -1, -1, -1) },
+                { FilterType.SepiaTone, new ImageEffect("Sepia Tone", -1, -1, -1) },
+                { FilterType.Emboss, new ImageEffect("Emboss", -1, -1, -1) },
+                { FilterType.Pixelate, new ImageEffect("Pixelate", 1, 100, 1) },
+                { FilterType.Median, new ImageEffect("Median", 3, 19, 2) },
+                { FilterType.BoxBlur, new ImageEffect("Box Blur", 3, 19, 2) },
+                { FilterType.GaussianBlur, new ImageEffect("Gaussian Blur", 1, 100, 1) },
+                { FilterType.EdgeDetection, new ImageEffect("Edge Detection", -1, -1, -1) },
+                { FilterType.EdgeDetection45Degree, new ImageEffect("Edge Detection 45 Degree", -1, -1, -1) },
+                { FilterType.EdgeDetectionHorizontal, new ImageEffect("Edge Detection Horizontal", -1, -1, -1) },
+                { FilterType.EdgeDetectionVertical, new ImageEffect("Edge Detection Vertical", -1, -1, -1) },
+                { FilterType.EdgeDetectionTopLeft, new ImageEffect("Edge Detection Top Left", -1, -1, -1) }
             };
 
             MaximumHue = 360;
@@ -313,7 +314,7 @@ namespace ImageProcessing.ViewModels
             GrayScale = false;
             PixelColor = Color.FromArgb(255, 255, 0, 0);
             ReplaceColor = false;
-            Filters.Clear();
+            EnabledFilters.Clear();
 
             if (ImageEffects && EffectsWindow != null)
             {
@@ -373,11 +374,8 @@ namespace ImageProcessing.ViewModels
                                                                  GrayScale,
                                                                  PixelColor,
                                                                  ReplaceColor,
-                                                                 PixelateSize,
-                                                                 MedianSize,
-                                                                 GaussianBlurAmount,
-                                                                 BoxBlurAmount,
                                                                  ImageEffects,
+                                                                 EnabledFilters,
                                                                  Filters));
             thread.Start();
         }

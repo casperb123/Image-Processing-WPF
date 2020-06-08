@@ -52,56 +52,72 @@ namespace ImageProcessing.Windows
             {
                 Button button = (Button)e.Data.GetData("Object");
 
-                if (button != null)
+                if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
                 {
-                    if (e.AllowedEffects.HasFlag(DragDropEffects.Move))
-                    {
-                        FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
-                        FilterType filter = ViewModel.ProcessingUserControlViewModel.Filters.FirstOrDefault(x => x == filterType);
+                    FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+                    FilterType filter = ViewModel.ProcessingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x == filterType);
 
-                        if (filter != FilterType.Invalid)
+                    if (filter != FilterType.Invalid)
+                    {
+                        int index = ViewModel.ProcessingUserControlViewModel.Filters.Keys.ToList().IndexOf(filterType);
+
+                        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
                         {
-                            ViewModel.ProcessingUserControlViewModel.Filters.Remove(filter);
+                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
                             stackPanelEnabledEffects.Children.Remove(button);
+
                             UpdateLayout();
-                            stackPanelEffects.Children.Add(button);
+
+                            stackPanelEffects.Children.Insert(index, button);
                             e.Effects = DragDropEffects.Move;
                         }
                     }
+
+                    ViewModel.Dragging = false;
                 }
             }
         }
 
         private void EnabledEffects_Drop(object sender, DragEventArgs e)
         {
-            if (!e.Handled)
+            if (!e.Handled && ViewModel.Dragging)
             {
                 Button button = (Button)e.Data.GetData("Object");
 
-                if (button != null)
+                if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
                 {
-                    if (e.AllowedEffects.HasFlag(DragDropEffects.Move))
-                    {
-                        FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+                    FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
 
-                        ViewModel.ProcessingUserControlViewModel.Filters.Add(filterType);
-                        stackPanelEffects.Children.Remove(button);
+                    if (filter != FilterType.Invalid)
+                    {
+                        int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
+
+                        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
+                        {
+                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
+                            stackPanelEnabledEffects.Children.Remove(button);
+                        }
+                        else
+                            stackPanelEffects.Children.Remove(button);
+
                         UpdateLayout();
-                        stackPanelEnabledEffects.Children.Add(button);
+
+                        if (index == -1)
+                        {
+                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Add(filter);
+                            stackPanelEnabledEffects.Children.Add(button);
+                        }
+                        else
+                        {
+                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Insert(index, filter);
+                            stackPanelEnabledEffects.Children.Insert(index, button);
+                        }
+
                         e.Effects = DragDropEffects.Move;
                     }
+
+                    ViewModel.Dragging = false;
                 }
-            }
-        }
-
-        private void Button_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DataObject data = new DataObject();
-                data.SetData("Object", sender);
-
-                DragDrop.DoDragDrop(this, data, DragDropEffects.Move);
             }
         }
     }
