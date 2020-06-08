@@ -8,10 +8,11 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  mc:Ignorable="d"
                  Title="Image Effects"
-                 Height="718"
-                 Width="691"
-                 SizeToContent="Height"
-                 ResizeMode="NoResize"
+                 Height="451"
+                 Width="450"
+                 MinHeight="451"
+                 MinWidth="450"
+                 ResizeMode="CanResizeWithGrip"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                  Closing="MetroWindow_Closing">
     <mah:MetroWindow.Flyouts>
@@ -78,10 +79,12 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
-            <StackPanel x:Name="stackPanelEffects"
-                        root:Spacing.Vertical="5"
-                        DragOver="Effects_DragOver"
-                        Drop="Effects_Drop" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="stackPanelEffects"
+                            root:Spacing.Vertical="5"
+                            DragOver="Effects_DragOver"
+                            Drop="Effects_Drop" />
+            </ScrollViewer>
         </Grid>
 
         <Label Content="Enabled Effects"
