@@ -29,7 +29,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="80" />
                         </Grid.ColumnDefinitions>
-
+                        
                         <Slider x:Name="sliderEffectValue"
                                 Minimum="{Binding Path=CurrentImageEffect.MinimumValue}"
                                 Maximum="{Binding Path=CurrentImageEffect.MaximumValue}"

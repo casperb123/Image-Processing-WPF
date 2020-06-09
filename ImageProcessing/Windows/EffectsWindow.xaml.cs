@@ -1,10 +1,12 @@
 ﻿using ImageProcessing.ViewModels;
 using MahApps.Metro.Controls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 
 namespace ImageProcessing.Windows
@@ -46,74 +48,127 @@ namespace ImageProcessing.Windows
         {
             if (e.Handled == false)
             {
-                Button button = (Button)e.Data.GetData("Object");
-
-                if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
+                foreach (var item in e.Data.GetData("Object") as Dictionary<Button, int>)
                 {
-                    FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+                    FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), item.Key.Name.Substring(6));
                     FilterType filter = ViewModel.ProcessingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x == filterType);
+                    int index = ViewModel.ProcessingUserControlViewModel.Filters.Keys.ToList().IndexOf(filterType);
 
-                    if (filter != FilterType.Invalid)
+                    if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
                     {
-                        int index = ViewModel.ProcessingUserControlViewModel.Filters.Keys.ToList().IndexOf(filterType);
+                        ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
+                        stackPanelEnabledEffects.Children.Remove(item.Key);
 
-                        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
-                        {
-                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
-                            stackPanelEnabledEffects.Children.Remove(button);
+                        UpdateLayout();
 
-                            UpdateLayout();
-
-                            stackPanelEffects.Children.Insert(index, button);
-                            e.Effects = DragDropEffects.Move;
-                        }
+                        stackPanelEffects.Children.Insert(index, item.Key);
+                        e.Effects = DragDropEffects.Move;
                     }
-
-                    ViewModel.Dragging = false;
                 }
+
+                //Button button = (Button)e.Data.GetData("Object");
+
+                //if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
+                //{
+                //    FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+                //    FilterType filter = ViewModel.ProcessingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x == filterType);
+
+                //    if (filter != FilterType.Invalid)
+                //    {
+                //        int index = ViewModel.ProcessingUserControlViewModel.Filters.Keys.ToList().IndexOf(filterType);
+
+                //        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
+                //        {
+                //            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
+                //            stackPanelEnabledEffects.Children.Remove(button);
+
+                //            UpdateLayout();
+
+                //            stackPanelEffects.Children.Insert(index, button);
+                //            e.Effects = DragDropEffects.Move;
+                //        }
+                //    }
+
+                //    ViewModel.Dragging = false;
+                //}
             }
         }
 
         private void EnabledEffects_Drop(object sender, DragEventArgs e)
         {
-            if (!e.Handled && ViewModel.Dragging)
+            if (!e.Handled && ViewModel.Dragging && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
-                Button button = (Button)e.Data.GetData("Object");
+                int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
 
-                if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
+                foreach (var item in e.Data.GetData("Object") as Dictionary<Button, int>)
                 {
-                    FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+                    FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), item.Key.Name.Substring(6));
 
-                    if (filter != FilterType.Invalid)
+                    if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
                     {
-                        int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
+                        ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
+                        stackPanelEnabledEffects.Children.Remove(item.Key);
+                    }
+                    else
+                        stackPanelEffects.Children.Remove(item.Key);
 
-                        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
-                        {
-                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
-                            stackPanelEnabledEffects.Children.Remove(button);
-                        }
-                        else
-                            stackPanelEffects.Children.Remove(button);
+                    UpdateLayout();
 
-                        UpdateLayout();
-
-                        if (index == -1)
-                        {
-                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Add(filter);
-                            stackPanelEnabledEffects.Children.Add(button);
-                        }
-                        else
-                        {
-                            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Insert(index, filter);
-                            stackPanelEnabledEffects.Children.Insert(index, button);
-                        }
-
-                        e.Effects = DragDropEffects.Move;
+                    if (index == -1)
+                    {
+                        ViewModel.ProcessingUserControlViewModel.EnabledFilters.Add(filter);
+                        stackPanelEnabledEffects.Children.Add(item.Key);
+                        index = 0;
+                    }
+                    else
+                    {
+                        ViewModel.ProcessingUserControlViewModel.EnabledFilters.Insert(index, filter);
+                        stackPanelEnabledEffects.Children.Insert(index, item.Key);
                     }
 
-                    ViewModel.Dragging = false;
+                    e.Effects = DragDropEffects.Move;
+                    index++;
                 }
+
+                ViewModel.ResetSelection();
+                ViewModel.Dragging = false;
+
+                //Button button = (Button)e.Data.GetData("Object");
+
+                //if (button != null && e.AllowedEffects.HasFlag(DragDropEffects.Move))
+                //{
+                //    FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
+
+                //    if (filter != FilterType.Invalid)
+                //    {
+                //        int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
+
+                //        if (ViewModel.ProcessingUserControlViewModel.EnabledFilters.Contains(filter))
+                //        {
+                //            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Remove(filter);
+                //            stackPanelEnabledEffects.Children.Remove(button);
+                //        }
+                //        else
+                //            stackPanelEffects.Children.Remove(button);
+
+                //        UpdateLayout();
+
+                //        if (index == -1)
+                //        {
+                //            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Add(filter);
+                //            stackPanelEnabledEffects.Children.Add(button);
+                //        }
+                //        else
+                //        {
+                //            ViewModel.ProcessingUserControlViewModel.EnabledFilters.Insert(index, filter);
+                //            stackPanelEnabledEffects.Children.Insert(index, button);
+                //        }
+
+                //        e.Effects = DragDropEffects.Move;
+                //    }
+
+                //    ViewModel.Dragging = false;
+                //}
             }
         }
     }
