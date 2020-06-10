@@ -26,8 +26,7 @@ namespace ImageProcessing.ViewModels
 
         public void ChangeTheme(string theme, string color, bool triggerChanges = true)
         {
-            ThemeManager.Current.ChangeThemeBaseColor(Application.Current, theme);
-            ThemeManager.Current.ChangeThemeColorScheme(Application.Current, color);
+            ThemeManager.Current.ChangeTheme(Application.Current, $"{theme}.{color}");
             if (triggerChanges)
                 SettingsChanged = true;
         }
