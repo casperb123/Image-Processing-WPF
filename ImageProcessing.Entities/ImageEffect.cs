@@ -67,10 +67,18 @@ namespace ImageProcessing.Entities
             if (!string.IsNullOrWhiteSpace(prop))
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
-
-        public ImageEffect(string effectName, int minimumValue, int maximumValue, int interval)
+        public ImageEffect(string effectName)
         {
             EffectName = effectName;
+            MinimumValue = -1;
+            MaximumValue = -1;
+            Interval = -1;
+            CurrentValue = -1;
+        }
+
+        public ImageEffect(string effectName, int minimumValue, int maximumValue, int interval)
+            : this(effectName)
+        {
             MinimumValue = minimumValue;
             MaximumValue = maximumValue;
             Interval = interval;

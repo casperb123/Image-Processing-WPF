@@ -180,18 +180,18 @@ namespace ImageProcessing.ViewModels
             EnabledFilters = new List<FilterType>();
             Filters = new Dictionary<FilterType, ImageEffect>
             {
-                { FilterType.Invert, new ImageEffect("Invert Image", -1, -1, -1) },
-                { FilterType.SepiaTone, new ImageEffect("Sepia Tone", -1, -1, -1) },
-                { FilterType.Emboss, new ImageEffect("Emboss", -1, -1, -1) },
+                { FilterType.Invert, new ImageEffect("Invert Image") },
+                { FilterType.SepiaTone, new ImageEffect("Sepia Tone") },
+                { FilterType.Emboss, new ImageEffect("Emboss") },
                 { FilterType.Pixelate, new ImageEffect("Pixelate", 1, 100, 1) },
                 { FilterType.Median, new ImageEffect("Median", 3, 19, 2) },
                 { FilterType.BoxBlur, new ImageEffect("Box Blur", 3, 19, 2) },
                 { FilterType.GaussianBlur, new ImageEffect("Gaussian Blur", 1, 100, 1) },
-                { FilterType.EdgeDetection, new ImageEffect("Edge Detection", -1, -1, -1) },
-                { FilterType.EdgeDetection45Degree, new ImageEffect("Edge Detection 45 Degree", -1, -1, -1) },
-                { FilterType.EdgeDetectionHorizontal, new ImageEffect("Edge Detection Horizontal", -1, -1, -1) },
-                { FilterType.EdgeDetectionVertical, new ImageEffect("Edge Detection Vertical", -1, -1, -1) },
-                { FilterType.EdgeDetectionTopLeft, new ImageEffect("Edge Detection Top Left", -1, -1, -1) }
+                { FilterType.EdgeDetection, new ImageEffect("Edge Detection") },
+                { FilterType.EdgeDetection45Degree, new ImageEffect("Edge Detection 45 Degree") },
+                { FilterType.EdgeDetectionHorizontal, new ImageEffect("Edge Detection Horizontal") },
+                { FilterType.EdgeDetectionVertical, new ImageEffect("Edge Detection Vertical") },
+                { FilterType.EdgeDetectionTopLeft, new ImageEffect("Edge Detection Top Left") }
             };
 
             MaximumHue = 360;
