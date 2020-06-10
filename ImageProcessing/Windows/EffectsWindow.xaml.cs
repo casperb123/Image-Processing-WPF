@@ -3,6 +3,7 @@ using ImageProcessing.ViewModels;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -46,21 +47,21 @@ namespace ImageProcessing.Windows
             ViewModel.SetStartPoint(e.GetPosition(null));
         }
 
-        public void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            ViewModel.EffectClicked(button);
-        }
+        //public void Button_Click(object sender, RoutedEventArgs e)
+        //{
+        //    Button button = sender as Button;
+        //    ViewModel.EffectClicked(button);
+        //}
 
-        public void Button_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && !ViewModel.Dragging)
-            {
-                Point position = e.GetPosition(null);
-                Button button = sender as Button;
-                ViewModel.TriggerDragDrop(position, button);
-            }
-        }
+        //public void Button_PreviewMouseMove(object sender, MouseEventArgs e)
+        //{
+        //    if (e.LeftButton == MouseButtonState.Pressed && !ViewModel.Dragging)
+        //    {
+        //        Point position = e.GetPosition(null);
+        //        Button button = sender as Button;
+        //        ViewModel.TriggerDragDrop(position, button);
+        //    }
+        //}
 
         private void Effects_DragOver(object sender, DragEventArgs e)
         {
@@ -72,8 +73,8 @@ namespace ImageProcessing.Windows
         {
             if (e.Handled == false && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
-                List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
-                ViewModel.DisableEffects(buttons);
+                ObservableCollection<ImageEffect> rows = e.Data.GetData("Object") as ObservableCollection<ImageEffect>;
+                ViewModel.DisableEffects(rows);
                 e.Effects = DragDropEffects.Move;
             }
         }
@@ -82,9 +83,9 @@ namespace ImageProcessing.Windows
         {
             if (!e.Handled && ViewModel.Dragging && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
-                int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
-                List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
-                ViewModel.EnableEffects(buttons, index);
+                int index = ViewModel.GetCurrentRowIndex(dataGridEnabledEffects, e.GetPosition);
+                ObservableCollection<ImageEffect> rows = e.Data.GetData("Object") as ObservableCollection<ImageEffect>;
+                ViewModel.EnableEffects(rows, index);
                 e.Effects = DragDropEffects.Move;
             }
         }
