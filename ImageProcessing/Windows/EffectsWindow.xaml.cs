@@ -63,7 +63,8 @@ namespace ImageProcessing.Windows
             {
                 Point position = e.GetPosition(null);
                 Button button = sender as Button;
-                ViewModel.TriggerDragDrop(position, button);
+                StackPanel stackPanel = VisualTreeHelper.GetParent(button) as StackPanel;
+                ViewModel.TriggerDragDrop(position, stackPanel, button);
             }
         }
 
@@ -79,6 +80,11 @@ namespace ImageProcessing.Windows
             {
                 List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
                 ViewModel.DisableEffects(buttons);
+                if (ViewModel.DragDropWindow != null)
+                {
+                    ViewModel.DragDropWindow.Close();
+                    ViewModel.DragDropWindow = null;
+                }
                 e.Effects = DragDropEffects.Move;
             }
         }
@@ -90,8 +96,18 @@ namespace ImageProcessing.Windows
                 int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
                 List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
                 ViewModel.EnableEffects(buttons, index);
+                if (ViewModel.DragDropWindow != null)
+                {
+                    ViewModel.DragDropWindow.Close();
+                    ViewModel.DragDropWindow = null;
+                }
                 e.Effects = DragDropEffects.Move;
             }
+        }
+
+        private void StackPanelEffects_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
+        {
+            ViewModel.MoveDragDropWindow();
         }
     }
 }

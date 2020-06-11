@@ -84,7 +84,8 @@
                 <StackPanel x:Name="stackPanelEffects"
                             root:Spacing.Vertical="5"
                             DragOver="Effects_DragOver"
-                            Drop="Effects_Drop" />
+                            Drop="Effects_Drop"
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"/>
             </ScrollViewer>
         </Grid>
 
@@ -105,7 +106,8 @@
                             root:Spacing.Vertical="5"
                             AllowDrop="True"
                             DragOver="Effects_DragOver"
-                            Drop="EnabledEffects_Drop" />
+                            Drop="EnabledEffects_Drop"
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"/>
             </ScrollViewer>
         </Grid>
     </Grid>

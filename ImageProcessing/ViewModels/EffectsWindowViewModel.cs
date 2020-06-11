@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -15,6 +16,17 @@ namespace ImageProcessing.ViewModels
 {
     public class EffectsWindowViewModel : INotifyPropertyChanged
     {
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetCursorPos(ref Win32Point pt);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Win32Point
+        {
+            public int X;
+            public int Y;
+        }
+
         private ImageEffect currentImageEffect;
         private readonly EffectsWindow window;
         private Point startPoint;
@@ -23,6 +35,7 @@ namespace ImageProcessing.ViewModels
         private readonly ProcessingUserControlViewModel processingUserControlViewModel;
 
         public delegate Point GetPosition(IInputElement element);
+        public DragDropWindow DragDropWindow;
 
         public ImageEffect CurrentImageEffect
         {
@@ -52,6 +65,13 @@ namespace ImageProcessing.ViewModels
             selected.startIndex = -1;
             selected.endIndex = -1;
             toMove.buttons = new List<(Button, int)>();
+        }
+
+        public void CreateDragDropWindow(List<Button> buttons)
+        {
+            DragDropWindow = new DragDropWindow(buttons);
+            DragDropWindow.Show();
+            MoveDragDropWindow();
         }
 
         public void Closing()
@@ -111,6 +131,15 @@ namespace ImageProcessing.ViewModels
             }
         }
 
+        public void MoveDragDropWindow()
+        {
+            Win32Point point = new Win32Point();
+            GetCursorPos(ref point);
+
+            DragDropWindow.Left = point.X + 15;
+            DragDropWindow.Top = point.Y + 15;
+        }
+
         public void StyleButtons()
         {
             List<Button> buttons = new List<Button>();
@@ -142,7 +171,7 @@ namespace ImageProcessing.ViewModels
             startPoint = point;
         }
 
-        public void TriggerDragDrop(Point position, Button button)
+        public void TriggerDragDrop(Point position, StackPanel stackPanel, Button button)
         {
             if (Math.Abs(position.X - startPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(position.Y - startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
@@ -150,7 +179,6 @@ namespace ImageProcessing.ViewModels
                 if (selected.startIndex > -1 && selected.endIndex == -1)
                     ResetSelection();
 
-                StackPanel stackPanel = VisualTreeHelper.GetParent(button) as StackPanel;
                 int index = stackPanel.Children.IndexOf(button);
 
                 if (toMove.stackPanel != stackPanel)
@@ -167,12 +195,14 @@ namespace ImageProcessing.ViewModels
                     toMove.buttons.Add((button, index));
                 }
 
+                StyleButtons();
                 Dragging = true;
 
                 DataObject data = new DataObject();
                 data.SetData("Object", toMove.buttons);
 
-                DragDrop.DoDragDrop(window, data, DragDropEffects.Move);
+                CreateDragDropWindow(new List<Button>(toMove.buttons.Select(x => x.Item1)));
+                DragDrop.DoDragDrop(stackPanel, data, DragDropEffects.Move);
             }
         }
 
