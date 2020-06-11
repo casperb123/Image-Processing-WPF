@@ -33,7 +33,7 @@ namespace ImageProcessing.Windows
                     BorderBrush = button.BorderBrush,
                     Content = button.Content,
                     IsHitTestVisible = false,
-                    Opacity = .5
+                    Opacity = .7
                 };
 
                 stackPanelButtons.Children.Add(newButton);
