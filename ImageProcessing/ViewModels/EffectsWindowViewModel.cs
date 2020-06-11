@@ -96,12 +96,7 @@ namespace ImageProcessing.ViewModels
                 {
                     Name = $"button{filter.Key}",
                     Content = filter.Value.EffectName,
-<<<<<<< HEAD
                     Focusable = false
-=======
-                    Focusable = false,
-                    BorderThickness = new Thickness(2)
->>>>>>> parent of 7f0f6e5... Began remaking the effects.
                 };
 
                 button.PreviewMouseMove += window.Button_PreviewMouseMove;
@@ -127,11 +122,7 @@ namespace ImageProcessing.ViewModels
             foreach (Button button in buttons)
             {
                 if (toMove.buttons.Any(x => x.Item1 == button))
-<<<<<<< HEAD
                     button.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 200, 0));
-=======
-                    button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Accent");
->>>>>>> parent of 7f0f6e5... Began remaking the effects.
                 else
                     button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Button.Border");
             }
