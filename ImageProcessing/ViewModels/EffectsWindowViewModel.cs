@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
+using static ImageProcessing.Entities.ImageEffect;
 
 namespace ImageProcessing.ViewModels
 {
@@ -88,14 +88,14 @@ namespace ImageProcessing.ViewModels
             return rect.Contains(point);
         }
 
-        private void CreateFilterButtons(Dictionary<FilterType, ImageEffect> filters, List<FilterType> enabledFilters)
+        private void CreateFilterButtons(List<ImageEffect> filters, List<ImageEffect> enabledFilters)
         {
             foreach (var filter in filters)
             {
                 Button button = new Button
                 {
-                    Name = $"button{filter.Key}",
-                    Content = filter.Value.EffectName,
+                    Name = $"button{filter.Filter}",
+                    Content = filter.EffectName,
                     Focusable = false,
                     BorderThickness = new Thickness(2)
                 };
@@ -104,7 +104,7 @@ namespace ImageProcessing.ViewModels
                 button.PreviewMouseLeftButtonDown += window.Button_PreviewMouseLeftButtonDown;
                 button.Click += window.Button_Click;
 
-                if (enabledFilters.Contains(filter.Key))
+                if (enabledFilters.Contains(filter))
                     window.stackPanelEnabledEffects.Children.Add(button);
                 else
                     window.stackPanelEffects.Children.Add(button);
@@ -197,8 +197,10 @@ namespace ImageProcessing.ViewModels
                 }
                 else
                 {
-                    if (toMove.buttons.Any(x => x.Item1 == button))
-                        toMove.buttons.RemoveAt(index);
+                    var selectedButton = toMove.buttons.FirstOrDefault(x => x.Item1 == button);
+
+                    if (selectedButton.Item1 != null)
+                        toMove.buttons.Remove(selectedButton);
                     else
                         toMove.buttons.Add((button, index));
                 }
@@ -243,7 +245,7 @@ namespace ImageProcessing.ViewModels
                 ResetSelection();
 
                 FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
-                ImageEffect imageEffect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Key == filterType).Value;
+                ImageEffect imageEffect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filterType);
 
                 if (imageEffect.MinimumValue == -1 && imageEffect.MaximumValue == -1)
                     window.flyoutEffectSettings.IsOpen = false;
@@ -260,33 +262,32 @@ namespace ImageProcessing.ViewModels
             foreach (var button in buttons)
             {
                 FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Item1.Name.Substring(6));
-                FilterType filter = processingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x == filterType);
-                int index = processingUserControlViewModel.Filters.Keys.ToList().IndexOf(filterType);
+                ImageEffect effect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filterType);
+                ImageEffect enabledEffect = processingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x.Filter == filterType);
+                int index = processingUserControlViewModel.Filters.IndexOf(effect);
 
-                if (filter != FilterType.Invalid)
+                if (enabledEffect != null)
+                    processingUserControlViewModel.EnabledFilters.Remove(enabledEffect);
+
+                window.stackPanelEnabledEffects.Children.Remove(button.Item1);
+                window.UpdateLayout();
+
+                List<FilterType> filterTypes = Enum.GetValues(typeof(FilterType)).Cast<FilterType>().Where(x => (int)x > (int)filterType).ToList();
+                foreach (Button existingButton in window.stackPanelEffects.Children)
                 {
-                    processingUserControlViewModel.EnabledFilters.Remove(filter);
-                    window.stackPanelEnabledEffects.Children.Remove(button.Item1);
+                    FilterType existingType = (FilterType)Enum.Parse(typeof(FilterType), existingButton.Name.Substring(6));
 
-                    window.UpdateLayout();
-
-                    List<FilterType> filterTypes = Enum.GetValues(typeof(FilterType)).Cast<FilterType>().Where(x => (int)x > (int)filterType).ToList();
-                    foreach (Button existingButton in window.stackPanelEffects.Children)
+                    if (filterTypes.Contains(existingType))
                     {
-                        FilterType existingType = (FilterType)Enum.Parse(typeof(FilterType), existingButton.Name.Substring(6));
-
-                        if (filterTypes.Contains(existingType))
-                        {
-                            index = window.stackPanelEffects.Children.IndexOf(existingButton);
-                            break;
-                        }
+                        index = window.stackPanelEffects.Children.IndexOf(existingButton);
+                        break;
                     }
-
-                    if (index > window.stackPanelEffects.Children.Count)
-                        index = window.stackPanelEffects.Children.Count;
-
-                    window.stackPanelEffects.Children.Insert(index, button.Item1);
                 }
+
+                if (index > window.stackPanelEffects.Children.Count)
+                    index = window.stackPanelEffects.Children.Count;
+
+                window.stackPanelEffects.Children.Insert(index, button.Item1);
             }
 
             ResetSelection();
@@ -298,10 +299,12 @@ namespace ImageProcessing.ViewModels
             foreach (var button in buttons)
             {
                 FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Item1.Name.Substring(6));
+                ImageEffect effect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filter);
+                ImageEffect enabledEffect = processingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x.Filter == filter);
 
-                if (processingUserControlViewModel.EnabledFilters.Contains(filter))
+                if (enabledEffect != null)
                 {
-                    processingUserControlViewModel.EnabledFilters.Remove(filter);
+                    processingUserControlViewModel.EnabledFilters.Remove(effect);
                     window.stackPanelEnabledEffects.Children.Remove(button.Item1);
                 }
                 else
@@ -311,13 +314,13 @@ namespace ImageProcessing.ViewModels
 
                 if (index == -1)
                 {
-                    processingUserControlViewModel.EnabledFilters.Add(filter);
+                    processingUserControlViewModel.EnabledFilters.Add(effect);
                     window.stackPanelEnabledEffects.Children.Add(button.Item1);
                     index = 0;
                 }
                 else
                 {
-                    processingUserControlViewModel.EnabledFilters.Insert(index, filter);
+                    processingUserControlViewModel.EnabledFilters.Insert(index, effect);
                     window.stackPanelEnabledEffects.Children.Insert(index, button.Item1);
                 }
 

@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using static ImageProcessing.Entities.ImageEffect;
 using Brush = System.Windows.Media.Brush;
 using Color = System.Windows.Media.Color;
 
@@ -36,26 +37,9 @@ namespace ImageProcessing.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public enum FilterType
-        {
-            Invalid,
-            Invert,
-            SepiaTone,
-            Emboss,
-            Pixelate,
-            Median,
-            BoxBlur,
-            GaussianBlur,
-            EdgeDetection,
-            EdgeDetection45Degree,
-            EdgeDetectionHorizontal,
-            EdgeDetectionVertical,
-            EdgeDetectionTopLeft
-        }
+        public List<ImageEffect> Filters;
 
-        public Dictionary<FilterType, ImageEffect> Filters;
-
-        public List<FilterType> EnabledFilters { get; set; }
+        public List<ImageEffect> EnabledFilters { get; set; }
 
         public bool ShowChanges
         {
@@ -177,21 +161,21 @@ namespace ImageProcessing.ViewModels
 
         public ProcessingUserControlViewModel(MainWindow mainWindow, ProcessingUserControl userControl)
         {
-            EnabledFilters = new List<FilterType>();
-            Filters = new Dictionary<FilterType, ImageEffect>
+            EnabledFilters = new List<ImageEffect>();
+            Filters = new List<ImageEffect>
             {
-                { FilterType.Invert, new ImageEffect("Invert Image") },
-                { FilterType.SepiaTone, new ImageEffect("Sepia Tone") },
-                { FilterType.Emboss, new ImageEffect("Emboss") },
-                { FilterType.Pixelate, new ImageEffect("Pixelate", 1, 100, 1) },
-                { FilterType.Median, new ImageEffect("Median", 3, 19, 2) },
-                { FilterType.BoxBlur, new ImageEffect("Box Blur", 3, 19, 2) },
-                { FilterType.GaussianBlur, new ImageEffect("Gaussian Blur", 1, 100, 1) },
-                { FilterType.EdgeDetection, new ImageEffect("Edge Detection") },
-                { FilterType.EdgeDetection45Degree, new ImageEffect("Edge Detection 45 Degree") },
-                { FilterType.EdgeDetectionHorizontal, new ImageEffect("Edge Detection Horizontal") },
-                { FilterType.EdgeDetectionVertical, new ImageEffect("Edge Detection Vertical") },
-                { FilterType.EdgeDetectionTopLeft, new ImageEffect("Edge Detection Top Left") }
+                { new ImageEffect(FilterType.Invert, "Invert Image") },
+                { new ImageEffect(FilterType.SepiaTone, "Sepia Tone") },
+                { new ImageEffect(FilterType.Emboss, "Emboss") },
+                { new ImageEffect(FilterType.Pixelate, "Pixelate", 1, 100, 1) },
+                { new ImageEffect(FilterType.Median, "Median", 3, 19, 2) },
+                { new ImageEffect(FilterType.BoxBlur, "Box Blur", 3, 19, 2) },
+                { new ImageEffect(FilterType.GaussianBlur, "Gaussian Blur", 1, 100, 1) },
+                { new ImageEffect(FilterType.EdgeDetection, "Edge Detection") },
+                { new ImageEffect(FilterType.EdgeDetection45Degree, "Edge Detection 45 Degree") },
+                { new ImageEffect(FilterType.EdgeDetectionHorizontal, "Edge Detection Horizontal") },
+                { new ImageEffect(FilterType.EdgeDetectionVertical, "Edge Detection Vertical") },
+                { new ImageEffect(FilterType.EdgeDetectionTopLeft, "Edge Detection Top Left") }
             };
 
             MaximumHue = 360;

@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using static ImageProcessing.Entities.ImageEffect;
 using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 using Color = System.Drawing.Color;
 
@@ -215,8 +216,8 @@ namespace ImageProcessing
                            System.Windows.Media.Color pixelColor,
                            bool replaceGrayColor,
                            bool imageEffects,
-                           List<FilterType> enabledFilters,
-                           Dictionary<FilterType, ImageEffect> filters)
+                           List<ImageEffect> enabledFilters,
+                           List<ImageEffect> filters)
         {
             Bitmap modifiedBitmap = new Bitmap(bitmap);
 
@@ -280,14 +281,9 @@ namespace ImageProcessing
 
             if (imageEffects)
             {
-                foreach (FilterType filter in enabledFilters)
+                foreach (ImageEffect effect in enabledFilters)
                 {
-                    if (filter == FilterType.Invalid)
-                        continue;
-
-                    ImageEffect imageEffect = filters.FirstOrDefault(x => x.Key == filter).Value;
-
-                    switch (filter)
+                    switch (effect.Filter)
                     {
                         case FilterType.Invert:
                             InvertImage(modifiedBitmap);
@@ -299,16 +295,16 @@ namespace ImageProcessing
                             modifiedBitmap = Emboss(modifiedBitmap);
                             break;
                         case FilterType.Pixelate:
-                            modifiedBitmap = Pixelate(modifiedBitmap, imageEffect.CurrentValue);
+                            modifiedBitmap = Pixelate(modifiedBitmap, effect.CurrentValue);
                             break;
                         case FilterType.Median:
-                            modifiedBitmap = MedianFilter(modifiedBitmap, imageEffect.CurrentValue);
+                            modifiedBitmap = MedianFilter(modifiedBitmap, effect.CurrentValue);
                             break;
                         case FilterType.BoxBlur:
-                            modifiedBitmap = BoxBlur(modifiedBitmap, imageEffect.CurrentValue);
+                            modifiedBitmap = BoxBlur(modifiedBitmap, effect.CurrentValue);
                             break;
                         case FilterType.GaussianBlur:
-                            modifiedBitmap = GaussianBlur(modifiedBitmap, imageEffect.CurrentValue);
+                            modifiedBitmap = GaussianBlur(modifiedBitmap, effect.CurrentValue);
                             break;
                         case FilterType.EdgeDetection:
                             modifiedBitmap = EdgeDetection(modifiedBitmap);
