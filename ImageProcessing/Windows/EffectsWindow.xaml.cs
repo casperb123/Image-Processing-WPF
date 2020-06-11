@@ -54,7 +54,12 @@ namespace ImageProcessing.Windows
 
         public void Button_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && !ViewModel.Dragging)
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                !ViewModel.Dragging &&
+                !Keyboard.IsKeyDown(Key.LeftCtrl) &&
+                !Keyboard.IsKeyDown(Key.LeftShift) &&
+                !Keyboard.IsKeyDown(Key.RightCtrl) &&
+                !Keyboard.IsKeyDown(Key.RightShift))
             {
                 Point position = e.GetPosition(null);
                 Button button = sender as Button;
