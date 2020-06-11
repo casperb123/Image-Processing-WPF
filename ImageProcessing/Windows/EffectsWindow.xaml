@@ -81,36 +81,10 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <DataGrid x:Name="dataGridEffects"
-                          ItemsSource="{Binding Path=Filters}"
-                          SelectionMode="Extended"
-                          SelectedItem="{Binding Path=SelectedRows}"
-                          AutoGenerateColumns="False"
-                          CanUserSortColumns="False"
-                          CanUserReorderColumns="False"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
-                          CanUserResizeRows="False"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled"
-                          AllowDrop="True"
-                          DragOver="Effects_DragOver"
-                          Drop="Effects_Drop">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Effect"
-                                            Binding="{Binding Path=Item2.EffectName}"
-                                            Width="1*"
-                                            IsReadOnly="True" />
-                        <mah:DataGridNumericUpDownColumn Header="Value"
-                                                         Binding="{Binding Path=Item2.CurrentValue}"
-                                                         Width="auto" />
-                    </DataGrid.Columns>
-                </DataGrid>
-
-                <!--<StackPanel x:Name="stackPanelEffects"
+                <StackPanel x:Name="stackPanelEffects"
                             root:Spacing.Vertical="5"
                             DragOver="Effects_DragOver"
-                            Drop="Effects_Drop" />-->
+                            Drop="Effects_Drop" />
             </ScrollViewer>
         </Grid>
 
@@ -127,37 +101,11 @@
               DragOver="Effects_DragOver"
               Drop="EnabledEffects_Drop">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <DataGrid x:Name="dataGridEnabledEffects"
-                          ItemsSource="{Binding Path=EnabledFilters}"
-                          SelectionMode="Extended"
-                          SelectedItem="{Binding Path=SelectedRows}"
-                          AutoGenerateColumns="False"
-                          CanUserSortColumns="False"
-                          CanUserReorderColumns="False"
-                          CanUserAddRows="False"
-                          CanUserDeleteRows="False"
-                          CanUserResizeRows="False"
-                          VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled"
-                          AllowDrop="True"
-                          DragOver="Effects_DragOver"
-                          Drop="EnabledEffects_Drop">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Effect"
-                                            Binding="{Binding Path=EffectName}"
-                                            Width="1*"
-                                            IsReadOnly="True" />
-                        <mah:DataGridNumericUpDownColumn Header="Value"
-                                                         Binding="{Binding Path=CurrentValue}"
-                                                         Width="auto" />
-                    </DataGrid.Columns>
-                </DataGrid>
-                
-                <!--<StackPanel x:Name="stackPanelEnabledEffects"
+                <StackPanel x:Name="stackPanelEnabledEffects"
                             root:Spacing.Vertical="5"
                             AllowDrop="True"
                             DragOver="Effects_DragOver"
-                            Drop="EnabledEffects_Drop" />-->
+                            Drop="EnabledEffects_Drop" />
             </ScrollViewer>
         </Grid>
     </Grid>

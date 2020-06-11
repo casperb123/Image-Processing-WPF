@@ -4,38 +4,11 @@ namespace ImageProcessing.Entities
 {
     public class ImageEffect : INotifyPropertyChanged
     {
-        public enum FilterType
-        {
-            Invert,
-            SepiaTone,
-            Emboss,
-            Pixelate,
-            Median,
-            BoxBlur,
-            GaussianBlur,
-            EdgeDetection,
-            EdgeDetection45Degree,
-            EdgeDetectionHorizontal,
-            EdgeDetectionVertical,
-            EdgeDetectionTopLeft
-        }
-
-        private FilterType filter;
         private string effectName;
         private int minimumValue;
         private int maximumValue;
         private int interval;
         private int currentValue;
-
-        public FilterType Filter
-        {
-            get { return filter; }
-            set
-            {
-                filter = value;
-                OnPropertyChanged(nameof(Filter));
-            }
-        }
 
         public int CurrentValue
         {
@@ -94,9 +67,8 @@ namespace ImageProcessing.Entities
             if (!string.IsNullOrWhiteSpace(prop))
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
-        public ImageEffect(FilterType filterType, string effectName)
+        public ImageEffect(string effectName)
         {
-            Filter = filterType;
             EffectName = effectName;
             MinimumValue = -1;
             MaximumValue = -1;
@@ -104,8 +76,8 @@ namespace ImageProcessing.Entities
             CurrentValue = -1;
         }
 
-        public ImageEffect(FilterType filterType, string effectName, int minimumValue, int maximumValue, int interval)
-            : this(filterType, effectName)
+        public ImageEffect(string effectName, int minimumValue, int maximumValue, int interval)
+            : this(effectName)
         {
             MinimumValue = minimumValue;
             MaximumValue = maximumValue;
