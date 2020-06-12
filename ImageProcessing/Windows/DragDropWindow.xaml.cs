@@ -19,11 +19,11 @@ namespace ImageProcessing.Windows
                 Button newButton = new Button
                 {
                     BorderThickness = new Thickness(2),
+                    BorderBrush = button.BorderBrush,
                     Content = button.Content,
                     IsHitTestVisible = false,
                     Opacity = .7
                 };
-                newButton.SetResourceReference(BorderBrushProperty, "MahApps.Brushes.Accent");
 
                 stackPanelButtons.Children.Add(newButton);
             }
