@@ -226,7 +226,7 @@ namespace ImageProcessing.ViewModels
 
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (selected.startIndex > -1 && selected.endIndex == -1)
+                if (selected.startIndex > -1 && selected.endIndex == -1 || toMove.stackPanel != stackPanel)
                     ResetSelection();
 
                 if (toMove.stackPanel != stackPanel)
@@ -249,6 +249,9 @@ namespace ImageProcessing.ViewModels
             }
             else if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
             {
+                if (toMove.stackPanel != stackPanel)
+                    ResetSelection();
+
                 if (selected.startIndex == -1)
                 {
                     toMove.buttons.Clear();
