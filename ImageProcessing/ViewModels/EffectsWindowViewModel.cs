@@ -74,6 +74,16 @@ namespace ImageProcessing.ViewModels
             MoveDragDropWindow();
         }
 
+        public void CloseDragDropWindow()
+        {
+            if (DragDropWindow != null)
+            {
+                DragDropWindow.Close();
+                DragDropWindow = null;
+                Dragging = false;
+            }
+        }
+
         public void Closing()
         {
             processingUserControlViewModel.UserControl.buttonImageEffects.Content = "Open";
@@ -199,7 +209,7 @@ namespace ImageProcessing.ViewModels
                 Dragging = true;
 
                 DataObject data = new DataObject();
-                data.SetData("Object", toMove.buttons);
+                data.SetData("Object", toMove);
 
                 CreateDragDropWindow(new List<Button>(toMove.buttons.Select(x => x.Item1)));
                 DragDrop.DoDragDrop(stackPanel, data, DragDropEffects.Move);

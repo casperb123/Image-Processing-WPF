@@ -2,6 +2,7 @@
 using ImageProcessing.Windows;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ImageProcessing.UserControls
 {
@@ -61,6 +62,12 @@ namespace ImageProcessing.UserControls
             
             if (colorPicker.ShowDialog() == true)
                 ViewModel.PixelColor = colorPicker.ViewModel.Color;
+        }
+
+        private void UserControl_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && ViewModel.EffectsWindow != null)
+                ViewModel.EffectsWindow.ViewModel.CloseDragDropWindow();
         }
     }
 }

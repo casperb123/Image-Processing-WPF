@@ -14,7 +14,8 @@
                  MinWidth="450"
                  ResizeMode="CanResizeWithGrip"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
-                 Closing="MetroWindow_Closing">
+                 Closing="MetroWindow_Closing"
+                 PreviewMouseMove="MetroWindow_PreviewMouseMove">
     <mah:MetroWindow.Flyouts>
         <mah:FlyoutsControl>
             <mah:Flyout x:Name="flyoutEffectSettings"

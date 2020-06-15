@@ -78,13 +78,11 @@ namespace ImageProcessing.Windows
         {
             if (e.Handled == false && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
-                List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
-                ViewModel.DisableEffects(buttons);
-                if (ViewModel.DragDropWindow != null)
-                {
-                    ViewModel.DragDropWindow.Close();
-                    ViewModel.DragDropWindow = null;
-                }
+                ValueTuple<StackPanel, List<(Button, int)>> toMove = (ValueTuple<StackPanel, List<(Button, int)>>)e.Data.GetData("Object");
+                if (toMove.Item1 != stackPanelEffects)
+                    ViewModel.DisableEffects(toMove.Item2);
+
+                ViewModel.CloseDragDropWindow();
                 e.Effects = DragDropEffects.Move;
             }
         }
@@ -94,13 +92,9 @@ namespace ImageProcessing.Windows
             if (!e.Handled && ViewModel.Dragging && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
                 int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
-                List<(Button, int)> buttons = e.Data.GetData("Object") as List<(Button, int)>;
-                ViewModel.EnableEffects(buttons, index);
-                if (ViewModel.DragDropWindow != null)
-                {
-                    ViewModel.DragDropWindow.Close();
-                    ViewModel.DragDropWindow = null;
-                }
+                ValueTuple<StackPanel, List<(Button, int)>> toMove = (ValueTuple<StackPanel, List<(Button, int)>>)e.Data.GetData("Object");
+                ViewModel.EnableEffects(toMove.Item2, index);
+                ViewModel.CloseDragDropWindow();
                 e.Effects = DragDropEffects.Move;
             }
         }
@@ -108,6 +102,12 @@ namespace ImageProcessing.Windows
         private void StackPanelEffects_PreviewGiveFeedback(object sender, GiveFeedbackEventArgs e)
         {
             ViewModel.MoveDragDropWindow();
+        }
+
+        private void MetroWindow_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released && ViewModel.DragDropWindow != null)
+                ViewModel.CloseDragDropWindow();
         }
     }
 }

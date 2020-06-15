@@ -15,7 +15,8 @@
                  MinHeight="613"
                  ResizeMode="CanResizeWithGrip"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
-                 Closing="MetroWindow_Closing">
+                 Closing="MetroWindow_Closing"
+                 PreviewMouseMove="MetroWindow_PreviewMouseMove">
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands>
             <Button x:Name="buttonSettings"

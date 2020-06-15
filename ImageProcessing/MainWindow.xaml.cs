@@ -4,6 +4,7 @@ using MahApps.Metro.Controls;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ImageProcessing
 {
@@ -50,6 +51,14 @@ namespace ImageProcessing
             await Settings.CurrentSettings.Save();
             if (viewModel.ProcessingUserControlViewModel.EffectsWindow != null)
                 viewModel.ProcessingUserControlViewModel.EffectsWindow.Close();
+        }
+
+        private void MetroWindow_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Released &&
+                viewModel.ProcessingUserControlViewModel != null &&
+                viewModel.ProcessingUserControlViewModel.EffectsWindow != null)
+                viewModel.ProcessingUserControlViewModel.EffectsWindow.ViewModel.CloseDragDropWindow();
         }
     }
 }
