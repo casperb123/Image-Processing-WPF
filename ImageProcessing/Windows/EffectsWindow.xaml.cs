@@ -73,7 +73,7 @@ namespace ImageProcessing.Windows
         {
             if (e.Handled == false && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
-                ValueTuple<StackPanel, List<(Button, int)>> toMove = (ValueTuple<StackPanel, List<(Button, int)>>)e.Data.GetData("Object");
+                ValueTuple<StackPanel, List<Button>> toMove = (ValueTuple<StackPanel, List<Button>>)e.Data.GetData("Object");
                 if (toMove.Item1 != stackPanelEffects)
                     ViewModel.DisableEffects(toMove.Item2);
 
@@ -87,7 +87,7 @@ namespace ImageProcessing.Windows
             if (!e.Handled && ViewModel.Dragging && e.AllowedEffects.HasFlag(DragDropEffects.Move))
             {
                 int index = ViewModel.GetCurrentButtonIndex(stackPanelEnabledEffects, e.GetPosition);
-                ValueTuple<StackPanel, List<(Button, int)>> toMove = (ValueTuple<StackPanel, List<(Button, int)>>)e.Data.GetData("Object");
+                ValueTuple<StackPanel, List<Button>> toMove = (ValueTuple<StackPanel, List<Button>>)e.Data.GetData("Object");
                 ViewModel.EnableEffects(toMove.Item2, index);
                 ViewModel.CloseDragDropWindow();
                 e.Effects = DragDropEffects.Move;

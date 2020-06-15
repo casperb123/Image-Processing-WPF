@@ -29,7 +29,7 @@ namespace ImageProcessing.ViewModels
         private ImageEffect currentImageEffect;
         private readonly EffectsWindow window;
         private Point startPoint;
-        private (StackPanel stackPanel, List<(Button, int)> buttons) toMove;
+        private (StackPanel stackPanel, List<Button> buttons) toMove;
         private (int startIndex, int endIndex) selected;
         private readonly ProcessingUserControlViewModel processingUserControlViewModel;
 
@@ -63,7 +63,7 @@ namespace ImageProcessing.ViewModels
             CreateFilterButtons(processingUserControlViewModel.Filters, processingUserControlViewModel.EnabledFilters);
             selected.startIndex = -1;
             selected.endIndex = -1;
-            toMove.buttons = new List<(Button, int)>();
+            toMove.buttons = new List<Button>();
         }
 
         public void CreateDragDropWindow(List<Button> buttons)
@@ -161,7 +161,7 @@ namespace ImageProcessing.ViewModels
 
             foreach (Button button in buttons)
             {
-                if (toMove.buttons.Any(x => x.Item1 == button))
+                if (toMove.buttons.Contains(button))
                     button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Accent");
                 else
                     button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Button.Border");
@@ -198,11 +198,11 @@ namespace ImageProcessing.ViewModels
                 }
 
                 if (toMove.buttons.Count == 0)
-                    toMove.buttons.Add((button, index));
-                else if (!toMove.buttons.Any(x => x.Item1 == button))
+                    toMove.buttons.Add(button);
+                else if (!toMove.buttons.Contains(button))
                 {
                     ResetSelection();
-                    toMove.buttons.Add((button, index));
+                    toMove.buttons.Add(button);
                 }
 
                 StyleButtons();
@@ -211,7 +211,7 @@ namespace ImageProcessing.ViewModels
                 DataObject data = new DataObject();
                 data.SetData("Object", toMove);
 
-                CreateDragDropWindow(new List<Button>(toMove.buttons.Select(x => x.Item1)));
+                CreateDragDropWindow(new List<Button>(toMove.buttons));
                 DragDrop.DoDragDrop(stackPanel, data, DragDropEffects.Move);
             }
         }
@@ -226,23 +226,29 @@ namespace ImageProcessing.ViewModels
 
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                if (selected.startIndex > -1 && selected.endIndex == -1 || toMove.stackPanel != stackPanel)
+                if (toMove.stackPanel != stackPanel)
                     ResetSelection();
+
+                if (selected.startIndex > -1 && selected.endIndex == -1)
+                {
+                    selected.startIndex = -1;
+                    selected.endIndex = -1;
+                }
 
                 if (toMove.stackPanel != stackPanel)
                 {
                     toMove.buttons.Clear();
                     toMove.stackPanel = stackPanel;
-                    toMove.buttons.Add((button, index));
+                    toMove.buttons.Add(button);
                 }
                 else
                 {
-                    var selectedButton = toMove.buttons.FirstOrDefault(x => x.Item1 == button);
+                    Button selectedButton = toMove.buttons.FirstOrDefault(x => x == button);
 
-                    if (selectedButton.Item1 != null)
+                    if (selectedButton != null)
                         toMove.buttons.Remove(selectedButton);
                     else
-                        toMove.buttons.Add((button, index));
+                        toMove.buttons.Add(button);
                 }
 
                 StyleButtons();
@@ -257,7 +263,7 @@ namespace ImageProcessing.ViewModels
                     toMove.buttons.Clear();
                     selected.startIndex = index;
                     toMove.stackPanel = stackPanel;
-                    toMove.buttons.Add((button, index));
+                    toMove.buttons.Add(button);
                 }
                 else if (selected.startIndex > -1 && selected.endIndex == -1)
                 {
@@ -265,14 +271,14 @@ namespace ImageProcessing.ViewModels
 
                     if (selected.endIndex > selected.startIndex)
                         for (int i = selected.startIndex + 1; i <= selected.endIndex; i++)
-                            toMove.buttons.Add((stackPanel.Children[i] as Button, i));
+                            toMove.buttons.Add(stackPanel.Children[i] as Button);
                     else
                     {
                         int newIndex = 0;
 
                         for (int i = selected.endIndex; i < selected.startIndex; i++)
                         {
-                            toMove.buttons.Insert(newIndex, (stackPanel.Children[i] as Button, newIndex));
+                            toMove.buttons.Insert(newIndex, stackPanel.Children[i] as Button);
                             newIndex++;
                         }
                     }
@@ -289,7 +295,7 @@ namespace ImageProcessing.ViewModels
                 selected.startIndex = index;
                 selected.endIndex = -1;
                 toMove.stackPanel = stackPanel;
-                toMove.buttons.Add((button, index));
+                toMove.buttons.Add(button);
                 StyleButtons();
 
                 FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
@@ -305,11 +311,11 @@ namespace ImageProcessing.ViewModels
             }
         }
 
-        public void DisableEffects(List<(Button, int)> buttons)
+        public void DisableEffects(List<Button> buttons)
         {
-            foreach (var button in buttons)
+            foreach (Button button in buttons)
             {
-                FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Item1.Name.Substring(6));
+                FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
                 ImageEffect effect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filterType);
                 ImageEffect enabledEffect = processingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x.Filter == filterType);
                 int index = processingUserControlViewModel.Filters.IndexOf(effect);
@@ -317,7 +323,7 @@ namespace ImageProcessing.ViewModels
                 if (enabledEffect != null)
                     processingUserControlViewModel.EnabledFilters.Remove(enabledEffect);
 
-                window.stackPanelEnabledEffects.Children.Remove(button.Item1);
+                window.stackPanelEnabledEffects.Children.Remove(button);
                 window.UpdateLayout();
 
                 List<FilterType> filterTypes = Enum.GetValues(typeof(FilterType)).Cast<FilterType>().Where(x => (int)x > (int)filterType).ToList();
@@ -335,41 +341,41 @@ namespace ImageProcessing.ViewModels
                 if (index > window.stackPanelEffects.Children.Count)
                     index = window.stackPanelEffects.Children.Count;
 
-                window.stackPanelEffects.Children.Insert(index, button.Item1);
+                window.stackPanelEffects.Children.Insert(index, button);
             }
 
             ResetSelection();
             Dragging = false;
         }
 
-        public void EnableEffects(List<(Button, int)> buttons, int index)
+        public void EnableEffects(List<Button> buttons, int index)
         {
-            foreach (var button in buttons)
+            foreach (Button button in buttons)
             {
-                FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Item1.Name.Substring(6));
+                FilterType filter = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
                 ImageEffect effect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filter);
                 ImageEffect enabledEffect = processingUserControlViewModel.EnabledFilters.FirstOrDefault(x => x.Filter == filter);
 
                 if (enabledEffect != null)
                 {
                     processingUserControlViewModel.EnabledFilters.Remove(effect);
-                    window.stackPanelEnabledEffects.Children.Remove(button.Item1);
+                    window.stackPanelEnabledEffects.Children.Remove(button);
                 }
                 else
-                    window.stackPanelEffects.Children.Remove(button.Item1);
+                    window.stackPanelEffects.Children.Remove(button);
 
                 window.UpdateLayout();
 
                 if (index == -1)
                 {
                     processingUserControlViewModel.EnabledFilters.Add(effect);
-                    window.stackPanelEnabledEffects.Children.Add(button.Item1);
+                    window.stackPanelEnabledEffects.Children.Add(button);
                     index = 0;
                 }
                 else
                 {
                     processingUserControlViewModel.EnabledFilters.Insert(index, effect);
-                    window.stackPanelEnabledEffects.Children.Insert(index, button.Item1);
+                    window.stackPanelEnabledEffects.Children.Insert(index, button);
                 }
 
                 index++;
