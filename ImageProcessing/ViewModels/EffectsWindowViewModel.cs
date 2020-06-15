@@ -80,6 +80,7 @@ namespace ImageProcessing.ViewModels
                 DragDropWindow.Close();
                 DragDropWindow = null;
                 Dragging = false;
+                ResetSelection();
             }
         }
 
