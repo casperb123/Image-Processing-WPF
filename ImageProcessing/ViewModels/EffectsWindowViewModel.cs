@@ -288,6 +288,7 @@ namespace ImageProcessing.ViewModels
                 ResetSelection();
                 selected.startIndex = index;
                 selected.endIndex = -1;
+                toMove.stackPanel = stackPanel;
                 toMove.buttons.Add((button, index));
                 StyleButtons();
 
