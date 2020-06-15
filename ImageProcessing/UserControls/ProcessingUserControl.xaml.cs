@@ -58,7 +58,7 @@ namespace ImageProcessing.UserControls
 
         private void ButtonGrayColorButton_Click(object sender, RoutedEventArgs e)
         {
-            ColorPickerWindow colorPicker = new ColorPickerWindow(ViewModel.PixelColor.R, ViewModel.PixelColor.G, ViewModel.PixelColor.B, ViewModel.PixelColor.A);
+            ColorPickerWindow colorPicker = new ColorPickerWindow(ViewModel.PixelColor);
             
             if (colorPicker.ShowDialog() == true)
                 ViewModel.PixelColor = colorPicker.ViewModel.Color;

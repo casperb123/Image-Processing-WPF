@@ -68,12 +68,12 @@ namespace ImageProcessing.ViewModels
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 		}
 
-		public ColorPickerWindowViewModel(int red, int green, int blue, int alpha)
+		public ColorPickerWindowViewModel(Color color)
 		{
-			Red = red;
-			Green = green;
-			Blue = blue;
-			Alpha = alpha;
+			Red = color.R;
+			Green = color.G;
+			Blue = color.B;
+			Alpha = color.A;
 		}
 	}
 }

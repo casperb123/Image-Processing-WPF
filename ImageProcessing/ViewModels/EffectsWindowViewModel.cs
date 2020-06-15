@@ -283,6 +283,10 @@ namespace ImageProcessing.ViewModels
             else
             {
                 ResetSelection();
+                selected.startIndex = index;
+                selected.endIndex = -1;
+                toMove.buttons.Add((button, index));
+                StyleButtons();
 
                 FilterType filterType = (FilterType)Enum.Parse(typeof(FilterType), button.Name.Substring(6));
                 ImageEffect imageEffect = processingUserControlViewModel.Filters.FirstOrDefault(x => x.Filter == filterType);

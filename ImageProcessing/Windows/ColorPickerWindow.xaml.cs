@@ -13,10 +13,10 @@ namespace ImageProcessing.Windows
     {
         public ColorPickerWindowViewModel ViewModel;
 
-        public ColorPickerWindow(int red, int green, int blue, int alpha)
+        public ColorPickerWindow(Color color)
         {
             InitializeComponent();
-            ViewModel = new ColorPickerWindowViewModel(red, green, blue, alpha);
+            ViewModel = new ColorPickerWindowViewModel(color);
             DataContext = ViewModel;
         }
 
