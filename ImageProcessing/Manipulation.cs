@@ -4,11 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using static ImageProcessing.Entities.ImageEffect;
-using static ImageProcessing.ViewModels.ProcessingUserControlViewModel;
 using Color = System.Drawing.Color;
 
 namespace ImageProcessing

@@ -21,7 +21,8 @@
                  ShowMaxRestoreButton="False"
                  BorderThickness="0"
                  Background="{x:Null}"
-                 WindowTransitionsEnabled="False">
+                 WindowTransitionsEnabled="False"
+                 Focusable="False">
     <StackPanel x:Name="stackPanelButtons"
                 root:Spacing.Vertical="5"
                 IsHitTestVisible="False" />
