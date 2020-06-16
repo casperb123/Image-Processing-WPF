@@ -50,7 +50,12 @@ namespace ImageProcessing
         {
             await Settings.CurrentSettings.Save();
             if (viewModel.ProcessingUserControlViewModel.EffectsWindow != null)
+            {
+                if (viewModel.ProcessingUserControlViewModel.EffectsWindow.ViewModel.DragDropWindow != null)
+                    viewModel.ProcessingUserControlViewModel.EffectsWindow.ViewModel.DragDropWindow.Close();
+
                 viewModel.ProcessingUserControlViewModel.EffectsWindow.Close();
+            }
         }
 
         private void MetroWindow_PreviewMouseMove(object sender, MouseEventArgs e)

@@ -146,8 +146,8 @@ namespace ImageProcessing.ViewModels
             Win32Point point = new Win32Point();
             GetCursorPos(ref point);
 
-            DragDropWindow.Left = point.X + 15;
-            DragDropWindow.Top = point.Y + 15;
+            DragDropWindow.Left = point.X + 10;
+            DragDropWindow.Top = point.Y + 10;
         }
 
         public void StyleButtons()
@@ -188,8 +188,6 @@ namespace ImageProcessing.ViewModels
             {
                 if (selected.startIndex > -1 && selected.endIndex == -1)
                     ResetSelection();
-
-                int index = stackPanel.Children.IndexOf(button);
 
                 if (toMove.stackPanel != stackPanel)
                 {

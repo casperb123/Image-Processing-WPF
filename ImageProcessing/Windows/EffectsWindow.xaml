@@ -30,7 +30,7 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="80" />
                         </Grid.ColumnDefinitions>
-                        
+
                         <Slider x:Name="sliderEffectValue"
                                 Minimum="{Binding Path=CurrentImageEffect.MinimumValue}"
                                 Maximum="{Binding Path=CurrentImageEffect.MaximumValue}"
@@ -86,7 +86,7 @@
                             root:Spacing.Vertical="5"
                             DragOver="Effects_DragOver"
                             Drop="Effects_Drop"
-                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"/>
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback" />
             </ScrollViewer>
         </Grid>
 
@@ -108,7 +108,7 @@
                             AllowDrop="True"
                             DragOver="Effects_DragOver"
                             Drop="EnabledEffects_Drop"
-                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"/>
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback" />
             </ScrollViewer>
         </Grid>
     </Grid>
