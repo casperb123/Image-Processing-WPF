@@ -156,10 +156,23 @@ namespace ImageProcessing
             ApplyColorMatrix(bitmap, sepiaArray);
         }
 
-        private Bitmap Emboss(Bitmap bitmap)
+        private Bitmap Emboss(Bitmap bitmap, FilterType filterType)
         {
-            EmbossFilter emboss = new EmbossFilter();
-            return bitmap.ConvolutionFilter(emboss);
+            ConvolutionFilterBase filter = null;
+
+            if (filterType == FilterType.Emboss)
+                filter = new EmbossFilter();
+            else if (filterType == FilterType.Emboss45Degree)
+                filter = new Emboss45DegreeFilter();
+            else if (filterType == FilterType.EmbossTopLeft)
+                filter = new EmbossTopLeftFilter();
+            else if (filterType == FilterType.EmbossIntense)
+                filter = new EmbossIntenseFilter();
+
+            if (filter is null)
+                return bitmap;
+
+            return bitmap.ConvolutionFilter(filter);
         }
 
         private Bitmap BoxBlur(Bitmap bitmap, int amount)
@@ -174,34 +187,25 @@ namespace ImageProcessing
             return gaussianBlur.Process(amount);
         }
 
-        private Bitmap EdgeDetection(Bitmap bitmap)
+        private Bitmap EdgeDetection(Bitmap bitmap, FilterType filterType)
         {
-            EdgeDetectionFilter edgeDetection = new EdgeDetectionFilter();
-            return bitmap.ConvolutionFilter(edgeDetection);
-        }
+            ConvolutionFilterBase filter = null;
 
-        private Bitmap EdgeDetection45Degree(Bitmap bitmap)
-        {
-            EdgeDetection45DegreeFilter edgeDetection45Degree = new EdgeDetection45DegreeFilter();
-            return bitmap.ConvolutionFilter(edgeDetection45Degree);
-        }
+            if (filterType == FilterType.EdgeDetection)
+                filter = new EdgeDetectionFilter();
+            else if (filterType == FilterType.EdgeDetection45Degree)
+                filter = new EdgeDetection45DegreeFilter();
+            else if (filterType == FilterType.EdgeDetectionHorizontal)
+                filter = new EdgeDetectionHorizontalFilter();
+            else if (filterType == FilterType.EdgeDetectionTopLeft)
+                filter = new EdgeDetectionTopLeftFilter();
+            else if (filterType == FilterType.EdgeDetectionVertical)
+                filter = new EdgeDetectionVerticalFilter();
 
-        private Bitmap EdgeDetectionHorizontal(Bitmap bitmap)
-        {
-            EdgeDetectionHorizontalFilter edgeDetectionHorizontal = new EdgeDetectionHorizontalFilter();
-            return bitmap.ConvolutionFilter(edgeDetectionHorizontal);
-        }
+            if (filter is null)
+                return bitmap;
 
-        private Bitmap EdgeDetectionVertical(Bitmap bitmap)
-        {
-            EdgeDetectionVerticalFilter edgeDetectionVertical = new EdgeDetectionVerticalFilter();
-            return bitmap.ConvolutionFilter(edgeDetectionVertical);
-        }
-
-        private Bitmap EdgeDetectionTopLeft(Bitmap bitmap)
-        {
-            EdgeDetectionTopLeftFilter edgeDetectionTopLeft = new EdgeDetectionTopLeftFilter();
-            return bitmap.ConvolutionFilter(edgeDetectionTopLeft);
+            return bitmap.ConvolutionFilter(filter);
         }
 
         public void Modify(Bitmap bitmap,
@@ -281,6 +285,11 @@ namespace ImageProcessing
             {
                 foreach (ImageEffect effect in enabledFilters)
                 {
+                    if (effect.Filter.ToString().Contains("EdgeDetection"))
+                        modifiedBitmap = EdgeDetection(modifiedBitmap, effect.Filter);
+                    else if (effect.Filter.ToString().Contains("Emboss"))
+                        modifiedBitmap = Emboss(modifiedBitmap, effect.Filter);
+
                     switch (effect.Filter)
                     {
                         case FilterType.Invert:
@@ -288,9 +297,6 @@ namespace ImageProcessing
                             break;
                         case FilterType.SepiaTone:
                             SepiaTone(modifiedBitmap);
-                            break;
-                        case FilterType.Emboss:
-                            modifiedBitmap = Emboss(modifiedBitmap);
                             break;
                         case FilterType.Pixelate:
                             modifiedBitmap = Pixelate(modifiedBitmap, effect.CurrentValue);
@@ -303,21 +309,6 @@ namespace ImageProcessing
                             break;
                         case FilterType.GaussianBlur:
                             modifiedBitmap = GaussianBlur(modifiedBitmap, effect.CurrentValue);
-                            break;
-                        case FilterType.EdgeDetection:
-                            modifiedBitmap = EdgeDetection(modifiedBitmap);
-                            break;
-                        case FilterType.EdgeDetection45Degree:
-                            modifiedBitmap = EdgeDetection45Degree(modifiedBitmap);
-                            break;
-                        case FilterType.EdgeDetectionHorizontal:
-                            modifiedBitmap = EdgeDetectionHorizontal(modifiedBitmap);
-                            break;
-                        case FilterType.EdgeDetectionVertical:
-                            modifiedBitmap = EdgeDetectionVertical(modifiedBitmap);
-                            break;
-                        case FilterType.EdgeDetectionTopLeft:
-                            modifiedBitmap = EdgeDetectionTopLeft(modifiedBitmap);
                             break;
                         default:
                             break;

@@ -1,7 +1,9 @@
 ﻿using MahApps.Metro.Controls;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace ImageProcessing.Windows
 {
