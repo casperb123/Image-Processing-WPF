@@ -3,6 +3,7 @@ using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -103,6 +104,21 @@ namespace ImageProcessing.Windows
         {
             if (e.LeftButton == MouseButtonState.Released && ViewModel.DragDropWindow != null)
                 ViewModel.CloseDragDropWindow();
+        }
+
+        private void Effects_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            List<Button> buttons = new List<Button>();
+
+            foreach (Button disabledButton in stackPanelEffects.Children)
+                buttons.Add(disabledButton);
+            foreach (Button enabledButton in stackPanelEnabledEffects.Children)
+                buttons.Add(enabledButton);
+
+            bool isMouseOverButton = buttons.Any(x => x.IsMouseOver);
+
+            if (!isMouseOverButton)
+                ViewModel.ResetSelection();
         }
     }
 }

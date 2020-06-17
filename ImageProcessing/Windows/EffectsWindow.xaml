@@ -76,7 +76,8 @@
               AllowDrop="True"
               DragOver="Effects_DragOver"
               Drop="Effects_Drop"
-              Margin="0,0,2.5,0">
+              Margin="0,0,2.5,0"
+              PreviewMouseLeftButtonDown="Effects_PreviewMouseLeftButtonDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
@@ -86,7 +87,8 @@
                             root:Spacing.Vertical="5"
                             DragOver="Effects_DragOver"
                             Drop="Effects_Drop"
-                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback" />
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"
+                            PreviewMouseLeftButtonDown="Effects_PreviewMouseLeftButtonDown" />
             </ScrollViewer>
         </Grid>
 
@@ -101,14 +103,16 @@
               Background="Transparent"
               Margin="2.5,0,0,0"
               DragOver="Effects_DragOver"
-              Drop="EnabledEffects_Drop">
+              Drop="EnabledEffects_Drop"
+              PreviewMouseLeftButtonDown="Effects_PreviewMouseLeftButtonDown">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="stackPanelEnabledEffects"
                             root:Spacing.Vertical="5"
                             AllowDrop="True"
                             DragOver="Effects_DragOver"
                             Drop="EnabledEffects_Drop"
-                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback" />
+                            PreviewGiveFeedback="StackPanelEffects_PreviewGiveFeedback"
+                            PreviewMouseLeftButtonDown="Effects_PreviewMouseLeftButtonDown" />
             </ScrollViewer>
         </Grid>
     </Grid>
