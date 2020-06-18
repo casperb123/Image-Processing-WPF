@@ -22,7 +22,8 @@
                         Position="Bottom"
                         Theme="Adapt"
                         IsPinned="False"
-                        Header="{Binding Path=CurrentImageEffect.EffectName}">
+                        Header="{Binding Path=CurrentImageEffect.EffectName}"
+                        IsOpenChanged="FlyoutEffectSettings_IsOpenChanged">
                 <StackPanel VerticalAlignment="Center"
                             Margin="0,0,15,0">
                     <Grid>

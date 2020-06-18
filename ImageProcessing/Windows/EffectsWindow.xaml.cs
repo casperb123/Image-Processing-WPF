@@ -120,5 +120,11 @@ namespace ImageProcessing.Windows
             if (!isMouseOverButton)
                 ViewModel.ResetSelection();
         }
+
+        private void FlyoutEffectSettings_IsOpenChanged(object sender, RoutedEventArgs e)
+        {
+            if (!flyoutEffectSettings.IsOpen)
+                ViewModel.ResetSelection();
+        }
     }
 }
