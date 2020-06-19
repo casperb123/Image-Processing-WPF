@@ -139,6 +139,8 @@ namespace ImageProcessing.ViewModels
                 else
                     window.stackPanelEffects.Children.Add(button);
             }
+
+            StyleButtons();
         }
 
         public void MoveDragDropWindow()
@@ -152,15 +154,30 @@ namespace ImageProcessing.ViewModels
 
         public void StyleButtons()
         {
-            List<Button> buttons = new List<Button>();
-
-            foreach (Button disabledbutton in window.stackPanelEffects.Children)
-                buttons.Add(disabledbutton);
-            foreach (Button enabledButton in window.stackPanelEnabledEffects.Children)
-                buttons.Add(enabledButton);
-
-            foreach (Button button in buttons)
+            foreach (Button button in window.stackPanelEffects.Children)
             {
+                int index = window.stackPanelEffects.Children.IndexOf(button);
+
+                if (index == window.stackPanelEffects.Children.Count - 1)
+                    button.Margin = new Thickness(0);
+                else
+                    button.Margin = new Thickness(0, 0, 0, 5);
+
+                if (toMove.buttons != null && toMove.buttons.Contains(button))
+                    button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Accent");
+                else
+                    button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Button.Border");
+            }
+
+            foreach (Button button in window.stackPanelEnabledEffects.Children)
+            {
+                int index = window.stackPanelEnabledEffects.Children.IndexOf(button);
+
+                if (index == window.stackPanelEnabledEffects.Children.Count - 1)
+                    button.Margin = new Thickness(0);
+                else
+                    button.Margin = new Thickness(0, 0, 0, 5);
+
                 if (toMove.buttons.Contains(button))
                     button.SetResourceReference(Control.BorderBrushProperty, "MahApps.Brushes.Accent");
                 else

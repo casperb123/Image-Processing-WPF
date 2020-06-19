@@ -27,6 +27,21 @@ namespace ImageProcessing.Windows
 
                 stackPanelButtons.Children.Add(newButton);
             }
+
+            StyleButtons();
+        }
+
+        private void StyleButtons()
+        {
+            foreach (Button button in stackPanelButtons.Children)
+            {
+                int index = stackPanelButtons.Children.IndexOf(button);
+
+                if (index == stackPanelButtons.Children.Count - 1)
+                    button.Margin = new Thickness(0);
+                else
+                    button.Margin = new Thickness(0, 0, 0, 5);
+            }
         }
     }
 }
