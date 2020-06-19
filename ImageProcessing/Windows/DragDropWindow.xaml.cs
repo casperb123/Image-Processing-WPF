@@ -22,7 +22,9 @@ namespace ImageProcessing.Windows
                     BorderBrush = button.BorderBrush,
                     Content = button.Content,
                     IsHitTestVisible = false,
-                    Opacity = .7
+                    Opacity = .7,
+                    FontSize = button.FontSize / 1.3,
+                    Height = button.Height / 1.3
                 };
 
                 stackPanelButtons.Children.Add(newButton);
