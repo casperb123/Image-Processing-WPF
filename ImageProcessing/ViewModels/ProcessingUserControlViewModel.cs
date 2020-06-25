@@ -252,13 +252,8 @@ namespace ImageProcessing.ViewModels
             ReplaceColor = false;
             EnabledFilters.Clear();
 
-            if (ImageEffects && EffectsWindow != null)
-            {
-                double top = EffectsWindow.Top;
-                double left = EffectsWindow.Left;
-                EffectsWindow.Close();
-                ShowEffectsWindow(top, left);
-            }
+            if (EffectsWindow != null)
+                EffectsWindow.ViewModel.CreateFilterButtons(Filters, EnabledFilters);
 
             if (OriginalImage != null)
             {

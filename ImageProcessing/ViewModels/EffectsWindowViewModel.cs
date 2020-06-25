@@ -118,8 +118,12 @@ namespace ImageProcessing.ViewModels
             return rect.Contains(point);
         }
 
-        private void CreateFilterButtons(List<ImageEffect> filters, List<ImageEffect> enabledFilters)
+        public void CreateFilterButtons(List<ImageEffect> filters, List<ImageEffect> enabledFilters)
         {
+            window.stackPanelEffects.Children.Clear();
+            window.stackPanelEnabledEffects.Children.Clear();
+            window.UpdateLayout();
+
             foreach (var filter in filters)
             {
                 Button button = new Button
