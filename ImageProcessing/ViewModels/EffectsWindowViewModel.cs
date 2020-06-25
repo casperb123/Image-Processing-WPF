@@ -145,6 +145,10 @@ namespace ImageProcessing.ViewModels
             }
 
             StyleButtons();
+            window.UpdateLayout();
+
+            window.scrollViewerEffects.ScrollToTop();
+            window.scrollViewerEnabledEffects.ScrollToTop();
         }
 
         public void MoveDragDropWindow()

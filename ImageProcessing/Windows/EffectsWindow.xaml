@@ -81,7 +81,8 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="scrollViewerEffects"
+                          VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="stackPanelEffects"
                             DragOver="Effects_DragOver"
                             Drop="Effects_Drop"
@@ -103,7 +104,8 @@
               DragOver="Effects_DragOver"
               Drop="EnabledEffects_Drop"
               PreviewMouseLeftButtonDown="Effects_PreviewMouseLeftButtonDown">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer x:Name="scrollViewerEnabledEffects"
+                          VerticalScrollBarVisibility="Auto">
                 <StackPanel x:Name="stackPanelEnabledEffects"
                             AllowDrop="True"
                             DragOver="Effects_DragOver"
